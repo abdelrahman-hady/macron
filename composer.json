@@ -1,6 +1,6 @@
 {
-    "name": "magento/project-community-edition",
-    "description": "eCommerce Platform for Growth (Community Edition)",
+    "name": "magento/project-enterprise-edition",
+    "description": "eCommerce Platform for Growth (Enterprise Edition)",
     "type": "project",
     "license": [
         "OSL-3.0",
@@ -24,7 +24,7 @@
     "require": {
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "~2.0",
-        "magento/product-community-edition": "2.4.4",
+        "magento/product-enterprise-edition": "2.4.4",
         "readymage/logger": "^1.0",
         "readymage/maintenance": "^1.0",
         "scandipwa/sample-data": "^1.2",
