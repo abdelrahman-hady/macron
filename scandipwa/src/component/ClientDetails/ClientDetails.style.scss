@@ -1,3 +1,14 @@
 .ClientDetails {
-    display: block;
+    margin: 10px;
+    width: 360px;
+
+    &-Note {
+        input {
+            width: 100%;
+        }
+
+        button {
+            margin: 10px 0px;
+        }
+    }
 }

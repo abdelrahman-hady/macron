@@ -5,23 +5,71 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
+
+import { hideActivePopup } from 'Store/Overlay/Overlay.action';
+import { showPopup } from 'Store/Popup/Popup.action';
 
 import ClientDetails from './ClientDetails.component';
+import { ADD_NOTE_POPUP } from './ClientDetails.config';
+
+/** @namespace Scandipwa/Component/ClientDetails/Container/mapStateToProps */
+export const mapStateToProps = (_state) => ({
+});
+
+/** @namespace Scandipwa/Component/ClientDetails/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    showAddNotePopup: () => dispatch(showPopup(ADD_NOTE_POPUP)),
+    hideActivePopup: () => dispatch(hideActivePopup())
+});
 
 /** @namespace Scandipwa/Component/ClientDetails/Container */
 export class ClientDetailsContainer extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        showAddNotePopup: PropTypes.func.isRequired,
+        hideActivePopup: PropTypes.func.isRequired
+    };
+
+    state = {
+        note: '',
+        internalNote: '',
+        savedNote: '',
+        savedInternalNote: ''
     };
 
     containerFunctions = {
-        // getData: this.getData.bind(this)
+        onFieldChange: this.onFieldChange.bind(this),
+        onNoteSave: this.onNoteSave.bind(this)
     };
 
+    onFieldChange(e) {
+        const { name, value } = e.target;
+
+        this.setState({ [name]: value });
+    }
+
+    onNoteSave() {
+        const { note, internalNote } = this.state;
+        const { hideActivePopup } = this.props;
+        this.setState({
+            savedNote: note,
+            savedInternalNote: internalNote
+        });
+
+        hideActivePopup();
+    }
+
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { showAddNotePopup } = this.props;
+        const { savedNote, savedInternalNote } = this.state;
+
+        return {
+            showAddNotePopup,
+            savedNote,
+            savedInternalNote
+        };
     };
 
     render() {
@@ -34,4 +82,4 @@ export class ClientDetailsContainer extends PureComponent {
     }
 }
 
-export default ClientDetailsContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(ClientDetailsContainer);
