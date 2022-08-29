@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /**
  * @category    Macron
  * @package     Macron_Shipment
