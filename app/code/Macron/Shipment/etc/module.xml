@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
+<!--
+* @category    Macron
+* @package     Macron_Shipment
+* @author      Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
+* @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+-->
 <config
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
