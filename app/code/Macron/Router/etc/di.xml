@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category    Macron
+ * @package     Macron_Router
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="ScandiPWA\Router\ValidationManager">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="invoices" xsi:type="string">ScandiPWA\Router\Validator\AlwaysPass</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
