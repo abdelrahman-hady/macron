@@ -13,8 +13,9 @@ import {
 /** @namespace Scandipwa/Route/CartPage/Component */
 export class CartPageComponent extends SourceCartPage {
     renderClientDetails() {
+        const { totals: { items } } = this.props;
         return (
-            <ClientDetails />
+            items.length && <ClientDetails />
         );
     }
 

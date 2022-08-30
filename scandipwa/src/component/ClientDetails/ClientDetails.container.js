@@ -6,9 +6,10 @@
  */
 
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { updateNotes } from 'Store/OrderNotes/OrderNotes.action';
 import { hideActivePopup } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 
@@ -16,32 +17,40 @@ import ClientDetails from './ClientDetails.component';
 import { ADD_NOTE_POPUP } from './ClientDetails.config';
 
 /** @namespace Scandipwa/Component/ClientDetails/Container/mapStateToProps */
-export const mapStateToProps = (_state) => ({
+export const mapStateToProps = (state) => ({
+    note: state.OrderNotesReducer.note,
+    internalNote: state.OrderNotesReducer.internalNote
 });
 
 /** @namespace Scandipwa/Component/ClientDetails/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     showAddNotePopup: () => dispatch(showPopup(ADD_NOTE_POPUP)),
-    hideActivePopup: () => dispatch(hideActivePopup())
+    hideActivePopup: () => dispatch(hideActivePopup()),
+    updateNotes: (notes) => dispatch(updateNotes(notes))
 });
 
 /** @namespace Scandipwa/Component/ClientDetails/Container */
 export class ClientDetailsContainer extends PureComponent {
     static propTypes = {
         showAddNotePopup: PropTypes.func.isRequired,
-        hideActivePopup: PropTypes.func.isRequired
+        hideActivePopup: PropTypes.func.isRequired,
+        updateNotes: PropTypes.func.isRequired,
+        note: PropTypes.string.isRequired,
+        internalNote: PropTypes.string.isRequired,
+        isCheckoutPage: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isCheckoutPage: null
     };
 
     state = {
-        note: '',
-        internalNote: '',
-        savedNote: '',
-        savedInternalNote: '',
+        noteRef: createRef(),
+        internalNoteRef: createRef(),
         isReadMore: true
     };
 
     containerFunctions = {
-        onFieldChange: this.onFieldChange.bind(this),
         onNoteSave: this.onNoteSave.bind(this),
         toggleIsReadMore: this.toggleIsReadMore.bind(this)
     };
@@ -51,32 +60,31 @@ export class ClientDetailsContainer extends PureComponent {
         this.setState((prevState) => ({ ...prevState, isReadMore: !isReadMore }));
     }
 
-    onFieldChange(e) {
-        const { name, value } = e.target;
-
-        this.setState({ [name]: value });
-    }
-
     onNoteSave() {
-        const { note, internalNote } = this.state;
-        const { hideActivePopup } = this.props;
-        this.setState({
-            savedNote: note,
-            savedInternalNote: internalNote
-        });
+        const { noteRef, internalNoteRef } = this.state;
+        const { hideActivePopup, updateNotes } = this.props;
+
+        updateNotes({ note: noteRef.current.value, internalNote: internalNoteRef.current.value });
 
         hideActivePopup();
     }
 
     containerProps = () => {
-        const { showAddNotePopup } = this.props;
-        const { savedNote, savedInternalNote, isReadMore } = this.state;
+        const {
+            showAddNotePopup, note, internalNote, isCheckoutPage
+        } = this.props;
+        const {
+            isReadMore, noteRef, internalNoteRef
+        } = this.state;
 
         return {
             showAddNotePopup,
-            savedNote,
-            savedInternalNote,
-            isReadMore
+            note,
+            internalNote,
+            isReadMore,
+            noteRef,
+            internalNoteRef,
+            isCheckoutPage
         };
     };
 
