@@ -5,7 +5,7 @@
 * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
 -->
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
- <table name="shipment" engine="innodb" comment="Shipment">
+ <table name="erp_shipment" engine="innodb" comment="Shipment">
     <column xsi:type="text" name="user_sap_id" comment="User SAP ID"/>
     <column xsi:type="text" name="shipment_number" comment="Shipment Number"/>
     <column xsi:type="text" name="packing_list_link" comment="Packing list link"/>
