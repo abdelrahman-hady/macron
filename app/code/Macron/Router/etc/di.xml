@@ -13,6 +13,7 @@
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="my-clients" xsi:type="string">ScandiPWA\Router\Validator\AlwaysPass</item>
+                <item name="shipments" xsi:type="string">ScandiPWA\Router\Validator\AlwaysPass</item>
             </argument>
         </arguments>
     </type>
