@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @category    Macron
+ * @package     Macron_Quantity
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ */
+
 declare(strict_types=1);
 
 namespace Macron\Quantity\Model\IsProductSalableForRequestedQtyCondition;
@@ -12,19 +19,17 @@ use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
+use Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\IsSalableWithReservationsCondition as Source;
 
 /**
  * @inheritdoc
  */
-class IsSalableWithReservationsCondition
-    extends
-    \Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\IsSalableWithReservationsCondition
+class IsSalableWithReservationsCondition extends Source
 {
-
     /**
      * @var GetStockItemDataInterface
      */
-    private $getStockItemData;
+    private GetStockItemDataInterface $getStockItemData;
 
     /**
      * @var GetReservationsQuantityInterface
@@ -54,13 +59,12 @@ class IsSalableWithReservationsCondition
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
      */
     public function __construct(
-        GetStockItemDataInterface              $getStockItemData,
-        GetReservationsQuantityInterface       $getReservationsQuantity,
-        GetStockItemConfigurationInterface     $getStockItemConfiguration,
+        GetStockItemDataInterface $getStockItemData,
+        GetReservationsQuantityInterface $getReservationsQuantity,
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory   $productSalableResultFactory
-    )
-    {
+        ProductSalableResultInterfaceFactory $productSalableResultFactory
+    ) {
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
@@ -74,22 +78,20 @@ class IsSalableWithReservationsCondition
      */
     public function execute(
         string $sku,
-        int    $stockId,
-        float  $requestedQty
-    ): ProductSalableResultInterface
-    {
+        int $stockId,
+        float $requestedQty
+    ): ProductSalableResultInterface {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         if (null === $stockItemData) {
             $errors = [
                 $this->productSalabilityErrorFactory->create([
-                    'code' => 'is_salable_with_reservations-no_data',
-                    'message' => __('The requested sku is not assigned to given stock'),
+                    "code" => "is_salable_with_reservations-no_data",
+                    "message" => __("The requested sku is not assigned to given stock"),
                 ]),
             ];
-            return $this->productSalableResultFactory->create(['errors' => $errors]);
+            return $this->productSalableResultFactory->create(["errors" => $errors]);
         }
 
-        return $this->productSalableResultFactory->create(['errors' => []]);
+        return $this->productSalableResultFactory->create(["errors" => []]);
     }
-
 }
