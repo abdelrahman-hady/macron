@@ -437,6 +437,7 @@ return [
         'Magento_WishlistGiftCard' => 1,
         'Magento_WishlistGiftCardGraphQl' => 1,
         'Magento_GiftCardGraphQl' => 1,
+        'Macron_Sales' => 1,
         'Sync4mage_Common' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,

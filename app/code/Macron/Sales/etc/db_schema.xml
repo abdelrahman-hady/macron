@@ -1,0 +1,31 @@
+<!--
+/**
+ * @category    Macron
+ * @package     Macron_Sales
+ * @author      Marian Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order" resource="sales" engine="innodb" comment="Sales Flat Order">
+        <column xsi:type="text" name="user_sap_id" comment="User SAP ID"/>
+        <column xsi:type="text" name="sap_order_id" comment="SAP Order ID"/>
+        <column xsi:type="text" name="user_customer_sap_id" comment="User Customer SAP ID"/>
+        <column xsi:type="text" name="user_customer_name" comment="User Customer Name"/>
+        <column xsi:type="text" name="sales_business_pool_id" comment="Sales Business Pool ID"/>
+        <column xsi:type="text" name="sales_business_pool_name" comment="Sales Business Pool Name"/>
+        <column xsi:type="int" name="sales_business_pool_type" comment="Sales Business Pool Type"/>
+        <column xsi:type="text" name="shipping_fees" comment="Shipping fees"/>
+        <column xsi:type="date" name="date" comment="User SAP ID"/>
+        <column xsi:type="text" name="payment_information" comment="Payment Information"/>
+        <column xsi:type="text" name="internal_note" comment="Internal Note"/>
+        <column xsi:type="text" name="reference_note" comment="Reference Note"/>
+        <column xsi:type="text" name="connected_shipment_ids" comment="Connected Shipment IDs"/>
+        <column xsi:type="text" name="connected_invoices_ids" comment="Connected Invoices IDs"/>
+    </table>
+    <table name="sales_order_item" resource="sales" engine="innodb" comment="Sales Flat Order Item">
+        <column xsi:type="text" name="warehouse" comment="Warehouse"/>
+        <column xsi:type="json" name="patches" comment="Patches"/>
+    </table>
+</schema>
