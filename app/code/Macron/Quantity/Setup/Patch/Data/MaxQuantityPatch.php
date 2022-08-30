@@ -1,5 +1,12 @@
 <?PHP
 
+/**
+ * @category    Macron
+ * @package     Macron_Quantity
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ */
+
 declare(strict_types=1);
 
 namespace Macron\Quantity\Setup\Patch\Data;
@@ -10,14 +17,13 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class MaxQuantityPatch implements DataPatchInterface
 {
-
     /**
-     * @var \Magento\Framework\App\Config\Storage\WriterInterface
+     * @var WriterInterface
      */
     protected WriterInterface $configWriter;
 
     /**
-     * @param \Magento\Framework\App\Config\Storage\WriterInterface $configWriter
+     * @param WriterInterface $configWriter
      */
     public function __construct(WriterInterface $configWriter)
     {
@@ -29,13 +35,15 @@ class MaxQuantityPatch implements DataPatchInterface
      */
     public function apply(): void
     {
-        $this->configWriter->save("cataloginventory/item_options/max_sale_qty",
-            999999, $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
-            $scopeId = 0);
+        $this->configWriter->save(
+            "cataloginventory/item_options/max_sale_qty",
+            999999
+        );
 
-        $this->configWriter->save("cataloginventory/item_options/min_sale_qty",
-            0, $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
-            $scopeId = 0);
+        $this->configWriter->save(
+            "cataloginventory/item_options/min_sale_qty",
+            0
+        );
     }
 
     /**
@@ -53,5 +61,4 @@ class MaxQuantityPatch implements DataPatchInterface
     {
         return [];
     }
-
 }
