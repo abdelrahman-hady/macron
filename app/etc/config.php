@@ -440,7 +440,7 @@ return [
         'Macron_Sales' => 1,
         'Sync4mage_Common' => 1,
         'Macron_Shipment' => 1,
-        'Magento_WishlistGraphQl' => 1,
+        'Macron_Quantity' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'ReadyMage_Logger' => 1,
