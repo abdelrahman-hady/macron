@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { Suspense } from 'react';
 
 import ClientDetails from 'Component/ClientDetails';
@@ -31,12 +30,6 @@ export {
 
 /** @namespace Scandipwa/Route/Checkout/Component */
 export class CheckoutComponent extends SourceCheckout {
-    static propTypes = {
-        ...super.propTypes,
-        note: PropTypes.string.isRequired,
-        internalNote: PropTypes.string.isRequired
-    };
-
     renderOrderNotes() {
         return (
              <ClientDetails
