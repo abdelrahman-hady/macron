@@ -1,6 +1,7 @@
 .ClientDetails {
     margin: 10px;
-    width: 360px;
+    width: 300px;
+    word-wrap: break-word;
 
     &-Note {
         input {
@@ -9,6 +10,23 @@
 
         button {
             margin: 10px 0px;
+        }
+    }
+
+    &-EditNote {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &-NoteContainer {
+        p {
+            margin-block-end: 0px;
+        }
+
+        button {
+            cursor: pointer;
+            text-decoration: underline;
+            margin-block-end: 10px;
         }
     }
 }

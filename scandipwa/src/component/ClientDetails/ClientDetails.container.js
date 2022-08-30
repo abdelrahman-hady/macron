@@ -36,13 +36,20 @@ export class ClientDetailsContainer extends PureComponent {
         note: '',
         internalNote: '',
         savedNote: '',
-        savedInternalNote: ''
+        savedInternalNote: '',
+        isReadMore: true
     };
 
     containerFunctions = {
         onFieldChange: this.onFieldChange.bind(this),
-        onNoteSave: this.onNoteSave.bind(this)
+        onNoteSave: this.onNoteSave.bind(this),
+        toggleIsReadMore: this.toggleIsReadMore.bind(this)
     };
+
+    toggleIsReadMore() {
+        const { isReadMore } = this.state;
+        this.setState((prevState) => ({ ...prevState, isReadMore: !isReadMore }));
+    }
 
     onFieldChange(e) {
         const { name, value } = e.target;
@@ -63,12 +70,13 @@ export class ClientDetailsContainer extends PureComponent {
 
     containerProps = () => {
         const { showAddNotePopup } = this.props;
-        const { savedNote, savedInternalNote } = this.state;
+        const { savedNote, savedInternalNote, isReadMore } = this.state;
 
         return {
             showAddNotePopup,
             savedNote,
-            savedInternalNote
+            savedInternalNote,
+            isReadMore
         };
     };
 
