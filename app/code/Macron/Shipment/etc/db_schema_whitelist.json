@@ -1,5 +1,5 @@
 {
-    "shipment": {
+    "erp_shipment": {
         "column": {
             "user_sap_id": true,
             "shipment_number": true,
