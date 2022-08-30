@@ -1,4 +1,11 @@
 <?xml version="1.0"?>
+<!--
+@category Macron
+@author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+@copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+-->
+
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="scandiweb_erp_invoice_request" resource="default" comment="To store Invoices data requests coming from ERP system">
         <column xsi:type="int" name="id" identity="true" comment="Invoice Auto Increment" />
