@@ -38,6 +38,14 @@ export {
 /** @namespace Scandipwa/Route/Checkout/Component */
 export class CheckoutComponent extends SourceCheckout {
     renderOrderNotes() {
+        const {
+            checkoutStep
+        } = this.props;
+        const { areTotalsVisible } = this.stepMap[checkoutStep];
+        if (!areTotalsVisible) {
+            return null;
+        }
+
         return (
              <ClientDetails
                isCheckoutPage
