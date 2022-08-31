@@ -1,0 +1,15 @@
+.Menu {
+    &-Item {
+        &List {
+            @include desktop {
+                display: flex;
+                align-items: center;
+                padding: 5px;
+            }
+        }
+    }
+
+    &-NewOrder {
+        margin-inline-start: 20px;
+    }
+}
