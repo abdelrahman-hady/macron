@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Popup from 'Component/Popup';
@@ -10,22 +10,27 @@ import './OrderTypePopup.style';
 /** @namespace Scandipwa/Component/OrderTypePopup/Component */
 export class OrderTypePopupComponent extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        handleClick: PropTypes.func.isRequired
     };
 
     renderContent() {
+        const { handleClick } = this.props;
         return (
             <div block="Buttons">
                 <h3>{ __('Choose the order type') }</h3>
                 <button
                   block="Button"
                   mods={ { isHollow: true } }
+                  // eslint-disable-next-line react/jsx-no-bind
+                  onClick={ () => handleClick('customer') }
                 >
                     { __('Customer order') }
                 </button>
                 <button
                   block="Button"
                   mods={ { isHollow: true } }
+                  // eslint-disable-next-line react/jsx-no-bind
+                  onClick={ () => handleClick('replenishment') }
                 >
                     { __('Replenishment order') }
                 </button>
