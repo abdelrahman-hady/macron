@@ -27,3 +27,7 @@ type CustomerDownloadableProduct {
     internal_note: String
     reference_note: String
 }
+
+type Mutation {
+    clearCart(guestCartId: String): Query @resolver(class:"\\Macron\\QuoteGraphQl\\Model\\Resolver\\ClearCart")
+}
