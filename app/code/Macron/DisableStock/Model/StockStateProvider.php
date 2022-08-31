@@ -2,14 +2,14 @@
 
 /**
  * @category    Macron
- * @package     Macron_Quantity
+ * @package     Macron_DisableStock
  * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  */
 
 declare(strict_types=1);
 
-namespace Macron\Quantity\Model;
+namespace Macron\DisableStock\Model;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Model\StockStateProvider as Source;

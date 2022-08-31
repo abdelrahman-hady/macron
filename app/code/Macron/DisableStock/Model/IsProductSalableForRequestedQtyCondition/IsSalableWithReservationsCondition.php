@@ -2,23 +2,19 @@
 
 /**
  * @category    Macron
- * @package     Macron_Quantity
+ * @package     Macron_DisableStock
  * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  */
 
 declare(strict_types=1);
 
-namespace Macron\Quantity\Model\IsProductSalableForRequestedQtyCondition;
+namespace Macron\DisableStock\Model\IsProductSalableForRequestedQtyCondition;
 
-use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\IsSalableWithReservationsCondition as Source;
 
 /**
@@ -31,15 +27,6 @@ class IsSalableWithReservationsCondition extends Source
      */
     private GetStockItemDataInterface $getStockItemData;
 
-    /**
-     * @var GetReservationsQuantityInterface
-     */
-    private $getReservationsQuantity;
-
-    /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
 
     /**
      * @var ProductSalabilityErrorInterfaceFactory
@@ -53,21 +40,15 @@ class IsSalableWithReservationsCondition extends Source
 
     /**
      * @param GetStockItemDataInterface $getStockItemData
-     * @param GetReservationsQuantityInterface $getReservationsQuantity
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
-        GetReservationsQuantityInterface $getReservationsQuantity,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
         ProductSalableResultInterfaceFactory $productSalableResultFactory
     ) {
         $this->getStockItemData = $getStockItemData;
-        $this->getReservationsQuantity = $getReservationsQuantity;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->productSalableResultFactory = $productSalableResultFactory;
     }

@@ -9,13 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Macron\Quantity\Setup\Patch\Data;
+namespace Macron\Migration\Setup\Patch\Data;
 
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 
-class MaxQuantityPatch implements DataPatchInterface
+class UpdateMaxQtyConfig implements DataPatchInterface
 {
     /**
      * @var WriterInterface
@@ -36,12 +35,12 @@ class MaxQuantityPatch implements DataPatchInterface
     public function apply(): void
     {
         $this->configWriter->save(
-            "cataloginventory/item_options/max_sale_qty",
+            'cataloginventory/item_options/max_sale_qty',
             999999
         );
 
         $this->configWriter->save(
-            "cataloginventory/item_options/min_sale_qty",
+            'cataloginventory/item_options/min_sale_qty',
             0
         );
     }

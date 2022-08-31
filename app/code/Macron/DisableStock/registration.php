@@ -2,7 +2,7 @@
 
 /**
  * @category    Macron
- * @package     Macron_Quantity
+ * @package     Macron_DisableStock
  * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  */
@@ -13,6 +13,6 @@ use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
-    'Macron_Quantity',
+    'Macron_DisableStock',
     __DIR__
 );
