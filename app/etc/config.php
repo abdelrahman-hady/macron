@@ -444,7 +444,6 @@ return [
         'ScandiPWA_Route717' => 1,
         'Macron_Sales' => 1,
         'ScandiPWA_SalesGraphQl' => 1,
-        'Macron_Shipment' => 1,
         'Sync4mage_Common' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
