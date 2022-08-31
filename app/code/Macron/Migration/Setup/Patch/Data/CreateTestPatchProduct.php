@@ -1,6 +1,15 @@
 <?php
 
-namespace Scandiweb\ProductPatches\Setup\Patch\Data;
+/**
+ * @category    Macron
+ * @author      Deniss Dubinins <denissd@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ */
+
+declare(strict_types=1);
+
+namespace Macron\Migration\Setup\Patch\Data;
 
 use Magento\Catalog\Api\CategoryLinkManagementInterface;
 use Magento\Catalog\Api\Data\ProductInterfaceFactory;
@@ -17,59 +26,19 @@ use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * Create Migration product class
- */
-class AddProductPatch implements DataPatchInterface
+class CreateTestPatchProduct implements DataPatchInterface
 {
-    /**
-     * @var ProductInterfaceFactory
-     */
     protected ProductInterfaceFactory $productInterfaceFactory;
-
-    /**
-     * @var ProductRepositoryInterface
-     */
     protected ProductRepositoryInterface $productRepository;
-
-    /**
-     * @var State
-     */
     protected State $appState;
-
-    /**
-     * @var StoreManagerInterface
-     */
     protected StoreManagerInterface $storeManager;
-
-    /**
-     * @var SourceItemInterfaceFactory
-     */
     protected SourceItemInterfaceFactory $sourceItemFactory;
-
-    /**
-     * @var SourceItemsSaveInterface
-     */
     protected SourceItemsSaveInterface $sourceItemsSaveInterface;
-
-    /**
-     * @var EavSetup
-     */
     protected EavSetup $eavSetup;
-
-    /**
-     * @var CategoryLinkManagementInterface
-     */
     protected CategoryLinkManagementInterface $categoryLink;
-
-    /**
-     * @var array
-     */
     protected array $sourceItems = [];
 
     /**
-     * Migration patch constructor.
-     *
      * @param ProductInterfaceFactory $productInterfaceFactory
      * @param ProductRepositoryInterface $productRepository
      * @param State $appState
@@ -140,8 +109,8 @@ class AddProductPatch implements DataPatchInterface
         $this->sourceItemsSaveInterface->execute($this->sourceItems);
 
         $product->setData('is_patch', true);
+        
         $this->productRepository->save($product);
-
     }
 
     /**
@@ -150,7 +119,7 @@ class AddProductPatch implements DataPatchInterface
     public static function getDependencies(): array
     {
         return [
-            \Scandiweb\ProductPatches\Setup\Patch\Data\InstallIsPatch::class
+            CreateIsPatchAttribute::class
         ];
     }
 
