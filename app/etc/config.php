@@ -478,6 +478,7 @@ return [
         'ScandiPWA_SampleData' => 1,
         'Scandiweb_ProductPatches' => 0,
         'ScandiPWA_SliderGraphQl' => 1,
+        'Sync4mage_Catalog' => 1,
         'Temando_ShippingRemover' => 1
     ],
     'scopes' => [
