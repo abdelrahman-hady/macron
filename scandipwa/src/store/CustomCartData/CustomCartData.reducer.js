@@ -5,16 +5,16 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-import { UPDATE_NOTES } from './OrderNotes.action';
+import { UPDATE_NOTES } from './CustomCartData.action';
 
-/** @namespace Scandipwa/Store/OrderNotes/Reducer/getInitialState */
+/** @namespace Scandipwa/Store/CustomCartData/Reducer/getInitialState */
 export const getInitialState = () => ({
     note: '',
     internalNote: ''
 });
 
-/** @namespace Scandipwa/Store/OrderNotes/Reducer/OrderNotesReducer */
-export const OrderNotesReducer = (state = getInitialState(), action) => {
+/** @namespace Scandipwa/Store/CustomCartData/Reducer/CustomCartDataReducer */
+export const CustomCartDataReducer = (state = getInitialState(), action) => {
     switch (action.type) {
     case UPDATE_NOTES:
         const { payload: { note, internalNote } } = action;
@@ -30,4 +30,4 @@ export const OrderNotesReducer = (state = getInitialState(), action) => {
     }
 };
 
-export default OrderNotesReducer;
+export default CustomCartDataReducer;
