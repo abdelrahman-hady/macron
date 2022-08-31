@@ -472,6 +472,7 @@ return [
         'ScandiPWA_UrlrewriteGraphQl' => 1,
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
+        'Scandiweb_ProductPatches' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
         'Sync4mage_Catalog' => 1,
         'Sync4mage_CatalogCommerce' => 1,
