@@ -1,28 +1,25 @@
 <?php
-declare (strict_types = 1);
+/**
+ * @category    Macron
+ * @author      Deniss Dubinins <denissd@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ */
 
-namespace Scandiweb\ProductPatches\Setup\Patch\Data;
+declare (strict_types=1);
+
+namespace Macron\Migration\Setup\Patch\Data;
 
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-/**
-* @codeCoverageIgnore
-*/
-class InstallIsPatch implements DataPatchInterface
+class CreateIsPatchAttribute implements DataPatchInterface
 {
-    /**
-     * Eav setup factory
-     * @var EavSetupFactory
-     */
     protected EavSetupFactory $eavSetupFactory;
 
     /**
-     * Init
      * @param EavSetupFactory $eavSetupFactory
      */
     public function __construct(EavSetupFactory $eavSetupFactory)
@@ -30,7 +27,9 @@ class InstallIsPatch implements DataPatchInterface
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
-    //...
+    /**
+     * @return void
+     */
     public function apply()
     {
         $eavSetup = $this->eavSetupFactory->create();
