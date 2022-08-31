@@ -1,3 +1,14 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @category  Macron
+ * @author    Mohammed komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+*/
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -17,7 +28,6 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch)
-    // TODO extend mapDispatchToProps
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container */
@@ -43,8 +53,6 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     componentDidUpdate(prevProps) {
         const { getOrderList } = this.props;
-        // eslint-disable-next-line no-unused-vars
-        const { sortOptions: { orderStatus } } = this.state;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);

@@ -1,3 +1,14 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @category  Macron
+ * @author    Mohammed komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+*/
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
 import {
@@ -9,9 +20,16 @@ import './MyAccountMyOrders.override.style';
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Component */
 export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     renderToolbar() {
-        const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
         return (
             <div className="MyAccountMyOrders-Toolbar">
+                { this.renderSortByStatus() }
+            </div>
+        );
+    }
+
+    renderSortByStatus() {
+        const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
+        return (
             <Field
               type="select"
               label={ __('Sort by status') }
@@ -25,7 +43,6 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                   }
               } }
             />
-            </div>
         );
     }
 
