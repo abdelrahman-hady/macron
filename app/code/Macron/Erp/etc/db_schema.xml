@@ -2,14 +2,14 @@
 <!--
 /**
  * @category    Macron
- * @package     Macron_Clients
  * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
 -->
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="macron_clients" resource="default" comment="Table to store my clients">
+    <table name="erp_client" resource="default" comment="Table to store my clients">
         <column xsi:type="int" name="entity_id" identity="true" nullable="false" comment="Client Id"/>
         <column xsi:type="text" name="company_name" nullable="false" comment="Company name"/>
         <column xsi:type="text" name="address" nullable="false" comment="Address"/>
