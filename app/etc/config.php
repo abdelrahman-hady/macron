@@ -438,6 +438,7 @@ return [
         'Magento_WishlistGiftCardGraphQl' => 1,
         'Magento_GiftCardGraphQl' => 1,
         'Macron_DisableStock' => 1,
+        'Macron_Erp' => 1,
         'Macron_Migration' => 1,
         'Macron_QuoteGraphQl' => 1,
         'ScandiPWA_Route717' => 1,
