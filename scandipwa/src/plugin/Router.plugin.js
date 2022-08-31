@@ -15,18 +15,15 @@ import { Route } from 'react-router-dom';
 
 import { withStoreRegex } from 'Component/Router/Router.component';
 
-export const InvoicesPage = lazy(() => import(
-    /* webpackMode: "lazy", webpackChunkName: "invoices" */
-    '../route/InvoicesPage'
-));
-export const ROUTE_NAME = 'INVOICES';
+export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
+export const INVOICES = 'INVOICES';
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
     {
         component: <Route path={ withStoreRegex('/invoices') } render={ (props) => <InvoicesPage { ...props } /> } />,
         position: 25,
-        name: ROUTE_NAME
+        name: INVOICES
     }
 ];
 
