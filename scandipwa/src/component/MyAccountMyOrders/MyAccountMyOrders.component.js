@@ -37,9 +37,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
               options={ statusOptions }
               value={ orderStatus }
               events={ {
-                  onChange: async (val) => {
-                      await updateOptions({ orderStatus: val });
-                      this.renderTable();
+                  onChange: (val) => {
+                      updateOptions({ orderStatus: val });
                   }
               } }
             />
