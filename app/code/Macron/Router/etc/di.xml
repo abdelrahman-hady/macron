@@ -12,8 +12,8 @@
     <type name="ScandiPWA\Router\ValidationManager">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="my-clients" xsi:type="string">ScandiPWA\Router\Validator\AlwaysPass</item>
                 <item name="invoices" xsi:type="string">ScandiPWA\Router\Validator\AlwaysPass</item>
+                <item name="my-clients" xsi:type="string">ScandiPWA\Router\Validator\AlwaysPass</item>
             </argument>
         </arguments>
     </type>
