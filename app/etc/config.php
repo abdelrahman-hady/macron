@@ -437,6 +437,7 @@ return [
         'Magento_WishlistGiftCard' => 0,
         'Magento_WishlistGiftCardGraphQl' => 0,
         'Magento_GiftCardGraphQl' => 0,
+        'Macron_DisableStock' => 1,
         'Macron_Erp' => 1,
         'Macron_Migration' => 0,
         'Sync4mage_Common' => 0,
