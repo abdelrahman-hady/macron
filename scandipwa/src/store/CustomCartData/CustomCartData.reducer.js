@@ -27,7 +27,6 @@ export const CustomCartDataReducer = (state = getInitialState(), action) => {
         };
     case UPDATE_ORDER_TYPE:
         const { orderType } = action;
-        console.log(orderType);
 
         return {
             ...state,
