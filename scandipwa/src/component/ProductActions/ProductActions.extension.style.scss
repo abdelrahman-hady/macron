@@ -1,8 +1,13 @@
 .ProductActions {
     &-PatchDrop {
-        background-color: white;//$default-primary-base-color;
         line-height: 24px;
-        padding: 7px;
+        padding: 0 7px 0 7px;
+        margin-block-end: 24px;
+        margin-block-start: 28px;
+
+        .headingHolder:hover {
+            cursor: pointer;
+        }
 
         .headingHolder {
             display: flex;
@@ -21,21 +26,120 @@
                 }
             }
 
-            .iconHolder {
-                width: 14px;
-                height: 14px;
-                display: inline-flex;
-                align-content: center;
-                justify-items: center;
+            .opened {
+                -ms-transform: rotate(180deg); /* IE 9 */
+                transform: rotate(180deg);
             }
-
-            .flipped {
-                transform: rotateX(90deg);
-            }
-        }
-
-        .bottomBorder {
-            border-bottom: 1px solid #E0E0E0;
         }
     }
+
+    &-PatchTable {
+        margin-block-start: 22px;
+        font-size: 12px;
+
+        table {
+            width: 100%;
+        }
+
+        input,select {
+            height: 36px;
+            min-width: 15px;
+            font-size: 12px;
+        }
+
+        .long {
+            width: 130px;
+            padding: 6px 16px 6px 16px;
+            margin-inline-start: 8px;
+        }
+
+        .short {
+            width: 50px;
+            padding: 6px;
+            text-align: center;
+        }
+
+        .discount {
+            width: 50px;
+            padding: 6px;
+            text-align: center;
+            margin-inline-start: 8px;
+            margin-inline-end: 8px;
+        }
+
+        th,td {
+            width: 120px;
+            min-width: 15px;
+            padding: 8px;
+        }
+
+        .p-0 {
+            padding: 0;
+        }
+
+        .span-4 {
+            width: 240px;
+        }
+
+        .span-1 {
+            width: 15px;
+        }
+
+        .quantityHolder {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            align-content: center;
+
+            .buttonHolder {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                justify-content: center;
+                align-content: center;
+
+                button {
+                    height: 16px;
+                    width: 24px;
+                    font-size: 14px;
+                    line-height: 12px;
+                    background-color: #F6F5F5;
+                    border: 1px solid #C4C4C4;
+                    text-align: center;
+                }
+
+                button:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.iconHolder {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-content: center;
+    justify-items: center;
+}
+
+.iconHolder:hover {
+    cursor: pointer;
+}
+
+.headingHolder {
+    border-bottom: 1px solid transparent;
+}
+
+.bottomBorder {
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.someHeight {
+    height: 16px;
+}
+
+.tac {
+    text-align: center;
 }

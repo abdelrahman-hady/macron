@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 
 import {
-    mapDispatchToProps,
-    mapStateToProps,
-    ProductActionsContainer as SourceProductActionsContainer
-} from 'SourceComponent/ProductActions/ProductActions.container';
+    mapDispatchToProps
+} from 'SourceComponent/Product/Product.container';
+import { mapStateToProps, ProductActionsContainer as SourceProductActionsContainer }
+from 'SourceComponent/ProductActions/ProductActions.container';
 
 export {
     mapStateToProps,
@@ -13,12 +13,12 @@ export {
 
 /** @namespace Scandipwa/Component/ProductActions/Container */
 export class ProductActionsContainer extends SourceProductActionsContainer {
-    /*
     __construct(props) {
         super.__construct(props, 'ProductActionsContainer');
 
         this.state = {
-            isAddPatchDropOpen: true
+            ...this.state,
+            isAddPatchDropOpen: false
         };
     }
 
@@ -38,7 +38,10 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         this.setState({ isAddPatchDropOpen: !isAddPatchDropOpen });
     }
 
-    */
+    containerFunctions = {
+        ...this.containerFunctions,
+        toggleDropDown: this.toggleDropDown.bind(this)
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductActionsContainer);
