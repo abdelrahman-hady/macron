@@ -439,7 +439,7 @@ return [
         'Magento_GiftCardGraphQl' => 0,
         'Macron_DisableStock' => 1,
         'Macron_Erp' => 1,
-        'Macron_Migration' => 0,
+        'Macron_Migration' => 1,
         'Macron_QuoteGraphQl' => 1,
         'ScandiPWA_Route717' => 1,
         'Macron_Sales' => 1,
