@@ -17,7 +17,6 @@ import {
     mapStateToProps as sourceMapStateToProps,
     MyAccountMyOrdersContainer as SourceMyAccountMyOrdersContainer
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.container';
-import { scrollToTop } from 'Util/Browser';
 
 import MyAccountMyOrders from './MyAccountMyOrders.component';
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
@@ -49,19 +48,6 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { getOrderList } = this.props;
         getOrderList(this._getPageFromUrl());
         this.setState({ statusOptions: this._getStatusOptions() });
-    }
-
-    componentDidUpdate(prevProps) {
-        const { getOrderList } = this.props;
-        const { location: prevLocation } = prevProps;
-
-        const prevPage = this._getPageFromUrl(prevLocation);
-        const currentPage = this._getPageFromUrl();
-
-        if (currentPage !== prevPage) {
-            getOrderList(this._getPageFromUrl());
-            scrollToTop();
-        }
     }
 
     _getStatusOptions() {

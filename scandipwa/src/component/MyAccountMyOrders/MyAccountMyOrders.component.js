@@ -62,7 +62,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         if (orderStatus === 0) {
             // no filters selected -> render all orders
             return orders.reduceRight(
-                (acc, e) => [...acc, e.status === orderStatus ? this.renderOrderRow(e) : null],
+                (acc, order) => [...acc, this.renderOrderRow(order)],
                 []
             );
         }
