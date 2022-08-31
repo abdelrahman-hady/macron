@@ -19,6 +19,6 @@ class ClientsCollection extends AbstractDb
      */
     protected function _construct(): void
     {
-        $this->_init("erp_client", "entity_id");
+        $this->_init('erp_client', 'entity_id');
     }
 }
