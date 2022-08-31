@@ -15,7 +15,6 @@ import MyAccountReducer from 'Store/MyAccount/MyAccount.reducer';
 import NavigationReducer from 'Store/Navigation/Navigation.reducer';
 import NoMatchReducer from 'Store/NoMatch/NoMatch.reducer';
 import OfflineReducer from 'Store/Offline/Offline.reducer';
-import OrderTypeReducer from 'Store/OrderType/OrderType.reducer';
 import OverlayReducer from 'Store/Overlay/Overlay.reducer';
 import PopupReducer from 'Store/Popup/Popup.reducer';
 import ProductCompareReducer from 'Store/ProductCompare/ProductCompare.reducer';
@@ -44,8 +43,7 @@ export const getStaticReducers = () => ({
     ContactFormReducer,
     ProductCompareReducer,
     StoreInPickUpReducer,
-    CustomCartDataReducer,
-    OrderTypeReducer
+    CustomCartDataReducer
 });
 
 export default function injectStaticReducers(store) {

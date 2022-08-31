@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { updateOrderType } from 'Store/OrderType/OrderType.action';
+import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActivePopup } from 'Store/Overlay/Overlay.action';
 
 import OrderTypePopup from './OrderTypePopup.component';

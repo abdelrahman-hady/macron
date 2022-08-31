@@ -13,7 +13,7 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps
 } from 'SourceComponent/CheckoutBilling/CheckoutBilling.container';
-import { updateOrderType } from 'Store/OrderType/OrderType.action';
+import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
 import transformToNameValuePair from 'Util/Form/Transform';
 
 export {
