@@ -1,0 +1,29 @@
+input AddressInput {
+    internal_note: String
+    reference_note: String
+}
+
+input CartAddressInput {
+    internal_note: String
+    reference_note: String
+}
+
+type Store {
+    internal_note: String
+    reference_note: String
+}
+
+type OrderCustomerAddress {
+    internal_note: String
+    reference_note: String
+}
+
+type CustomerOrder {
+    internal_note: String
+    reference_note: String
+}
+
+type CustomerDownloadableProduct {
+    internal_note: String
+    reference_note: String
+}

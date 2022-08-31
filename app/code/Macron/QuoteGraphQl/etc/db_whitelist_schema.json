@@ -1,0 +1,8 @@
+{
+  "quote_address": {
+    "column": {
+      "internal_note": true,
+      "reference_note": true
+    }
+  }
+}
