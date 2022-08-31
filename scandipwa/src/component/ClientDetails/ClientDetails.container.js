@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { updateNotes } from 'Store/OrderNotes/OrderNotes.action';
+import { updateNotes } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActivePopup } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 
@@ -18,8 +18,8 @@ import { ADD_NOTE_POPUP } from './ClientDetails.config';
 
 /** @namespace Scandipwa/Component/ClientDetails/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
-    note: state.OrderNotesReducer.note,
-    internalNote: state.OrderNotesReducer.internalNote
+    note: state.CustomCartDataReducer.note,
+    internalNote: state.CustomCartDataReducer.internalNote
 });
 
 /** @namespace Scandipwa/Component/ClientDetails/Container/mapDispatchToProps */
