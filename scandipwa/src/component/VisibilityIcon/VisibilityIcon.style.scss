@@ -1,0 +1,19 @@
+.VisibilityIcon {
+    &-Wrapper {
+        inset-block-start: 12px;
+        inset-inline-end: 18px;
+        position: absolute;
+        margin-block-start: 0px;
+        margin-block-end: 0px;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &-Icon {
+        width: 22px;
+    }
+}
+
+
