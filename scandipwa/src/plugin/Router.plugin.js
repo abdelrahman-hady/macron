@@ -40,7 +40,7 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         component: <Route path={ withStoreRegex('/shipments') } render={ (props) => <Shipments { ...props } /> } />,
         position: 26,
         name: SHIPMENTS
-    },
+    }
 ];
 
 export default {
