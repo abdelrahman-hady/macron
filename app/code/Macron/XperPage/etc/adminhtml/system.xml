@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<!--
+@category  Macron
+@author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+@copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="macron" translate="label" sortOrder="10">
+            <label>Macron</label>
+        </tab>
+
+        <section id="xperpage" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="10" translate="label">
+            <class>class-separator</class>
+            <label>My Account</label>
+            <tab>macron</tab>
+            <resource>Macron_XperPage::xperpage_config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>X per page on List View allowed values</label>
+                <field id="text" type="text" translate="label" sortOrder="2" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Value</label>
+                    <comment>Comma-separation.</comment>
+                    <validate>required-entry no-whitespace</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
