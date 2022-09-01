@@ -14,18 +14,6 @@
             align-items: center;
             justify-content: space-between;
 
-            span {
-                font-weight: 400;
-                font-size: 12px;
-
-                h4 {
-                    margin-inline-start: 10px;
-                    display: inline;
-                    font-weight: 700;
-                    font-size: 14px;
-                }
-            }
-
             .opened {
                 -ms-transform: rotate(180deg); /* IE 9 */
                 transform: rotate(180deg);
@@ -35,7 +23,6 @@
 
     &-PatchTable {
         margin-block-start: 22px;
-        font-size: 12px;
 
         table {
             width: 100%;
@@ -48,29 +35,47 @@
         }
 
         .long {
-            width: 130px;
+            width: 160px;
             padding: 6px 16px 6px 16px;
             margin-inline-start: 8px;
         }
 
         .short {
-            width: 50px;
-            padding: 6px;
-            text-align: center;
+            width: 55px;
+            padding: 8px;
         }
 
-        .discount {
-            width: 50px;
-            padding: 6px;
-            text-align: center;
+        .m-sides {
             margin-inline-start: 8px;
             margin-inline-end: 8px;
+        }
+
+        thead {
+            background: #fff
         }
 
         th,td {
             width: 120px;
             min-width: 15px;
             padding: 8px;
+
+            form {
+                width: min-content;
+
+                div {
+                    position: relative;
+
+                    span {
+                        width: 14px;
+                        height: 14px;
+                        position: absolute;
+                        inset-inline-end: 12px;
+                        inset-block-start: 6px;
+                        z-index: 10;
+                        pointer-events: none;
+                    }
+                }
+            }
         }
 
         .p-0 {
@@ -101,7 +106,6 @@
                 button {
                     height: 16px;
                     width: 24px;
-                    font-size: 14px;
                     line-height: 12px;
                     background-color: #F6F5F5;
                     border: 1px solid #C4C4C4;
@@ -116,15 +120,34 @@
     }
 }
 
+.addPatchBtn {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+h4 {
+    margin-inline-start: 10px;
+    display: inline;
+}
+
 .iconHolder {
-    width: 14px;
-    height: 14px;
     display: inline-flex;
     align-content: center;
     justify-items: center;
 }
 
-.iconHolder:hover {
+.ic-lg {
+    width: 24px;
+    height: 24px;
+}
+
+.ic-sm {
+    width: 14px;
+    height: 14px;
+}
+
+.iconHolder:hover,.addPatchBtn:hover {
     cursor: pointer;
 }
 
@@ -138,8 +161,4 @@
 
 .someHeight {
     height: 16px;
-}
-
-.tac {
-    text-align: center;
 }
