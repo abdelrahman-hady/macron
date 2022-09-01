@@ -1,0 +1,26 @@
+{
+    "erp_client": {
+        "column": {
+            "entity_id": true,
+            "company_name": true,
+            "address": true,
+            "vat_number": true,
+            "contract_expiracy_date": true,
+            "affiliation": true,
+            "sport": true,
+            "category": true,
+            "primary_color": true,
+            "secondary_color": true,
+            "current_brand": true,
+            "coni_id": true,
+            "membership_no": true,
+            "distance": true,
+            "contact_person": true,
+            "mobile": true,
+            "email": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
