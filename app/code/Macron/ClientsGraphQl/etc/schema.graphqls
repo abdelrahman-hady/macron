@@ -2,10 +2,17 @@ type Query {
     clients: [ClientType]
     @resolver(class: "\\Macron\\ClientsGraphQl\\Model\\Resolver\\Clients")
     @doc(description: "Get list of clients")
+
+    client (
+        client_id: Int!
+    ): ClientType
+    @resolver(class: "\\Macron\\ClientsGraphQl\\Model\\Resolver\\Client")
+    @doc(description: "Get client by id")
+
 }
 
 type ClientType {
-    entity_id: ID
+    entity_id: Int
     company_name: String
     address: String
     vat_number: Int
