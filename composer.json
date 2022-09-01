@@ -22,13 +22,17 @@
     },
     "version": "2.4.4",
     "require": {
+        "macron/module-sync4magecatalogwrapper": "1.0.1",
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "~2.0",
         "magento/product-enterprise-edition": "2.4.4",
         "readymage/logger": "^1.0",
         "readymage/maintenance": "^1.0",
         "scandipwa/sample-data": "^1.2",
-        "scandipwa/theme": "^0.0.1"
+        "scandipwa/theme": "^0.0.1",
+        "sync4mage/module-catalog": "100.1.5.9",
+        "sync4mage/module-catalogcommerce": "100.1.0",
+        "sync4mage/module-configurableproduct": "100.1.0.2"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -85,6 +89,10 @@
         "0": {
             "type": "composer",
             "url": "https://repo.magento.com/"
+        },
+        "macron": {
+            "type": "composer",
+            "url": "https://packages.dev.macron.com/"
         },
         "scandipwa": {
             "type": "path",
