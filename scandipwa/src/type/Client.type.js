@@ -8,7 +8,7 @@
 import PropTypes from 'prop-types';
 
 export const ClientType = PropTypes.shape({
-    entity_id: PropTypes.string,
+    entity_id: PropTypes.number,
     address: PropTypes.string,
     affiliation: PropTypes.string,
     category: PropTypes.number,

@@ -31,10 +31,12 @@ export class MyClientsTableComponent extends PureComponent {
         );
     }
 
-    renderActionButtons() {
+    renderActionButtons(clientId) {
+        const profileUrl = `/my-clients/${clientId}`;
+
         return (
             <div>
-                <Link to="/">{ __('View profile') }</Link>
+                <Link to={ profileUrl }>{ __('View profile') }</Link>
                 <span> | </span>
                 <Link to="/">{ __('Quote history') }</Link>
             </div>
@@ -48,7 +50,7 @@ export class MyClientsTableComponent extends PureComponent {
             <tr key={ entity_id }>
                 <td>{ company_name }</td>
                 <td>{ address }</td>
-                <td>{ this.renderActionButtons() }</td>
+                <td>{ this.renderActionButtons(entity_id) }</td>
             </tr>
         );
     }
