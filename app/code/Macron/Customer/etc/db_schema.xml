@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+@category  Macron
+@author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+@copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+
+Extending customer_entity table
+-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="customer_entity" resource="default" engine="innodb" comment="Customer Entity">
+        <column xsi:type="text" name="business_partner_id" comment="Business partner ID"/>
+        <column xsi:type="text" name="parent_business_partner_id" comment="Parent Business parner ID"/>
+        <column xsi:type="text" name="phone_number" comment="Phone number"/>
+        <column xsi:type="text" name="type" comment="Type"/>
+        <column xsi:type="text" name="status" comment="Status"/>
+        <column xsi:type="int" name="pdf_catalog_id" comment="PDFCatalog ID"/>
+        <column xsi:type="text" name="business_line" comment="BusinessLine"/>
+        <column xsi:type="text" name="b2b_profile_id" comment="B2B profile ID"/>
+        <column xsi:type="text" name="currency" comment="Currency"/>
+        <column xsi:type="text" name="customer_discounts" comment="Customer Discounts"/>
+        <column xsi:type="text" name="retail_price_list" comment="Retail Price List"/>
+        <column xsi:type="text" name="wholsale_price_list" comment="Wholsale Price List"/>
+        <column xsi:type="date" name="created_date" comment="Created date"/>
+        <column xsi:type="date" name="updated_date" comment="Updated date"/>
+    </table>
+
+    <table name="customer_discounts" resource="default" engine="innodb" comment="Customer Discounts">
+        <column xsi:type="text" name="business_line" comment="Business Line"/>
+        <column xsi:type="float" name="discount_amount" comment="DiscountAmount"/>
+    </table>
+
+    <table name="sales_business_pools_item" resource="default" engine="innodb" comment="Sales Business Pools Item">
+        <column xsi:type="text" name="id" comment="ID"/>
+        <column xsi:type="text" name="name" comment="Name"/>
+        <column xsi:type="text" name="customer_business_partner_id" comment="Customer Business partner ID"/>
+        <column xsi:type="float" name="discount" comment="Discount"/>
+        <column xsi:type="text" name="type" comment="Type"/>
+    </table>
+
+    <table name="default_billing_addess" resource="default" engine="innodb" comment="Default Billing Addess">
+        <column xsi:type="text" name="first_name" comment="First Name"/>
+        <column xsi:type="text" name="last_name" comment="Last Name"/>
+        <column xsi:type="text" name="street" comment="Street"/>
+        <column xsi:type="text" name="postal_code" comment="Postal code"/>
+        <column xsi:type="text" name="phone_number" comment="Phone Number"/>
+        <column xsi:type="text" name="country" comment="Country"/>
+        <column xsi:type="text" name="state_province" comment="State/Province"/>
+        <column xsi:type="text" name="city" comment="City"/>
+        <column xsi:type="text" name="address_id" comment="Address ID (Business partner ID)"/>
+    </table>
+
+    <table name="shipping_address" resource="default" engine="innodb" comment="Shipping Address">
+        <column xsi:type="boolean" name="default_shipping_address" comment="Default shipping address"/>
+        <column xsi:type="text" name="first_name" comment="First Name"/>
+        <column xsi:type="text" name="last_name" comment="Last Name"/>
+        <column xsi:type="text" name="street" comment="Street"/>
+        <column xsi:type="text" name="postal_code" comment="Postal code"/>
+        <column xsi:type="text" name="phone_number" comment="Phone Number"/>
+        <column xsi:type="text" name="country" comment="Country"/>
+        <column xsi:type="text" name="state_province" comment="State/Province"/>
+        <column xsi:type="text" name="city" comment="City"/>
+        <column xsi:type="text" name="address_id" comment="Address ID (Business partner ID)"/>
+    </table>
+</schema>

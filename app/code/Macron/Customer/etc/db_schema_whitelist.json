@@ -1,0 +1,62 @@
+{
+    "customer_entity": {
+        "column": {
+            "business_partner_id": true,
+            "parent_business_partner_id": true,
+            "phone_number": true,
+            "type": true,
+            "status": true,
+            "pdf_catalog_id": true,
+            "business_line": true,
+            "b2b_profile_id": true,
+            "currency": true,
+            "customer_discounts": true,
+            "retail_price_list": true,
+            "wholsale_price_list": true,
+            "created_date": true,
+            "updated_date": true
+        }
+    },
+    "customer_discounts": {
+        "column": {
+            "business_line": true,
+            "discount_amount": true
+        }
+    },
+    "sales_business_pools_item": {
+        "column": {
+            "id": true,
+            "name": true,
+            "customer_business_partner_id": true,
+            "discount": true,
+            "type": true
+        }
+    },
+    "default_billing_addess": {
+        "column": {
+            "first_name": true,
+            "last_name": true,
+            "street": true,
+            "postal_code": true,
+            "phone_number": true,
+            "country": true,
+            "state_province": true,
+            "city": true,
+            "address_id": true
+        }
+    },
+    "shipping_address": {
+        "column": {
+            "default_shipping_address": true,
+            "first_name": true,
+            "last_name": true,
+            "street": true,
+            "postal_code": true,
+            "phone_number": true,
+            "country": true,
+            "state_province": true,
+            "city": true,
+            "address_id": true
+        }
+    }
+}
