@@ -37,5 +37,21 @@
             "connected_order_id": true,
             "connected_invoice_id": true
         }
+    },
+    "erp_invoice": {
+        "column": {
+            "id": true,
+            "user_sap_id": true,
+            "invoice_number": true,
+            "date": true,
+            "grand_total": true,
+            "status": true,
+            "download_link": true,
+            "connected_order_ids": true,
+            "connected_shipment_ids": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
     }
 }
