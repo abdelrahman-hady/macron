@@ -22,5 +22,35 @@
         "constraint": {
             "PRIMARY": true
         }
+    },
+    "catalog_product_entity_tier_price": {
+        "column": {
+            "wholesale_value": true
+        }
+    },
+    "catalog_product_index_price": {
+        "column": {
+            "wholesale_tier_price": true
+        }
+    },
+    "catalog_product_index_price_replica": {
+        "column": {
+            "wholesale_tier_price": true
+        }
+    },
+    "erp_price": {
+        "column": {
+            "id": true,
+            "sku": true,
+            "price": true,
+            "date_from": true,
+            "date_to": true,
+            "pricelist_id": true,
+            "currency": true,
+            "type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
     }
 }

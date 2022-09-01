@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @category    Macron
- * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
- * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
- * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @category Macron
+ * @author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 -->
+
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="erp_client" resource="default" comment="Table to store my clients">
@@ -29,6 +30,36 @@
         <column xsi:type="text" name="email" nullable="false" comment="Email"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
+        </constraint>
+    </table>
+
+    <table name="catalog_product_entity_tier_price" resource="default" engine="innodb"
+           comment="Catalog Product Tier Price Attribute Backend Table">
+        <column xsi:type="decimal" precision="20" scale="6" name="wholesale_value" nullable="false" default="0.000000"
+                comment="Wholesale value"/>
+    </table>
+
+    <table name="catalog_product_index_price" resource="default" engine="innodb"
+           comment="Catalog Product Price Index Table">
+        <column xsi:type="decimal" precision="20" scale="6" name="wholesale_tier_price" comment="Wholesale tier price"/>
+    </table>
+
+    <table name="catalog_product_index_price_replica" resource="default" engine="innodb"
+           comment="Catalog Product Price Index Table">
+        <column xsi:type="decimal" precision="20" scale="6" name="wholesale_tier_price" comment="Wholesale tier price"/>
+    </table>
+
+    <table name="erp_price" resource="default" engine="innodb" comment="ERP Price Table">
+        <column xsi:type="int" name="id" identity="true" nullable="false" comment="ID"/>
+        <column xsi:type="text" name="sku" comment="sku"/>
+        <column xsi:type="float" name="price" comment="Price"/>
+        <column xsi:type="date" name="date_from" comment="Date from"/>
+        <column xsi:type="date" name="date_to" comment="Date to"/>
+        <column xsi:type="text" name="pricelist_id" comment="Customer group ID"/>
+        <column xsi:type="text" name="currency" comment="Currency"/>
+        <column xsi:type="int" name="type" comment="Type"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
         </constraint>
     </table>
 </schema>
