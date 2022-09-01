@@ -1,0 +1,29 @@
+.OrderTypePopup {
+    .Popup {
+        &-Content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            padding-block-end: 30px;
+
+            h3 {
+                margin-block-start: 30px;
+                width: 90%;
+                text-align: center;
+            }
+
+            button {
+                margin: 20px;
+            }
+
+            .Buttons {
+                padding: 50px;
+            }
+        }
+
+        &-Header {
+            width: 100%;
+        }
+    }
+}
