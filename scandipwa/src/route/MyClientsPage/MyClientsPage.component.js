@@ -10,6 +10,7 @@ import { PureComponent } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
+import MyClientsTable from 'Component/MyClientsTable';
 
 /** @namespace Scandipwa/Route/MyClientsPage/Component */
 export class MyClientsPageComponent extends PureComponent {
@@ -33,6 +34,7 @@ export class MyClientsPageComponent extends PureComponent {
         return (
             <ContentWrapper label="My Clients Page">
                 { this.renderHeading() }
+                <MyClientsTable />
             </ContentWrapper>
         );
     }
