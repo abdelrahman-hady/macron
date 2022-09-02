@@ -138,11 +138,6 @@ const SWITCH_ITEMS_TYPE = () => [
         name: CREATE_ACCOUNT
     },
     {
-        component: <Route path={ withStoreRegex('/customer/account/login/') } render={ (props) => (!isSignedIn() ? history.replace(appendWithStoreCode('/')) : <LoginAccountPage { ...props } />) } />,
-        position: 62,
-        name: LOGIN
-    },
-    {
         component: <Route path={ withStoreRegex('/customer/account/forgotpassword/') } render={ (props) => (!isSignedIn() ? history.replace(appendWithStoreCode('/')) : <ForgotPasswordPage { ...props } />) } />,
         position: 63,
         name: ACCOUNT_FORGOT_PASSWORD
