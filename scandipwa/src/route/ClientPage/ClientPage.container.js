@@ -10,6 +10,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import ClientsQuery from 'Query/Client.query';
+import { MY_CLIENTS_URL } from 'Route/MyClientsPage/MyClientsPage.config';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { MatchType } from 'Type/Router.type';
@@ -68,18 +69,21 @@ export class ClientPageContainer extends PureComponent {
         };
     }
 
-    updateBreadcrumbs() {
+    updateBreadcrumbs(companyName) {
         const { updateBreadcrumbs } = this.props;
         const breadcrumbs = [
             {
-                url: '/my-clients/customer_id/:customerId',
-                name: __('Customer Name')
-            },
-            {
-                url: '/my-clients',
+                url: MY_CLIENTS_URL,
                 name: __('My clients')
             }
         ];
+
+        if (companyName) {
+            breadcrumbs.unshift({
+                url: `${MY_CLIENTS_URL}/:clientId`,
+                name: companyName
+            });
+        }
 
         updateBreadcrumbs(breadcrumbs);
     }
@@ -93,7 +97,10 @@ export class ClientPageContainer extends PureComponent {
         try {
             const { client } = await fetchQuery(ClientsQuery.getClientQuery(clientId));
 
-            this.updateMeta(client.company_name);
+            const { company_name: companyName } = client;
+
+            this.updateMeta(companyName);
+            this.updateBreadcrumbs(companyName);
 
             this.setState({ client, isLoading: false });
         } catch (e) {

@@ -8,15 +8,16 @@
 
 declare(strict_types=1);
 
-namespace Macron\ClientsGraphQl\Model\Resolver;
+namespace Macron\ErpGraphQl\Model\Resolver;
 
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Macron\ClientsGraphQl\Model\ClientsModel;
+use Macron\ErpGraphQl\Model\ClientsModel;
+use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 
-class Clients implements ResolverInterface
+class Client implements ResolverInterface
 {
     /**
      * @var ClientsModel
@@ -38,6 +39,7 @@ class Clients implements ResolverInterface
      * @param array|null $value
      * @param array|null $args
      * @return array|Value|mixed|null
+     * @throws GraphQlInputException
      */
     public function resolve(
         Field $field,
@@ -46,6 +48,26 @@ class Clients implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        return $this->clientsModelFactory->getCollection()->getData();
+        $clientId = $this->getClientId($args);
+        $clients = $this->clientsModelFactory->getCollection()->addFieldToFilter('entity_id', $clientId)->getData();
+
+        if (count($clients) === 0) {
+            throw new GraphQlInputException(__("Client doesn't exists"));
+        }
+
+        return $clients[0];
+    }
+
+    /**
+     * @param array $args
+     * @return int
+     * @throws GraphQlInputException
+     */
+    private function getClientId(array $args): int
+    {
+        if (!isset($args['client_id'])) {
+            throw new GraphQlInputException(__('Client id should be specified'));
+        }
+        return (int)$args['client_id'];
     }
 }

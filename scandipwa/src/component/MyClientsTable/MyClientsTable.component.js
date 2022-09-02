@@ -10,7 +10,9 @@ import { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
+import { MY_CLIENTS_URL } from 'Route/MyClientsPage/MyClientsPage.config';
 import { ClientType } from 'Type/Client.type';
+import { appendWithStoreCode } from 'Util/Url';
 
 import './MyClientsTable.style';
 
@@ -32,11 +34,11 @@ export class MyClientsTableComponent extends PureComponent {
     }
 
     renderActionButtons(clientId) {
-        const profileUrl = `/my-clients/${clientId}`;
+        const profileUrl = `${MY_CLIENTS_URL}/${clientId}`;
 
         return (
             <div>
-                <Link to={ profileUrl }>{ __('View profile') }</Link>
+                <Link to={ appendWithStoreCode(profileUrl) }>{ __('View profile') }</Link>
                 <span> | </span>
                 <Link to="/">{ __('Quote history') }</Link>
             </div>

@@ -14,6 +14,7 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 
 import MyClientsPage from './MyClientsPage.component';
+import { MY_CLIENTS_URL } from './MyClientsPage.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -68,7 +69,7 @@ export class MyClientsPageContainer extends PureComponent {
         const { updateBreadcrumbs } = this.props;
         const breadcrumbs = [
             {
-                url: '/my-clients',
+                url: MY_CLIENTS_URL,
                 name: __('My clients')
             }
         ];
