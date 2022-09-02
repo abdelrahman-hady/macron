@@ -10,7 +10,8 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
-import { hideActivePopup } from 'Store/Overlay/Overlay.action';
+import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
+import history from 'Util/History';
 
 import OrderTypePopup from './OrderTypePopup.component';
 
@@ -21,14 +22,19 @@ export const mapStateToProps = (_state) => ({
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateOrderType: (notes) => dispatch(updateOrderType(notes)),
-    hideActivePopup: () => dispatch(hideActivePopup())
+    hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container */
 export class OrderTypePopupContainer extends PureComponent {
     static propTypes = {
         updateOrderType: PropTypes.func.isRequired,
-        hideActivePopup: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        addProductToCart: PropTypes.func
+    };
+
+    static defaultProps = {
+        addProductToCart: null
     };
 
     containerFunctions = {
@@ -36,9 +42,14 @@ export class OrderTypePopupContainer extends PureComponent {
     };
 
     handleClick(orderType) {
-        const { updateOrderType, hideActivePopup } = this.props;
+        const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
         updateOrderType(orderType);
-        hideActivePopup();
+        hideActiveOverlay();
+        history.goBack();
+
+        if (addProductToCart) {
+            addProductToCart();
+        }
     }
 
     render() {
