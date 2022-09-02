@@ -408,7 +408,7 @@ return [
         'Magento_GoogleTagManager' => 1,
         'Magento_ThemeGraphQl' => 1,
         'Magento_Translation' => 1,
-        'Magento_TwoFactorAuth' => 1,
+        'Magento_TwoFactorAuth' => 0,
         'Magento_ElasticsearchCatalogPermissions' => 1,
         'Magento_Ups' => 1,
         'Magento_CatalogUrlRewriteStaging' => 1,
@@ -445,6 +445,7 @@ return [
         'ScandiPWA_Route717' => 1,
         'Macron_Sales' => 1,
         'ScandiPWA_SalesGraphQl' => 1,
+        'Sync4mage_Common' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'ReadyMage_Logger' => 1,
@@ -477,6 +478,10 @@ return [
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
+        'Sync4mage_Catalog' => 1,
+        'Sync4mage_CatalogCommerce' => 1,
+        'Macron_Sync4mageCatalogWrapper' => 1,
+        'Sync4mage_ConfigurableProduct' => 1,
         'Temando_ShippingRemover' => 1
     ],
     'scopes' => [
