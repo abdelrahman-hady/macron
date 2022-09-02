@@ -5,12 +5,13 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CUSTOMER_ACCOUNT_OVERLAY_KEY } from 'SourceComponent/MyAccountOverlay/MyAccountOverlay.config';
 import {
     CartPageContainer as SourceCartPageContainer,
-    mapDispatchToProps,
+    mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps
 } from 'SourceRoute/CartPage/CartPage.container';
 import { CHECKOUT_URL } from 'SourceRoute/Checkout/Checkout.config';
@@ -21,12 +22,40 @@ import { appendWithStoreCode } from 'SourceUtil/Url';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
 
 export {
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 };
+
+export const CartDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/Cart/Cart.dispatcher'
+);
+
+/** @namespace Scandipwa/Route/CartPage/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
+    clearCart: () => CartDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.clearCart(dispatch)
+    )
+});
 
 /** @namespace Scandipwa/Route/CartPage/Container */
 export class CartPageContainer extends SourceCartPageContainer {
+    static propTypes = {
+        ...super.propTypes,
+        clearCart: PropTypes.func.isRequired
+    };
+
+    containerProps() {
+        const {
+            clearCart
+        } = this.props;
+
+        return {
+            clearCart,
+            ...super.containerProps()
+        };
+    }
+
     isProductsQuantitySelected() {
         const { totals: { items = [] } = {} } = this.props;
         return items.some((item) => item.qty === DEFAULT_MAX_PRODUCTS);

@@ -12,6 +12,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\GuestCartItemRepositoryInterface;
 use Magento\Quote\Api\GuestCartRepositoryInterface;
 use Magento\Quote\Model\Webapi\ParamOverriderCartId;
+use Exception;
 
 class ClearCart implements ResolverInterface
 {
@@ -41,7 +42,7 @@ class ClearCart implements ResolverInterface
     protected ParamOverriderCartId $overriderCartId;
 
     /**
-     * RemoveCartItem constructor.
+     * ClearCart constructor.
      * @param CartItemRepositoryInterface $cartItemRepository
      * @param GuestCartItemRepositoryInterface $guestCartItemRepository
      * @param ParamOverriderCartId $overriderCartId
@@ -70,6 +71,7 @@ class ClearCart implements ResolverInterface
      * @param array|null $args =
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
+     * @throws Exception
      */
     public function resolve(
         Field $field,
@@ -78,25 +80,30 @@ class ClearCart implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        if (isset($args['guestCartId'])) {
-            $guestCartId = $args['guestCartId'];
-            $cart = $this->guestCartRepository->get($guestCartId);
-            if ($cart->getItemsCount()) {
-                $cartItems = $cart->getItems();
-                foreach ($cartItems as $item) {
-                    $this->guestCartItemRepository->deleteById($guestCartId, $item->getItemId());
+        try {
+            if (isset($args['guestCartId'])) {
+                $guestCartId = $args['guestCartId'];
+                $cart = $this->guestCartRepository->get($guestCartId);
+                if ($cart->getItemsCount()) {
+                    $cartItems = $cart->getItems();
+                    foreach ($cartItems as $item) {
+                        $this->guestCartItemRepository->deleteById($guestCartId, $item->getItemId());
+                    }
                 }
-            }
-        } else {
-            $cartId = $this->overriderCartId->getOverriddenValue();
-            $cart = $this->cartRepository->get($cartId);
-            if ($cart->getItemsCount()) {
-                $cartItems = $cart->getItems();
-                foreach ($cartItems as $item) {
-                    $this->cartItemRepository->deleteById($cartId, $item->getItemId());
+            } else {
+                $cartId = $this->overriderCartId->getOverriddenValue();
+                $cart = $this->cartRepository->get($cartId);
+                if ($cart->getItemsCount()) {
+                    $cartItems = $cart->getItems();
+                    foreach ($cartItems as $item) {
+                        $this->cartItemRepository->deleteById($cartId, $item->getItemId());
+                    }
                 }
-            }
 
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
+
     }
 }

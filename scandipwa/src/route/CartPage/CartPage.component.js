@@ -5,6 +5,8 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import PropTypes from 'prop-types';
+
 import ClientDetails from 'Component/ClientDetails';
 import {
     CartPage as SourceCartPage
@@ -12,6 +14,11 @@ import {
 
 /** @namespace Scandipwa/Route/CartPage/Component */
 export class CartPageComponent extends SourceCartPage {
+    static propTypes = {
+        ...super.propTypes,
+        clearCart: PropTypes.func.isRequired
+    };
+
     renderClientDetails() {
         const { totals: { items } } = this.props;
         return (
@@ -20,11 +27,11 @@ export class CartPageComponent extends SourceCartPage {
     }
 
     renderDeleteOrder() {
-        const { totals: { items } } = this.props;
+        const { totals: { items }, clearCart } = this.props;
         return (
             items.length && (
                 <div block="CartPage" elem="DeleteOrder">
-                    <button block="Button">
+                    <button block="Button" onClick={ clearCart }>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
