@@ -63,11 +63,10 @@ export class CartPageContainer extends SourceCartPageContainer {
 
     containerProps() {
         const {
-            clearCart, showDeleteOrderPopup
+            showDeleteOrderPopup
         } = this.props;
 
         return {
-            clearCart,
             showDeleteOrderPopup,
             ...super.containerProps()
         };
