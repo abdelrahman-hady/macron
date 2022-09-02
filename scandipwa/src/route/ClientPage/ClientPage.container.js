@@ -13,8 +13,9 @@ import ClientsQuery from 'Query/Client.query';
 import { MY_CLIENTS_URL } from 'Route/MyClientsPage/MyClientsPage.config';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { showNotification } from 'Store/Notification/Notification.action';
-import { MatchType } from 'Type/Router.type';
-import { fetchQuery, getErrorMessage } from 'Util/Request';
+import { HistoryType, MatchType } from 'Type/Router.type';
+import { fetchMutation, fetchQuery, getErrorMessage } from 'Util/Request';
+import { appendWithStoreCode } from 'Util/Url';
 
 import ClientPage from './ClientPage.component';
 
@@ -44,7 +45,8 @@ export class ClientPageContainer extends PureComponent {
         updateMeta: PropTypes.func.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         showErrorNotification: PropTypes.func.isRequired,
-        match: MatchType.isRequired
+        match: MatchType.isRequired,
+        history: HistoryType.isRequired
     };
 
     state = {
@@ -53,6 +55,7 @@ export class ClientPageContainer extends PureComponent {
     };
 
     containerFunctions = {
+        onClickDelete: this.onClickDelete.bind(this)
     };
 
     componentDidMount() {
@@ -89,8 +92,7 @@ export class ClientPageContainer extends PureComponent {
     }
 
     async requestClient() {
-        const { showErrorNotification } = this.props;
-        const { match: { params: { clientId } } } = this.props;
+        const { showErrorNotification, match: { params: { clientId } } } = this.props;
 
         this.setState({ isLoading: true });
 
@@ -112,6 +114,19 @@ export class ClientPageContainer extends PureComponent {
     updateMeta(title) {
         const { updateMeta } = this.props;
         updateMeta({ title });
+    }
+
+    async onClickDelete() {
+        const { showErrorNotification, history } = this.props;
+        const { client: { entity_id: clientId } } = this.state;
+
+        try {
+            await fetchMutation(ClientsQuery.getDeleteClientMutation(clientId));
+
+            history.replace(appendWithStoreCode(MY_CLIENTS_URL));
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+        }
     }
 
     render() {

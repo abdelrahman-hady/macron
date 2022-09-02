@@ -20,6 +20,12 @@ export class ClientQuery {
             .addFieldList(this._getClientFields());
     }
 
+    getDeleteClientMutation(clientId) {
+        return new Field('deleteClient')
+            .addArgument('client_id', 'Int!', clientId)
+            .addFieldList(this._getClientFields());
+    }
+
     _getClientFields() {
         return [
             'entity_id',
