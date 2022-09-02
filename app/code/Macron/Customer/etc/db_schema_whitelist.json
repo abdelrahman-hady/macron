@@ -1,0 +1,40 @@
+{
+    "customer_entity": {
+        "column": {
+            "business_partner_id": true,
+            "parent_business_partner_id": true,
+            "phone_number": true,
+            "type": true,
+            "status": true,
+            "pdf_catalog_id": true,
+            "business_line": true,
+            "b2b_profile_id": true,
+            "customer_discounts": true,
+            "retail_price_list": true,
+            "wholesale_price_list": true
+        }
+    },
+    "customer_entity_discounts": {
+        "column": {
+            "business_line": true,
+            "discount_amount": true
+        }
+    },
+    "sales_business_pool": {
+        "column": {
+            "id": true,
+            "name": true,
+            "business_partner_id": true,
+            "discount": true,
+            "type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "customer_address_entity": {
+        "column": {
+            "business_partner_id": true
+        }
+    }
+}
