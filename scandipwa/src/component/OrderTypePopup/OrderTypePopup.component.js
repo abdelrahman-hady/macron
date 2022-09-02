@@ -10,7 +10,7 @@ import { PureComponent } from 'react';
 
 import Popup from 'Component/Popup';
 
-import { ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT } from './OrderTypePopup.config';
+import { ORDER_TYPE_POPUP } from './OrderTypePopup.config';
 
 import './OrderTypePopup.style';
 
@@ -29,7 +29,7 @@ export class OrderTypePopupComponent extends PureComponent {
                   block="Button"
                   mods={ { isHollow: true } }
                   // eslint-disable-next-line react/jsx-no-bind
-                  onClick={ () => handleClick(TYPE_CUSTOMER) }
+                  onClick={ () => handleClick('customer') }
                 >
                     { __('Customer order') }
                 </button>
@@ -37,7 +37,7 @@ export class OrderTypePopupComponent extends PureComponent {
                   block="Button"
                   mods={ { isHollow: true } }
                   // eslint-disable-next-line react/jsx-no-bind
-                  onClick={ () => handleClick(TYPE_REPLENISHMENT) }
+                  onClick={ () => handleClick('replenishment') }
                 >
                     { __('Replenishment order') }
                 </button>
