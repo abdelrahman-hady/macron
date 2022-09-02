@@ -1,0 +1,27 @@
+{
+  "sales_order": {
+    "column": {
+      "user_sap_id": true,
+      "sap_order_id": true,
+      "user_customer_sap_id": true,
+      "user_customer_name": true,
+      "sales_business_pool_id": true,
+      "sales_business_pool_name": true,
+      "sales_business_pool_type": true,
+      "shipping_fees": true,
+      "date": true,
+      "payment_information": true,
+      "internal_note": true,
+      "reference_note": true,
+      "connected_shipment_ids": true,
+      "connected_invoices_ids": true
+    }
+  },
+  "sales_order_item": {
+    "column": {
+      "discounted_price": true,
+      "warehouse": true,
+      "patches": true
+    }
+  }
+}
