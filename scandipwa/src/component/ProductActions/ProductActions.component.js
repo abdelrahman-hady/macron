@@ -5,13 +5,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
+import AddIcon from '@scandipwa/scandipwa/src/component/AddIcon';
+import ChevronIcon from '@scandipwa/scandipwa/src/component/ChevronIcon';
+import CloseIcon from '@scandipwa/scandipwa/src/component/CloseIcon';
+
 import PRODUCT_TYPE from 'Component/Product/Product.config';
 import { ProductActions as SourceProductActions } from 'SourceComponent/ProductActions/ProductActions.component';
 import { isCrawler, isSSR } from 'Util/Browser';
-
-import vectorArrow from '../../images/vectorarrowbottom.svg';
-import vectorBin from '../../images/vectorbin.svg';
-import vectorPlus from '../../images/vectorplus.svg';
 
 import './ProductActions.extension.style.scss';
 /** @namespace Scandipwa/Component/ProductActions/Component */
@@ -27,22 +27,19 @@ export class ProductActionsComponent extends SourceProductActions {
               block="ProductActions"
               elem="PatchDrop"
             >
-                    <div
-                      className={ isAddPatchDropOpen ? 'headingHolder' : 'headingHolder bottomBorder' }
-                      onClick={ toggleDropDown }
-                    >
-                        <span>
-                            ⌗
-                            <h4>Add Patch</h4>
-                        </span>
-                        <div className={ isAddPatchDropOpen ? 'iconHolder ic-sm opened' : 'iconHolder ic-sm' }>
-                            <img
-                              src={ vectorArrow }
-                              alt=""
-                            />
-                        </div>
+                <div
+                  className={ isAddPatchDropOpen ? 'patchHeadingHolder' : 'patchHeadingHolder bottomBorder' }
+                  onClick={ toggleDropDown }
+                >
+                    <span>
+                        ⌗
+                        <h4 className="patchHeading">{ __('Add Patch') }</h4>
+                    </span>
+                    <div className="patchIconHolder icon-small-patch">
+                        <ChevronIcon direction={ isAddPatchDropOpen ? 'top' : 'bottom' } />
                     </div>
-                    { isAddPatchDropOpen && this.renderPatchTable() }
+                </div>
+                { isAddPatchDropOpen && this.renderPatchTable() }
             </div>
         );
     }
@@ -58,88 +55,85 @@ export class ProductActionsComponent extends SourceProductActions {
         } = this.props;
 
         return patchList.map((patch) => (
-                <tr key={ patch.id }>
-                    <td className="span-4 p-0">
-                        <form>
-                            <div>
-                                <span>
-                                    <img src={ vectorArrow } alt="" />
-                                </span>
-                                <select
-                                  name="patchCode"
-                                  className="long"
-                                  value={ patch.sku }
-                                  onChange={ (e) => patchSelectionChange(e, patch.id) }
-                                >
-                                    <option value={ patch.id }>
-                                        Select a patch code
-                                    </option>
-                                    { patchData.map((data) => (
-                                        data.sku === '-'
-                                            ? ''
-                                            : (
+            <tr key={ patch.id }>
+                <td className="span-4 p-0">
+                    <form>
+                        <div>
+                            <span className="marginTopIcon">
+                                <ChevronIcon direction="bottom" />
+                            </span>
+                            <select
+                              name="patchCode"
+                              className="long"
+                              value={ patch.sku }
+                              onChange={ (e) => patchSelectionChange(e, patch.id) }
+                            >
+                                <option value={ patch.id }>
+                                { __('Select a patch code') }
+                                </option>
+                                { patchData.map((data) => (
+                                    data.sku === '-'
+                                        ? ''
+                                        : (
                                             <option key={ data.sku }>
                                             { data.sku }
                                             </option>
-                                            )
-                                    )) }
-                                </select>
-                            </div>
-                        </form>
-                    </td>
-                    <td>{ patch.name }</td>
-                    <td>{ patch.price }</td>
-                    <td className="p-0">
-                        <div className="quantityHolder">
+                                        )
+                                )) }
+                            </select>
+                        </div>
+                    </form>
+                </td>
+                <td>{ patch.name }</td>
+                <td>{ patch.sku !== '-' ? patch.price : '-' }</td>
+                <td className="p-0">
+                <div className="quantityHolder">
+                    <input
+                      className="short"
+                      name="quantity"
+                      type="text"
+                      value={ patch.quantity > 0 ? patch.quantity : '' }
+                      disabled={ patch.sku === '-' }
+                      onChange={ (e) => patchInputOnChange(e, patch.id) }
+                    />
+                    <div className="buttonHolder">
+                        <button
+                          onClick={ () => updatePatchQuantityButton(1, patch.id) }
+                          disabled={ patch.sku === '-' }
+                        >
+                            +
+                        </button>
+                        <button
+                          onClick={ () => updatePatchQuantityButton(-1, patch.id) }
+                          disabled={ patch.sku === '-' || patch.quantity < 2 }
+                        >
+                                -
+                        </button>
+                    </div>
+                </div>
+                </td>
+                <td className="p-0">
+                    <form>
+                        <div>
+                            <span className="marginTopText">%</span>
                             <input
-                              className="short"
-                              name="quantity"
+                              className="short m-sides"
+                              name="discount"
                               type="text"
-                              value={ patch.quantity > 0 ? patch.quantity : '' }
+                              value={ patch.discount > 0 ? patch.discount : '' }
                               disabled={ patch.sku === '-' }
                               onChange={ (e) => patchInputOnChange(e, patch.id) }
                             />
-                            <div className="buttonHolder">
-                                <button
-                                  onClick={ () => updatePatchQuantityButton(1, patch.id) }
-                                  disabled={ patch.sku === '-' }
-                                >
-                                +
-                                </button>
-                                <button
-                                  onClick={ () => updatePatchQuantityButton(-1, patch.id) }
-                                  disabled={ patch.sku === '-' || patch.quantity === 1 }
-                                >
-                                -
-                                </button>
-                            </div>
                         </div>
-                    </td>
-                    <td className="p-0">
-                        <form>
-                            <div>
-                                <span>%</span>
-                                <input
-                                  className="short m-sides"
-                                  name="discount"
-                                  type="text"
-                                  value={ patch.discount > 0 ? patch.discount : '' }
-                                  disabled={ patch.sku === '-' }
-                                  onChange={ (e) => patchInputOnChange(e, patch.id) }
-                                />
-                            </div>
-                        </form>
-                    </td>
-                    <td>{ patch.line }</td>
-                    <td className="span-1">
-                        <div className="iconHolder ic-sm" onClick={ () => deletePatchRow(patch.id) }>
-                            <img
-                              src={ vectorBin }
-                              alt=""
-                            />
-                        </div>
-                    </td>
-                </tr>
+                    </form>
+                </td>
+                <td>{ patch.sku !== '-' ? patch.line : '-' }</td>
+                <td className="span-1">
+                    <div className="patchIconHolder icon-small-patch" onClick={ () => deletePatchRow(patch.id) }>
+                        <CloseIcon />
+                    </div>
+                </td>
+            </tr>
         ));
     }
 
@@ -154,27 +148,23 @@ export class ProductActionsComponent extends SourceProductActions {
               block="ProductActions"
               elem="PatchTable"
             >
-                    <tr>
-                        <th className="span-4">Patch Code</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Discount</th>
-                        <th>Line total:</th>
-                        <th className="span-1">{ }</th>
-                    </tr>
-
-                    { this.renderPatchRows() }
+                <tr>
+                    <th className="span-4">{ __('Patch Code') }</th>
+                    <th>{ __('Name') }</th>
+                    <th>{ __('Price') }</th>
+                    <th>{ __('Quantity') }</th>
+                    <th>{ __('Discount') }</th>
+                    <th>{ __('Line total:') }</th>
+                    <th className="span-1">{ }</th>
+                </tr>
+                { this.renderPatchRows() }
             </table>
             <br />
             <div className="addPatchBtn" onClick={ addAnotherPatch }>
-                <div className="iconHolder ic-lg">
-                    <img
-                      src={ vectorPlus }
-                      alt=""
-                    />
+                <div className="patchIconHolder icon-large-patch">
+                    <AddIcon />
                 </div>
-                <h4>Add Another Patch</h4>
+                <h4 className="patchHeading">{ __('Add Another Patch') }</h4>
             </div>
             </>
         );
@@ -218,7 +208,7 @@ export class ProductActionsComponent extends SourceProductActions {
             return '';
         }
 
-        return <div className="someHeight bottomBorder" />;
+        return <div className="someHeightPatch bottomBorder" />;
     }
 
     renderDesktop() {

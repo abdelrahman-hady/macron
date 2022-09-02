@@ -5,19 +5,14 @@
         margin-block-end: 24px;
         margin-block-start: 28px;
 
-        .headingHolder:hover {
+        .patchHeadingHolder:hover {
             cursor: pointer;
         }
 
-        .headingHolder {
+        .patchHeadingHolder {
             display: flex;
             align-items: center;
             justify-content: space-between;
-
-            .opened {
-                -ms-transform: rotate(180deg); /* IE 9 */
-                transform: rotate(180deg);
-            }
         }
     }
 
@@ -28,7 +23,7 @@
             width: 100%;
         }
 
-        input,select {
+        input, select {
             height: 36px;
             min-width: 15px;
             font-size: 12px;
@@ -54,7 +49,7 @@
             background: #fff
         }
 
-        th,td {
+        th, td {
             width: 120px;
             min-width: 15px;
             padding: 8px;
@@ -70,9 +65,16 @@
                         height: 14px;
                         position: absolute;
                         inset-inline-end: 12px;
-                        inset-block-start: 6px;
                         z-index: 10;
                         pointer-events: none;
+                    }
+
+                    .marginTopIcon {
+                        inset-block-start: 10px;
+                    }
+
+                    .marginTopText {
+                        inset-block-start: 6px;
                     }
                 }
             }
@@ -126,32 +128,32 @@
     width: fit-content;
 }
 
-h4 {
+.patchHeading {
     margin-inline-start: 10px;
     display: inline;
 }
 
-.iconHolder {
+.patchIconHolder {
     display: inline-flex;
     align-content: center;
     justify-items: center;
 }
 
-.ic-lg {
+.icon-large-patch {
     width: 24px;
     height: 24px;
 }
 
-.ic-sm {
+.icon-small-patch {
     width: 14px;
     height: 14px;
 }
 
-.iconHolder:hover,.addPatchBtn:hover {
+.patchIconHolder:hover, .addPatchBtn:hover {
     cursor: pointer;
 }
 
-.headingHolder {
+.patchHeadingHolder {
     border-bottom: 1px solid transparent;
 }
 
@@ -159,6 +161,6 @@ h4 {
     border-bottom: 1px solid #E0E0E0;
 }
 
-.someHeight {
+.someHeightPatch {
     height: 16px;
 }
