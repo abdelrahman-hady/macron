@@ -32,7 +32,7 @@ export class ShipmentsComponent extends PureComponent {
             </h1>
         );
     }
-    
+
     render() {
         return (
             <main block="Shipments">
