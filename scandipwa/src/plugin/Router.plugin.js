@@ -18,8 +18,10 @@ import { LoginAccountPage, withStoreRegex } from 'Component/Router/Router.compon
 import {
     HOME, LOGIN
 } from 'Component/Router/Router.config';
-import UrlRewrites from 'Route/UrlRewrites';
+import { appendWithStoreCode } from 'SourceUtil/Url';
+// import UrlRewrites from 'Route/UrlRewrites';
 import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
 
 export const HomePage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "cms" */ 'Route/HomePage'));
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "MyClients" */ '../route/MyClientsPage'));
@@ -35,7 +37,7 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         name: HOME
     },
     {
-        component: <Route path={ withStoreRegex('/customer/account/login/') } render={ (props) => <UrlRewrites { ...props } /> } />,
+        component: <Route path={ withStoreRegex('/customer/account/login/') } render={ () => history.replace(appendWithStoreCode('/')) } />,
         position: 62,
         name: LOGIN
     },
