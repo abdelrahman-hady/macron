@@ -10,7 +10,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="Macron_StoreConfig">
         <sequence>
+<<<<<<< HEAD
             <module name="Macron_Core" />
+=======
+>>>>>>> MCRB-199
             <module name="ScandiPWA_StoreGraphQL" />
         </sequence>
     </module>
