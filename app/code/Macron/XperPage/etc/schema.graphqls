@@ -1,3 +1,0 @@
-type StoreConfig {
-    xperpage: String! @doc(description: "The X Per Page Configuration value")
-}
