@@ -19,7 +19,12 @@ import { ACCOUNT_URL } from 'SourceRoute/MyAccount/MyAccount.config';
 import { isSignedIn } from 'SourceUtil/Auth';
 import { scrollToTop } from 'SourceUtil/Browser';
 import { appendWithStoreCode } from 'SourceUtil/Url';
+import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
+import { hideActivePopup } from 'Store/Overlay/Overlay.action';
+import { showPopup } from 'Store/Popup/Popup.action';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
+
+import { CONFIRM_DELETE_ORDER_POPUP } from './CartPage.config';
 
 export {
     mapStateToProps
@@ -33,27 +38,49 @@ export const CartDispatcher = import(
 /** @namespace Scandipwa/Route/CartPage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
+    showDeleteOrderPopup: () => dispatch(showPopup(CONFIRM_DELETE_ORDER_POPUP)),
     clearCart: () => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.clearCart(dispatch)
-    )
+    ),
+    updateOrderType: (type) => dispatch(updateOrderType(type)),
+    hideActivePopup: () => dispatch(hideActivePopup())
 });
 
 /** @namespace Scandipwa/Route/CartPage/Container */
 export class CartPageContainer extends SourceCartPageContainer {
     static propTypes = {
         ...super.propTypes,
-        clearCart: PropTypes.func.isRequired
+        clearCart: PropTypes.func.isRequired,
+        showDeleteOrderPopup: PropTypes.func.isRequired,
+        updateOrderType: PropTypes.func.isRequired,
+        hideActivePopup: PropTypes.func.isRequired
+    };
+
+    containerFunctions = {
+        ...super.containerFunctions,
+        handleDeleteOrder: this.handleDeleteOrder.bind(this)
     };
 
     containerProps() {
         const {
-            clearCart
+            clearCart, showDeleteOrderPopup
         } = this.props;
 
         return {
             clearCart,
+            showDeleteOrderPopup,
             ...super.containerProps()
         };
+    }
+
+    async handleDeleteOrder() {
+        const { clearCart, updateOrderType, hideActivePopup } = this.props;
+        try {
+            hideActivePopup();
+            await clearCart();
+        } finally {
+            updateOrderType('');
+        }
     }
 
     isProductsQuantitySelected() {

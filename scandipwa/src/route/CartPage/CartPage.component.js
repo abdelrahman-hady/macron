@@ -8,15 +8,19 @@
 import PropTypes from 'prop-types';
 
 import ClientDetails from 'Component/ClientDetails';
+import Popup from 'Component/Popup';
 import {
     CartPage as SourceCartPage
 } from 'SourceRoute/CartPage/CartPage.component';
+
+import { CONFIRM_DELETE_ORDER_POPUP } from './CartPage.config';
 
 /** @namespace Scandipwa/Route/CartPage/Component */
 export class CartPageComponent extends SourceCartPage {
     static propTypes = {
         ...super.propTypes,
-        clearCart: PropTypes.func.isRequired
+        handleDeleteOrder: PropTypes.func.isRequired,
+        showDeleteOrderPopup: PropTypes.func.isRequired
     };
 
     renderClientDetails() {
@@ -26,12 +30,35 @@ export class CartPageComponent extends SourceCartPage {
         );
     }
 
+    renderPopupContent() {
+        const { handleDeleteOrder } = this.props;
+        return (
+            <div block="Buttons">
+                <h3><b>{ __('All the items added to the order will be lost') }</b></h3>
+                <h3>{ __('Are you sure you want to start a new order?') }</h3>
+                <button
+                  block="Button"
+                  mods={ { isHollow: true } }
+                >
+                    { __('Add to quote and continue') }
+                </button>
+                <button
+                  block="Button"
+                  mods={ { isHollow: true } }
+                  onClick={ handleDeleteOrder }
+                >
+                    { __('Yes, start a new order') }
+                </button>
+            </div>
+        );
+    }
+
     renderDeleteOrder() {
-        const { totals: { items }, clearCart } = this.props;
+        const { totals: { items }, showDeleteOrderPopup } = this.props;
         return (
             items.length && (
                 <div block="CartPage" elem="DeleteOrder">
-                    <button block="Button" onClick={ clearCart }>
+                    <button block="Button" onClick={ showDeleteOrderPopup }>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -47,6 +74,13 @@ export class CartPageComponent extends SourceCartPage {
                     </svg>
                         { __('delete order') }
                     </button>
+                    <Popup
+                      id={ CONFIRM_DELETE_ORDER_POPUP }
+                      clickOutside={ false }
+                      mix={ { block: 'OrderDeletePopup' } }
+                    >
+                        { this.renderPopupContent() }
+                    </Popup>
                 </div>
             )
         );
