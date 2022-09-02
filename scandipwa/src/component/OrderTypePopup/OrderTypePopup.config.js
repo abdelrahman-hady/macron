@@ -6,3 +6,5 @@
  */
 
 export const ORDER_TYPE_POPUP = 'orderTypePopup';
+export const TYPE_CUSTOMER = 'customer';
+export const TYPE_REPLENISHMENT = 'replenishment';
