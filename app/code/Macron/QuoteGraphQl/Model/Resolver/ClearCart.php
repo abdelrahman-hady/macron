@@ -1,4 +1,11 @@
 <?php
+/**
+ * @category    Macron
+ * @package     Macron_QuoteGraphQl
+ * @author      Marian Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Ltd (https://scandiweb.com)
+ */
+declare(strict_types=1);
 
 namespace Macron\QuoteGraphQl\Model\Resolver;
 
