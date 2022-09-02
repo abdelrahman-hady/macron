@@ -15,10 +15,10 @@ import {
     mapStateToProps as sourceMapStateToProps,
     MyAccountMyOrdersContainer as SourceMyAccountMyOrdersContainer
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.container';
-import { OrdersConfigType } from 'Type/Order.type';
 import { scrollToTop } from 'Util/Browser';
+import BrowserDatabase from 'Util/BrowserDatabase';
 
-import { ORDERS_PER_PAGE } from './MyAccountMyOrders.config';
+import { ORDERS_PER_PAGE, ORDERS_PER_PAGE_ITEM } from './MyAccountMyOrders.config';
 
 export const OrderDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -28,7 +28,7 @@ export const OrderDispatcher = import(
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-    ordersConfig: state.OrderReducer.ordersConfig
+    ordersPerPageList: state.ConfigReducer.xperpage
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
@@ -36,9 +36,6 @@ export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     getOrderList: (page, pageSize) => OrderDispatcher.then(
         ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize)
-    ),
-    requestOrdersConfig: () => OrderDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.requestOrdersConfig(dispatch)
     )
 });
 
@@ -46,12 +43,11 @@ export const mapDispatchToProps = (dispatch) => ({
 export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer {
     static propTypes = {
         ...super.propTypes,
-        requestOrdersConfig: PropTypes.func.isRequired,
-        ordersConfig: OrdersConfigType.isRequired
+        ordersPerPageList: PropTypes.string.isRequired
     };
 
     state = {
-        ordersPerPage: ORDERS_PER_PAGE
+        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE
     };
 
     containerFunctions = {
@@ -59,16 +55,17 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     containerProps() {
-        const { ordersConfig } = this.props;
+        const { ordersPerPageList } = this.props;
         const { ordersPerPage } = this.state;
 
-        return { ...super.containerProps(), ordersConfig, ordersPerPage };
+        return { ...super.containerProps(), ordersPerPageList, ordersPerPage };
     }
 
     componentDidMount() {
-        const { getOrderList, requestOrdersConfig } = this.props;
-        getOrderList(this._getPageFromUrl(), ORDERS_PER_PAGE);
-        requestOrdersConfig();
+        const { getOrderList } = this.props;
+        const { ordersPerPage } = this.state;
+
+        getOrderList(this._getPageFromUrl(), ordersPerPage);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -87,6 +84,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     onOrderPerPageChange(ordersPerPage) {
+        BrowserDatabase.setItem(ordersPerPage, ORDERS_PER_PAGE_ITEM);
+
         this.setState({ ordersPerPage });
     }
 

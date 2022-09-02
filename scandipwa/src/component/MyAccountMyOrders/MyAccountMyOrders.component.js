@@ -10,11 +10,9 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
-import Pagination from 'Component/Pagination';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
-import { OrdersConfigType } from 'Type/Order.type';
 
 import './MyAccountMyOrders.override.style.scss';
 
@@ -22,40 +20,22 @@ import './MyAccountMyOrders.override.style.scss';
 export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     static propTypes = {
         ...super.propTypes,
-        ordersConfig: OrdersConfigType.isRequired,
+        ordersPerPageList: PropTypes.string.isRequired,
         ordersPerPage: PropTypes.number.isRequired
     };
 
-    renderPagination() {
-        const {
-            isLoading,
-            orderList: {
-                pageInfo: {
-                    total_pages = 0
-                } = {}
-            }
-        } = this.props;
-
-        return (
-            <Pagination
-              isLoading={ isLoading }
-              totalPages={ total_pages }
-              mix={ { block: 'MyAccountMyOrders', elem: 'Pagination' } }
-            />
-        );
-    }
-
     renderOrdersPerPage() {
-        const { ordersConfig: { xperpage }, onOrderPerPageChange, ordersPerPage } = this.props;
+        const { ordersPerPageList, ordersPerPage, onOrderPerPageChange } = this.props;
 
-        const xperpageOptions = [];
+        const ordersPerPageOptions = [];
 
-        if (xperpage) {
-            xperpage.split(',').forEach((value) => {
-                xperpageOptions.push({ id: value, label: value, value });
+        if (ordersPerPageList) {
+            ordersPerPageList.split(',').forEach((value) => {
+                const perPage = +value;
+                ordersPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
             });
         } else {
-            xperpageOptions.push({ label: ordersPerPage, value: ordersPerPage });
+            ordersPerPageOptions.push({ label: ordersPerPage, value: ordersPerPage });
         }
 
         return (
@@ -71,7 +51,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                   events={ {
                       onChange: onOrderPerPageChange
                   } }
-                  options={ xperpageOptions }
+                  options={ ordersPerPageOptions }
                 />
                 <span>{ __('per page') }</span>
             </div>

@@ -6,3 +6,4 @@
  */
 
 export const ORDERS_PER_PAGE = 10;
+export const ORDERS_PER_PAGE_ITEM = 'orders_per_page';

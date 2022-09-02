@@ -14,8 +14,6 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import { getOrderList, setLoadingStatus } from 'Store/Order/Order.action';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
 
-import { getOrdersConfig } from './Order.action';
-
 /** @namespace Scandipwa/Store/Order/Dispatcher */
 export class OrderDispatcher extends SourceOrderDispatcher {
     requestOrders(dispatch, page = 1, pageSize = ORDERS_PER_PAGE) {
@@ -31,21 +29,6 @@ export class OrderDispatcher extends SourceOrderDispatcher {
             (error) => {
                 dispatch(showNotification('error', getErrorMessage(error)));
                 dispatch(setLoadingStatus(false));
-            }
-        );
-    }
-
-    requestOrdersConfig(dispatch) {
-        const query = OrderQuery.getOrdersConfigQuery();
-
-        return fetchQuery(query).then(
-            /** @namespace Scandipwa/Store/Order/Dispatcher/OrderDispatcher/requestOrdersConfig/fetchQuery/then */
-            ({ storeConfig: { xperpage } }) => {
-                dispatch(getOrdersConfig({ xperpage }, false));
-            },
-            /** @namespace Scandipwa/Store/Order/Dispatcher/OrderDispatcher/requestOrdersConfig/fetchQuery/then/catch */
-            (error) => {
-                dispatch(showNotification('error', getErrorMessage(error)));
             }
         );
     }
