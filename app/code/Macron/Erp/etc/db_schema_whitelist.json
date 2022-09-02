@@ -53,5 +53,33 @@
         "constraint": {
             "PRIMARY": true
         }
+    },
+    "erp_price_wholesale": {
+        "column": {
+            "id": true,
+            "sku": true,
+            "price": true,
+            "new_price": true,
+            "date_from": true,
+            "pricelist_id": true,
+            "currency": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "erp_price_retail": {
+        "column": {
+            "id": true,
+            "sku": true,
+            "price": true,
+            "new_price": true,
+            "date_from": true,
+            "pricelist_id": true,
+            "currency": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
     }
 }
