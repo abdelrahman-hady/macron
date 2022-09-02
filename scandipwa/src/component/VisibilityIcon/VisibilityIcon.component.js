@@ -28,7 +28,7 @@ export class VisibilityIconComponent extends PureComponent {
         const { onClick, isVisible } = this.props;
 
         return (
-            <button onClick={ onClick } block="VisibilityIcon" elem="Wrapper">
+            <button onClick={ onClick } block="VisibilityIcon" elem="Wrapper" id="visibilityButton">
                 <img
                   src={ isVisible ? hidePasswordIcon : showPasswordIcon }
                   alt=""
