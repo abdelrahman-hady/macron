@@ -479,10 +479,6 @@ return [
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
-        'Sync4mage_Catalog' => 1,
-        'Sync4mage_CatalogCommerce' => 1,
-        'Macron_Sync4mageCatalogWrapper' => 1,
-        'Sync4mage_ConfigurableProduct' => 1,
         'Temando_ShippingRemover' => 1
     ],
     'scopes' => [
