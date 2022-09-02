@@ -1,9 +1,5 @@
 /* eslint-disable max-lines */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable react/jsx-no-bind */
-/* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-conditional */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 
 import AddIcon from '@scandipwa/scandipwa/src/component/AddIcon';
 import ChevronIcon from '@scandipwa/scandipwa/src/component/ChevronIcon';
@@ -27,6 +23,7 @@ export class ProductActionsComponent extends SourceProductActions {
               block="ProductActions"
               elem="PatchDrop"
             >
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
                 <div
                   className={ isAddPatchDropOpen ? 'patchHeadingHolder' : 'patchHeadingHolder bottomBorder' }
                   onClick={ toggleDropDown }
@@ -66,6 +63,7 @@ export class ProductActionsComponent extends SourceProductActions {
                               name="patchCode"
                               className="long"
                               value={ patch.sku }
+                              /* eslint-disable-next-line react/jsx-no-bind */
                               onChange={ (e) => patchSelectionChange(e, patch.id) }
                             >
                                 <option value={ patch.id }>
@@ -85,6 +83,7 @@ export class ProductActionsComponent extends SourceProductActions {
                     </form>
                 </td>
                 <td>{ patch.name }</td>
+                { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
                 <td>{ patch.sku !== '-' ? patch.price : '-' }</td>
                 <td className="p-0">
                 <div className="quantityHolder">
@@ -94,16 +93,19 @@ export class ProductActionsComponent extends SourceProductActions {
                       type="text"
                       value={ patch.quantity > 0 ? patch.quantity : '' }
                       disabled={ patch.sku === '-' }
+                      /* eslint-disable-next-line react/jsx-no-bind */
                       onChange={ (e) => patchInputOnChange(e, patch.id) }
                     />
                     <div className="buttonHolder">
                         <button
+                        /* eslint-disable-next-line react/jsx-no-bind */
                           onClick={ () => updatePatchQuantityButton(1, patch.id) }
                           disabled={ patch.sku === '-' }
                         >
                             +
                         </button>
                         <button
+                        /* eslint-disable-next-line react/jsx-no-bind */
                           onClick={ () => updatePatchQuantityButton(-1, patch.id) }
                           disabled={ patch.sku === '-' || patch.quantity < 2 }
                         >
@@ -122,14 +124,21 @@ export class ProductActionsComponent extends SourceProductActions {
                               type="text"
                               value={ patch.discount > 0 ? patch.discount : '' }
                               disabled={ patch.sku === '-' }
+                              /* eslint-disable-next-line react/jsx-no-bind */
                               onChange={ (e) => patchInputOnChange(e, patch.id) }
                             />
                         </div>
                     </form>
                 </td>
+                { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
                 <td>{ patch.sku !== '-' ? patch.line : '-' }</td>
                 <td className="span-1">
-                    <div className="patchIconHolder icon-small-patch" onClick={ () => deletePatchRow(patch.id) }>
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
+                    <div
+                      className="patchIconHolder icon-small-patch"
+                      /* eslint-disable-next-line react/jsx-no-bind */
+                      onClick={ () => deletePatchRow(patch.id) }
+                    >
                         <CloseIcon />
                     </div>
                 </td>
@@ -160,6 +169,7 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderPatchRows() }
             </table>
             <br />
+            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
             <div className="addPatchBtn" onClick={ addAnotherPatch }>
                 <div className="patchIconHolder icon-large-patch">
                     <AddIcon />
