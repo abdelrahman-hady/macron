@@ -448,10 +448,7 @@ return [
         'ScandiPWA_Route717' => 1,
         'Macron_Sales' => 1,
         'ScandiPWA_SalesGraphQl' => 1,
-<<<<<<< HEAD
         'ScandiPWA_StoreGraphQL' => 1,
-=======
->>>>>>> @{-1}
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'ReadyMage_Logger' => 1,
