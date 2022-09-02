@@ -14,15 +14,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import NoMatch from 'Route/NoMatch';
-import { MyAccountContainer as SourceMyAccountContainer } from 'SourceRoute/MyAccount/MyAccount.container';
-import { updateMeta } from 'Store/Meta/Meta.action';
-import { updateIsLocked } from 'Store/MyAccount/MyAccount.action';
-import { changeNavigationState } from 'Store/Navigation/Navigation.action';
-import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { mapDispatchToProps, mapStateToProps, MyAccountContainer as SourceMyAccountContainer } from 'SourceRoute/MyAccount/MyAccount.container';
 import { updateNoMatch } from 'Store/NoMatch/NoMatch.action';
-import { showNotification } from 'Store/Notification/Notification.action';
 import OrderReducer from 'Store/Order/Order.reducer';
-import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import {
     MY_ACCOUNT,
     MY_DOWNLOADABLE,
@@ -42,35 +36,7 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
-/** @namespace Scandipwa/Route/MyAccount/Container/mapStateToProps */
-export const mapStateToProps = (state) => ({
-    isMobile: state.ConfigReducer.device.isMobile,
-    isWishlistEnabled: state.ConfigReducer.wishlist_general_active,
-    wishlistItems: state.WishlistReducer.productsInWishlist,
-    IsSignedInFromState: state.MyAccountReducer.isSignedIn,
-    isLocked: state.MyAccountReducer.isLocked,
-    newsletterActive: state.ConfigReducer.newsletter_general_active,
-    baseLinkUrl: state.ConfigReducer.base_link_url
-});
-
-/** @namespace Scandipwa/Route/MyAccount/Container/mapDispatchToProps */
-
-export const mapDispatchToProps = (dispatch) => ({
-    updateBreadcrumbs: (breadcrumbs) => BreadcrumbsDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
-    ),
-    changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
-    requestCustomerData: () => MyAccountDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)
-    ),
-    toggleOverlayByKey: (key) => dispatch(toggleOverlayByKey(key)),
-    updateMeta: (meta) => dispatch(updateMeta(meta)),
-    showNotification: (type, message) => dispatch(showNotification(type, message)),
-    logout: () => MyAccountDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.logout(false, false, dispatch)
-    ),
-    updateIsLocked: (isLocked) => dispatch(updateIsLocked(isLocked))
-});
+export { mapStateToProps, mapDispatchToProps };
 
 /** @namespace Scandipwa/Route/MyAccount/Container */
 export class MyAccountContainer extends SourceMyAccountContainer {
