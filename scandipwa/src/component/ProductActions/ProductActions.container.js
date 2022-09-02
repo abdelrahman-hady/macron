@@ -1,5 +1,12 @@
-/* eslint-disable no-magic-numbers */
+/**
+  * @category    Macron
+  * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+  */
+
 import { nanoid } from 'nanoid';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
@@ -26,7 +33,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
             patchData,
             patchList: [{
                 id: nanoid(),
-                sku: '-',
+                Sku: '-',
                 name: '-',
                 price: '-',
                 quantity: '0',
@@ -35,6 +42,16 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
             }]
         };
     }
+
+    static propTypes = {
+        ...SourceProductActionsContainer.propTypes,
+        addAnotherPatch: PropTypes.func.isRequired,
+        findObjFromSku: PropTypes.func.isRequired,
+        patchSelectionChange: PropTypes.func.isRequired,
+        patchInputOnChange: PropTypes.func.isRequired,
+        deletePatchRow: PropTypes.func.isRequired,
+        updatePatchQuantityButton: PropTypes.func.isRequired
+    };
 
     containerProps() {
         const {
@@ -55,7 +72,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         this.setState({
             patchList: [...patchList, {
                 id: nanoid(),
-                sku: '-',
+                Sku: '-',
                 name: '-',
                 price: '-',
                 quantity: '0',
@@ -65,17 +82,15 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         });
     }
 
-    findObjFromSKU(SKU) {
-        // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < patchData.length; i++) {
-            if (patchData[i].sku === SKU) {
-                return patchData[i];
-            }
+    findObjFromSku(Sku) {
+        const Obj = patchData.find((patch) => patch.Sku === Sku);
+        if (typeof Obj !== 'undefined') {
+            return Obj;
         }
 
         return {
             id: nanoid(),
-            sku: '-',
+            Sku: '-',
             name: '-',
             price: '-',
             quantity: '0',
@@ -86,94 +101,78 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     patchSelectionChange(e, rowId) {
         const { patchList } = this.state;
-        const patchObj = this.findObjFromSKU(e.target.value);
-        const copyList = [];
-        // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < patchList.length; i++) {
-            if (patchList[i].id === rowId) {
-                copyList.push({
-                    ...patchObj
-                });
-            } else {
-                copyList.push(patchList[i]);
-            }
-        }
+        const patchObj = this.findObjFromSku(e.target.value);
+
         this.setState({
-            patchList: Array.from(copyList)
+            patchList: patchList.map((patch) => {
+                if (patch.id === rowId) {
+                    return patchObj;
+                }
+
+                return patch;
+            })
         });
     }
 
     patchInputOnChange(e, rowId) {
         const { patchList } = this.state;
-        const copyList = [];
+        const { name } = e.target;
         // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < patchList.length; i++) {
-            if (patchList[i].id === rowId) {
-                const newObj = patchList[i];
-                const { name } = e.target;
-                // eslint-disable-next-line fp/no-let
-                let { value } = e.target;
-                if (name === 'discount') {
-                    if (value < 0) {
-                        value = 0;
-                    } else if (value > 100) {
-                        value = 100;
-                    }
-                }
-                if (name === 'quantity') {
-                    if (value < 1) {
-                        value = 1;
-                    }
-                }
-                newObj[name] = value;
-                copyList.push(newObj);
-            } else {
-                copyList.push(patchList[i]);
-            }
-        }
+        let { value } = e.target;
+
         this.setState({
-            patchList: Array.from(copyList)
+            patchList: patchList.map((patch) => {
+                const newObj = patch;
+                if (patch.id === rowId) {
+                    if (name === 'discount') {
+                        if (value < 0) {
+                            value = 0;
+                        // eslint-disable-next-line no-magic-numbers
+                        } else if (value > 100) {
+                        // eslint-disable-next-line no-magic-numbers
+                            value = 100;
+                        }
+                    }
+                    if (name === 'quantity') {
+                        if (value < 1) {
+                            value = 1;
+                        }
+                    }
+                    newObj[name] = value;
+                }
+
+                return patch;
+            })
         });
     }
 
     deletePatchRow(rowId) {
         const { patchList } = this.state;
-        const copyList = [];
-        // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < patchList.length; i++) {
-            if (patchList[i].id !== rowId) {
-                copyList.push(patchList[i]);
-            }
-        }
+
         this.setState({
-            patchList: Array.from(copyList)
+            patchList: patchList.filter((patch) => patch.id !== rowId)
         });
     }
 
     updatePatchQuantityButton(mode, rowId) {
         const { patchList } = this.state;
-        const copyList = [];
-        // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < patchList.length; i++) {
-            if (patchList[i].id === rowId) {
-                const newObj = patchList[i];
-                if (mode > 0) {
-                    newObj.quantity++;
-                } else if (mode < 0 && (newObj.quantity - 1) > 0) {
-                    newObj.quantity--;
-                }
-                copyList.push(newObj);
-            } else {
-                copyList.push(patchList[i]);
-            }
-        }
+
         this.setState({
-            patchList: Array.from(copyList)
+            patchList: patchList.map((patch) => {
+                if (patch.id === rowId) {
+                    const newObj = patch;
+                    if (mode > 0) {
+                        newObj.quantity++;
+                    } else if (mode < 0 && (newObj.quantity - 1) > 0) {
+                        newObj.quantity--;
+                    }
+
+                    return newObj;
+                }
+
+                return patch;
+            })
         });
-    }
-
-    updatePatchQuantity() {
-
     }
 
     toggleDropDown() {

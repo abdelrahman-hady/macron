@@ -1,5 +1,11 @@
+/**
+  * @category    Macron
+  * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+  */
+
 /* eslint-disable max-lines */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import AddIcon from '@scandipwa/scandipwa/src/component/AddIcon';
 import ChevronIcon from '@scandipwa/scandipwa/src/component/ChevronIcon';
@@ -23,7 +29,7 @@ export class ProductActionsComponent extends SourceProductActions {
               block="ProductActions"
               elem="PatchDrop"
             >
-                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                 <div
                   className={ isAddPatchDropOpen ? 'patchHeadingHolder' : 'patchHeadingHolder bottomBorder' }
                   onClick={ toggleDropDown }
@@ -41,17 +47,29 @@ export class ProductActionsComponent extends SourceProductActions {
         );
     }
 
-    renderPatchRows() {
+    renderOptions() {
+        const { patchData } = this.props;
+
+        return (patchData.map((data) => (
+            data.Sku === '-'
+                ? ''
+                : (
+                    <option key={ data.Sku }>
+                    { data.Sku }
+                    </option>
+                )
+        )));
+    }
+
+    renderPatchRow(patch) {
         const {
-            patchList,
-            patchData,
             patchSelectionChange,
             deletePatchRow,
             updatePatchQuantityButton,
             patchInputOnChange
         } = this.props;
 
-        return patchList.map((patch) => (
+        return (
             <tr key={ patch.id }>
                 <td className="span-4 p-0">
                     <form>
@@ -62,57 +80,49 @@ export class ProductActionsComponent extends SourceProductActions {
                             <select
                               name="patchCode"
                               className="long"
-                              value={ patch.sku }
+                              value={ patch.Sku }
                               /* eslint-disable-next-line react/jsx-no-bind */
                               onChange={ (e) => patchSelectionChange(e, patch.id) }
                             >
                                 <option value={ patch.id }>
-                                { __('Select a patch code') }
+                                    { __('Select a patch code') }
                                 </option>
-                                { patchData.map((data) => (
-                                    data.sku === '-'
-                                        ? ''
-                                        : (
-                                            <option key={ data.sku }>
-                                            { data.sku }
-                                            </option>
-                                        )
-                                )) }
+                                { this.renderOptions() }
                             </select>
                         </div>
                     </form>
                 </td>
                 <td>{ patch.name }</td>
                 { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
-                <td>{ patch.sku !== '-' ? patch.price : '-' }</td>
+                <td>{ patch.Sku !== '-' ? patch.price : '-' }</td>
                 <td className="p-0">
-                <div className="quantityHolder">
-                    <input
-                      className="short"
-                      name="quantity"
-                      type="text"
-                      value={ patch.quantity > 0 ? patch.quantity : '' }
-                      disabled={ patch.sku === '-' }
-                      /* eslint-disable-next-line react/jsx-no-bind */
-                      onChange={ (e) => patchInputOnChange(e, patch.id) }
-                    />
-                    <div className="buttonHolder">
-                        <button
+                    <div className="quantityHolder">
+                        <input
+                          className="short"
+                          name="quantity"
+                          type="text"
+                          value={ patch.quantity > 0 ? patch.quantity : '' }
+                          disabled={ patch.Sku === '-' }
                         /* eslint-disable-next-line react/jsx-no-bind */
-                          onClick={ () => updatePatchQuantityButton(1, patch.id) }
-                          disabled={ patch.sku === '-' }
-                        >
-                            +
-                        </button>
-                        <button
-                        /* eslint-disable-next-line react/jsx-no-bind */
-                          onClick={ () => updatePatchQuantityButton(-1, patch.id) }
-                          disabled={ patch.sku === '-' || patch.quantity < 2 }
-                        >
-                                -
-                        </button>
+                          onChange={ (e) => patchInputOnChange(e, patch.id) }
+                        />
+                        <div className="buttonHolder">
+                            <button
+                            /* eslint-disable-next-line react/jsx-no-bind */
+                              onClick={ () => updatePatchQuantityButton(1, patch.id) }
+                              disabled={ patch.Sku === '-' }
+                            >
+                                +
+                            </button>
+                            <button
+                            /* eslint-disable-next-line react/jsx-no-bind */
+                              onClick={ () => updatePatchQuantityButton(-1, patch.id) }
+                              disabled={ patch.Sku === '-' || patch.quantity < 2 }
+                            >
+                                    -
+                            </button>
+                        </div>
                     </div>
-                </div>
                 </td>
                 <td className="p-0">
                     <form>
@@ -123,7 +133,7 @@ export class ProductActionsComponent extends SourceProductActions {
                               name="discount"
                               type="text"
                               value={ patch.discount > 0 ? patch.discount : '' }
-                              disabled={ patch.sku === '-' }
+                              disabled={ patch.Sku === '-' }
                               /* eslint-disable-next-line react/jsx-no-bind */
                               onChange={ (e) => patchInputOnChange(e, patch.id) }
                             />
@@ -131,9 +141,9 @@ export class ProductActionsComponent extends SourceProductActions {
                     </form>
                 </td>
                 { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
-                <td>{ patch.sku !== '-' ? patch.line : '-' }</td>
+                <td>{ patch.Sku !== '-' ? patch.line : '-' }</td>
                 <td className="span-1">
-                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                     <div
                       className="patchIconHolder icon-small-patch"
                       /* eslint-disable-next-line react/jsx-no-bind */
@@ -143,6 +153,16 @@ export class ProductActionsComponent extends SourceProductActions {
                     </div>
                 </td>
             </tr>
+        );
+    }
+
+    renderPatchRows() {
+        const {
+            patchList
+        } = this.props;
+
+        return patchList.map((patch) => (
+            this.renderPatchRow(patch)
         ));
     }
 
@@ -153,29 +173,29 @@ export class ProductActionsComponent extends SourceProductActions {
 
         return (
             <>
-            <table
-              block="ProductActions"
-              elem="PatchTable"
-            >
-                <tr>
-                    <th className="span-4">{ __('Patch Code') }</th>
-                    <th>{ __('Name') }</th>
-                    <th>{ __('Price') }</th>
-                    <th>{ __('Quantity') }</th>
-                    <th>{ __('Discount') }</th>
-                    <th>{ __('Line total:') }</th>
-                    <th className="span-1">{ }</th>
-                </tr>
-                { this.renderPatchRows() }
-            </table>
-            <br />
-            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
-            <div className="addPatchBtn" onClick={ addAnotherPatch }>
-                <div className="patchIconHolder icon-large-patch">
-                    <AddIcon />
+                <table
+                  block="ProductActions"
+                  elem="PatchTable"
+                >
+                    <tr>
+                        <th className="span-4">{ __('Patch Code') }</th>
+                        <th>{ __('Name') }</th>
+                        <th>{ __('Price') }</th>
+                        <th>{ __('Quantity') }</th>
+                        <th>{ __('Discount') }</th>
+                        <th>{ __('Line total:') }</th>
+                        <th className="span-1">{ }</th>
+                    </tr>
+                    { this.renderPatchRows() }
+                </table>
+                <br />
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
+                <div className="addPatchBtn" onClick={ addAnotherPatch }>
+                    <div className="patchIconHolder icon-large-patch">
+                        <AddIcon />
+                    </div>
+                    <h4 className="patchHeading">{ __('Add Another Patch') }</h4>
                 </div>
-                <h4 className="patchHeading">{ __('Add Another Patch') }</h4>
-            </div>
             </>
         );
     }

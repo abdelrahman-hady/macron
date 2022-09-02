@@ -1,7 +1,14 @@
+/**
+  * @category    Macron
+  * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+  */
+
 export const data = [
     {
         id: 'dshjhdjs723',
-        sku: '12345678',
+        Sku: '12345678',
         name: 'Patch X',
         price: 5.00,
         quantity: 2,
@@ -10,7 +17,7 @@ export const data = [
     },
     {
         id: 'dsonwi22',
-        sku: '87654321',
+        Sku: '87654321',
         name: 'Patch Q',
         price: 10.00,
         quantity: -4,
@@ -19,7 +26,7 @@ export const data = [
     },
     {
         id: 'uidba82',
-        sku: '13579864',
+        Sku: '13579864',
         name: 'Patch Z',
         price: 15.00,
         quantity: 1,
