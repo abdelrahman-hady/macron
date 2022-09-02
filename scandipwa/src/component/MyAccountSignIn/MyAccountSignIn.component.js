@@ -1,3 +1,9 @@
+/*
+ * @category Macron
+ * @author    Omar Elshopky <omar.elshopky@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ */
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Form from 'Component/Form';
@@ -6,7 +12,6 @@ import { MyAccountSignIn as SourceMyAccountSignInComponent } from
 'SourceComponent/MyAccountSignIn/MyAccountSignIn.component';
 import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
 
-// import VisibleIcon from '../../../public/svg/Visible.icon.svg';
 import VisibilityIcon from '../VisibilityIcon/VisibilityIcon.component';
 
 import './MyAccountSignIn.override.style';
@@ -22,10 +27,10 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
             isCheckout,
             handleEmailInput,
             isLoading,
-            onPasswordVisibilityClick
+            onPasswordVisibilityClick,
+            visibilityState
         } = this.props;
 
-        console.log(onPasswordVisibilityClick);
         return (
             <Form
               key="sign-in"
@@ -53,7 +58,7 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
                 <div id="InputIconWrapper">
                 <Field
                   label={ __('Password') }
-                  type={ FIELD_TYPE.password }
+                  type={ visibilityState ? FIELD_TYPE.text : FIELD_TYPE.password }
                   attr={ {
                       id: 'password',
                       name: 'password',
@@ -67,7 +72,7 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
                   } }
                   addRequiredTag
                 />
-                <VisibilityIcon onClick={ onPasswordVisibilityClick } />
+                <VisibilityIcon onClick={ onPasswordVisibilityClick } isVisible={ visibilityState } />
                 </div>
                 <button
                   type="button"

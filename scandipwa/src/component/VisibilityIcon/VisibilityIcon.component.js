@@ -1,40 +1,36 @@
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
+/*
+ * @category Macron
+ * @author    Omar Elshopky <omar.elshopky@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
-
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import VisibleIcon from '../../../public/svg/Visible.icon.svg';
+import showPasswordIcon from '../../../public/svg/MacronLogo.svg';
+import hidePasswordIcon from '../../../public/svg/Visible.icon.svg';
 
 import './VisibilityIcon.style';
 
 /** @namespace Scandipwa/Component/VisibilityIcon/Component */
 export class VisibilityIconComponent extends PureComponent {
     static propTypes = {
-        // isActive: PropTypes.bool
+        isVisible: PropTypes.bool,
+        onClick: PropTypes.func
     };
 
     static defaultProps = {
-        isActive: false
+        onClick: () => {},
+        isVisible: false
     };
 
     render() {
-        // eslint-disable-next-line react/prop-types
-        const { onClick } = this.props;
+        const { onClick, isVisible } = this.props;
 
         return (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
             <button onClick={ onClick } block="VisibilityIcon" elem="Wrapper">
                 <img
-                  src={ VisibleIcon }
+                  src={ isVisible ? hidePasswordIcon : showPasswordIcon }
                   alt=""
                   block="VisibilityIcon"
                   elem="Icon"

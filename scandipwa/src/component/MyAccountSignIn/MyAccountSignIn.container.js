@@ -1,3 +1,9 @@
+/*
+ * @category Macron
+ * @author    Omar Elshopky <omar.elshopky@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ */
 import { connect } from 'react-redux';
 
 import { mapDispatchToProps, mapStateToProps, MyAccountSignInContainer as SourceMyAccountSignInContainer } from
@@ -10,14 +16,45 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
         isPasswordVisible: false
     };
 
-    containerFunctions = {
-        ...super.containerFunctions,
-        onPasswordVisibilityClick: this.onPasswordVisibilityClick.bind(this)
-    };
+     containerFunctions = {
+         onSignInSuccess: this.onSignInSuccess.bind(this),
+         onPasswordVisibilityClick: this.onPasswordVisibilityClick.bind(this)
+     };
 
-    onPasswordVisibilityClick() {
-        alert('called');
-    }
+     containerProps() {
+         const {
+             state,
+             onFormError,
+             handleForgotPassword,
+             handleCreateAccount,
+             isCheckout,
+             setLoadingState,
+             emailValue,
+             handleEmailInput,
+             isLoading
+         } = this.props;
+
+         const visibilityState = this.state.isPasswordVisible;
+
+         return {
+             state,
+             onFormError,
+             handleForgotPassword,
+             handleCreateAccount,
+             isCheckout,
+             setLoadingState,
+             emailValue,
+             handleEmailInput,
+             isLoading,
+             visibilityState
+         };
+     }
+
+     onPasswordVisibilityClick(e) {
+         e.stopPropagation();
+         e.preventDefault();
+         this.setState({ ...this.state, isPasswordVisible: !this.state.isPasswordVisible });
+     }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAccountSignInContainer);
