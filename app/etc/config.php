@@ -442,12 +442,16 @@ return [
         'Macron_Customer' => 1,
         'Macron_DisableStock' => 1,
         'Macron_Erp' => 1,
+        'Macron_ErpGraphQl' => 1,
         'Macron_Migration' => 1,
         'Macron_QuoteGraphQl' => 1,
         'ScandiPWA_Route717' => 1,
         'Macron_Sales' => 1,
         'ScandiPWA_SalesGraphQl' => 1,
+<<<<<<< HEAD
         'ScandiPWA_StoreGraphQL' => 1,
+=======
+>>>>>>> @{-1}
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'ReadyMage_Logger' => 1,

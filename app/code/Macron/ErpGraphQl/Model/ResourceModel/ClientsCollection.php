@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Macron\ClientsGraphQl\Model\ResourceModel;
+namespace Macron\ErpGraphQl\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 

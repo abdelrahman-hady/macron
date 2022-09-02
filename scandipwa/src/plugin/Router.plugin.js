@@ -16,13 +16,15 @@ import { Route } from 'react-router-dom';
 
 import { withStoreRegex } from 'Component/Router/Router.component';
 
-export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "MyClients" */ '../route/MyClientsPage'));
+export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "my-clients" */ '../route/MyClientsPage'));
 export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
 export const Shipments = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "shipments" */ '../route/Shipments'));
+export const ClientPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "client" */ '../route/ClientPage'));
 
 export const MY_CLIENTS = 'MY_CLIENTS';
 export const INVOICES = 'INVOICES';
 export const SHIPMENTS = 'SHIPMENTS';
+export const CLIENT = 'CLIENT';
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
@@ -40,6 +42,11 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         component: <Route path={ withStoreRegex('/shipments') } render={ (props) => <Shipments { ...props } /> } />,
         position: 26,
         name: SHIPMENTS
+    },
+    {
+        component: <Route path={ withStoreRegex('/my-clients/:clientId?') } render={ (props) => <ClientPage { ...props } /> } />,
+        position: 31,
+        name: CLIENT
     }
 ];
 
