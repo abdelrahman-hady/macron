@@ -8,9 +8,5 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-<<<<<<< HEAD:app/code/Macron/Core/etc/module.xml
     <module name="Macron_Core" />
-=======
-    <module name="Macron_Core"/>
->>>>>>> MCRB-208-xperpage Renamed module to Macron_Core:app/code/Macron/XperPage/etc/module.xml
 </config>
