@@ -21,24 +21,35 @@ export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChu
 export const INVOICES = 'INVOICES';
 export const MY_CLIENTS = 'MY_CLIENTS';
 
-const SWITCH_ITEMS_TYPE = (originalMember) => [
-    ...originalMember,
-    {
-        component: <Route path={ withStoreRegex('/invoices') } render={ (props) => <InvoicesPage { ...props } /> } />,
-        position: 25,
-        name: INVOICES
-    },
-    {
-        component: <Route path={ withStoreRegex('/my-clients') } render={ (props) => <MyClientsPage { ...props } /> } />,
-        position: 30,
-        name: MY_CLIENTS
+const modifyUrls = (originalMembers) => {
+    function checkUrl(memberElement) {
+        if (memberElement.name === 'CREATE_ACCOUNT' || memberElement.name === 'CHANGE_PASSWORD' || memberElement.name === 'ACCOUNT_FORGOT_PASSWORD' || memberElement.name === 'CONFIRM_ACCOUNT') {
+            return false;
+        }
+
+        return true;
     }
-];
+    const newMembers = originalMembers.filter((route) => checkUrl(route));
+
+    return [
+        ...newMembers,
+        {
+            component: <Route path={ withStoreRegex('/invoices') } render={ (props) => <InvoicesPage { ...props } /> } />,
+            position: 25,
+            name: INVOICES
+        },
+        {
+            component: <Route path={ withStoreRegex('/my-clients') } render={ (props) => <MyClientsPage { ...props } /> } />,
+            position: 30,
+            name: MY_CLIENTS
+        }
+    ];
+};
 
 export default {
     'Component/Router/Component': {
         'member-property': {
-            SWITCH_ITEMS_TYPE
+            SWITCH_ITEMS_TYPE: modifyUrls
         }
     }
 };
