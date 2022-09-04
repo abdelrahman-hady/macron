@@ -1,14 +1,13 @@
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
+/* eslint-disable react/forbid-prop-types */
+/*
  * @category  Macron
- * @author    Mohammed komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
+ * @author    Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
-*/
+ */
+
+import PropTypes from 'prop-types';
+
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
 import {
@@ -19,6 +18,13 @@ import './MyAccountMyOrders.override.style';
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Component */
 export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
+    static propTypes = {
+        ...super.propTypes,
+        sortOptions: PropTypes.object.isRequired,
+        statusOptions: PropTypes.array.isRequired,
+        updateOptions: PropTypes.func.isRequired
+    };
+
     renderToolbar() {
         return (
             <div className="MyAccountMyOrders-Toolbar">
@@ -54,13 +60,9 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             return this.renderNoOrders();
         }
 
-        const orders = items.length
-            ? items
-            : Array.from({ length: 10 }, (_, id) => ({ base_order_info: { id } }));
-
         if (orderStatus === 0) {
             // no filters selected -> render all orders
-            return orders.reduceRight(
+            return items.reduceRight(
                 (acc, order) => [...acc, this.renderOrderRow(order)],
                 []
             );
@@ -68,7 +70,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
         // Filter Orders By Status
         const [filterOption = {}] = statusOptions.filter((option) => option.id === orderStatus);
-        return orders.reduceRight(
+        return items.reduceRight(
             (acc, order) => {
                 if (filterOption.label?.value === order.status) {
                     return [...acc, this.renderOrderRow(order)];
