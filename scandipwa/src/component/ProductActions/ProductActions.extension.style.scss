@@ -6,168 +6,93 @@
   */
 
 .ProductActions {
-    &-PatchDrop {
-        line-height: 24px;
-        padding: 0 7px 0 7px;
-        margin-block-end: 24px;
-        margin-block-start: 28px;
+    &-PatchHeadingHolder {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-        .patchHeadingHolder:hover {
-            cursor: pointer;
-        }
+    &-PatchHeading {
+        display: inline;
+    }
 
-        .patchHeadingHolder {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    &-PatchIconHolder {
+        display: inline-flex;
+        align-content: center;
+        justify-items: center;
     }
 
     &-PatchTable {
-        margin-block-start: 22px;
-
-        table {
-            width: 100%;
-        }
-
         input, select {
             height: 36px;
             min-width: 15px;
-            font-size: 12px;
-        }
-
-        .long {
-            width: 160px;
-            padding: 6px 16px 6px 16px;
-            margin-inline-start: 8px;
-        }
-
-        .short {
-            width: 55px;
             padding: 8px;
-        }
-
-        .m-sides {
-            margin-inline-start: 8px;
-            margin-inline-end: 8px;
-        }
-
-        thead {
-            background: #fff
         }
 
         th, td {
-            width: 120px;
             min-width: 15px;
-            padding: 8px;
 
             form {
-                width: min-content;
-
                 div {
                     position: relative;
 
                     span {
-                        width: 14px;
-                        height: 14px;
-                        position: absolute;
-                        inset-inline-end: 12px;
                         z-index: 10;
+                        position: absolute;
+                        inset-inline-end: 8px;
                         pointer-events: none;
                     }
-
-                    .marginTopIcon {
-                        inset-block-start: 10px;
-                    }
-
-                    .marginTopText {
-                        inset-block-start: 6px;
-                    }
                 }
             }
         }
 
-        .p-0 {
-            padding: 0;
+        &_Length_Long {
+            width: 160px;
         }
 
-        .span-4 {
-            width: 240px;
+        &_Length_Short {
+            width: 55px;
         }
 
-        .span-1 {
-            width: 15px;
-        }
-
-        .quantityHolder {
-            display: flex;
-            gap: 2px;
-            justify-content: center;
-            align-content: center;
-
-            .buttonHolder {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                justify-content: center;
-                align-content: center;
-
-                button {
-                    height: 16px;
-                    width: 24px;
-                    line-height: 12px;
-                    background-color: #F6F5F5;
-                    border: 1px solid #C4C4C4;
-                    text-align: center;
-                }
-
-                button:hover {
-                    cursor: pointer;
-                }
-            }
+        &_MarginTop {
+            inset-block-start: 10px;
         }
     }
-}
 
-.addPatchBtn {
-    display: flex;
-    align-items: center;
-    width: fit-content;
-}
+    &-PatchQuantityHolder {
+        display: flex;
+        gap: 2px;
+        justify-content: center;
+        align-content: center;
+    }
 
-.patchHeading {
-    margin-inline-start: 10px;
-    display: inline;
-}
+    &-PatchQuantityButtonHolder {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        justify-content: center;
+        align-content: center;
 
-.patchIconHolder {
-    display: inline-flex;
-    align-content: center;
-    justify-items: center;
-}
+        button {
+            height: 16px;
+            width: 24px;
+            background-color: #F6F5F5;
+            border: 1px solid #C4C4C4;
+            text-align: center;
+        }
 
-.icon-large-patch {
-    width: 24px;
-    height: 24px;
-}
+        button:hover {
+            cursor: pointer;
+        }
+    }
 
-.icon-small-patch {
-    width: 14px;
-    height: 14px;
-}
+    &-AddPatchButton {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+    }
 
-.patchIconHolder:hover, .addPatchBtn:hover {
-    cursor: pointer;
-}
-
-.patchHeadingHolder {
-    border-bottom: 1px solid transparent;
-}
-
-.bottomBorder {
-    border-bottom: 1px solid #E0E0E0;
-}
-
-.someHeightPatch {
-    height: 16px;
+    &-PatchHeadingHolder:hover, &-PatchIconHolder:hover, &-AddPatchButton {
+        cursor: pointer;
+    }
 }

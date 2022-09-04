@@ -25,20 +25,26 @@ export class ProductActionsComponent extends SourceProductActions {
         } = this.props;
 
         return (
-            <div
-              block="ProductActions"
-              elem="PatchDrop"
-            >
+            <div>
                 { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                 <div
-                  className={ isAddPatchDropOpen ? 'patchHeadingHolder' : 'patchHeadingHolder bottomBorder' }
+                  block="ProductActions"
+                  elem="PatchHeadingHolder"
                   onClick={ toggleDropDown }
                 >
                     <span>
                         ⌗
-                        <h4 className="patchHeading">{ __('Add Patch') }</h4>
+                        <h4
+                          block="ProductActions"
+                          elem="PatchHeading"
+                        >
+                            { __('Add Patch') }
+                        </h4>
                     </span>
-                    <div className="patchIconHolder icon-small-patch">
+                    <div
+                      block="ProductActions"
+                      elem="PatchIconHolder"
+                    >
                         <ChevronIcon direction={ isAddPatchDropOpen ? 'top' : 'bottom' } />
                     </div>
                 </div>
@@ -55,7 +61,7 @@ export class ProductActionsComponent extends SourceProductActions {
                 ? ''
                 : (
                     <option key={ data.Sku }>
-                    { data.Sku }
+                        { data.Sku }
                     </option>
                 )
         )));
@@ -71,15 +77,21 @@ export class ProductActionsComponent extends SourceProductActions {
 
         return (
             <tr key={ patch.id }>
-                <td className="span-4 p-0">
+                <td>
                     <form>
                         <div>
-                            <span className="marginTopIcon">
+                            <span
+                              block="ProductActions"
+                              elem="PatchTable"
+                              mods={ { MarginTop: true } }
+                            >
                                 <ChevronIcon direction="bottom" />
                             </span>
                             <select
+                              block="ProductActions"
+                              elem="PatchTable"
+                              mods={ { Length: 'Long' } }
                               name="patchCode"
-                              className="long"
                               value={ patch.Sku }
                               /* eslint-disable-next-line react/jsx-no-bind */
                               onChange={ (e) => patchSelectionChange(e, patch.id) }
@@ -95,10 +107,15 @@ export class ProductActionsComponent extends SourceProductActions {
                 <td>{ patch.name }</td>
                 { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
                 <td>{ patch.Sku !== '-' ? patch.price : '-' }</td>
-                <td className="p-0">
-                    <div className="quantityHolder">
+                <td>
+                    <div
+                      block="ProductActions"
+                      elem="PatchQuantityHolder"
+                    >
                         <input
-                          className="short"
+                          block="ProductActions"
+                          elem="PatchTable"
+                          mods={ { Length: 'Short' } }
                           name="quantity"
                           type="text"
                           value={ patch.quantity > 0 ? patch.quantity : '' }
@@ -106,7 +123,10 @@ export class ProductActionsComponent extends SourceProductActions {
                         /* eslint-disable-next-line react/jsx-no-bind */
                           onChange={ (e) => patchInputOnChange(e, patch.id) }
                         />
-                        <div className="buttonHolder">
+                        <div
+                          block="ProductActions"
+                          elem="PatchQuantityButtonHolder"
+                        >
                             <button
                             /* eslint-disable-next-line react/jsx-no-bind */
                               onClick={ () => updatePatchQuantityButton(1, patch.id) }
@@ -124,12 +144,20 @@ export class ProductActionsComponent extends SourceProductActions {
                         </div>
                     </div>
                 </td>
-                <td className="p-0">
+                <td>
                     <form>
                         <div>
-                            <span className="marginTopText">%</span>
+                            <span
+                              block="ProductActions"
+                              elem="PatchTable"
+                              mods={ { MarginTop: true } }
+                            >
+                                %
+                            </span>
                             <input
-                              className="short m-sides"
+                              block="ProductActions"
+                              elem="PatchTable"
+                              mods={ { Length: 'Short' } }
                               name="discount"
                               type="text"
                               value={ patch.discount > 0 ? patch.discount : '' }
@@ -142,10 +170,9 @@ export class ProductActionsComponent extends SourceProductActions {
                 </td>
                 { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
                 <td>{ patch.Sku !== '-' ? patch.line : '-' }</td>
-                <td className="span-1">
+                <td>
                 { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                     <div
-                      className="patchIconHolder icon-small-patch"
                       /* eslint-disable-next-line react/jsx-no-bind */
                       onClick={ () => deletePatchRow(patch.id) }
                     >
@@ -178,23 +205,32 @@ export class ProductActionsComponent extends SourceProductActions {
                   elem="PatchTable"
                 >
                     <tr>
-                        <th className="span-4">{ __('Patch Code') }</th>
+                        <th>{ __('Patch Code') }</th>
                         <th>{ __('Name') }</th>
                         <th>{ __('Price') }</th>
                         <th>{ __('Quantity') }</th>
                         <th>{ __('Discount') }</th>
                         <th>{ __('Line total:') }</th>
-                        <th className="span-1">{ }</th>
+                        <th>{ }</th>
                     </tr>
                     { this.renderPatchRows() }
                 </table>
                 <br />
                 { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
-                <div className="addPatchBtn" onClick={ addAnotherPatch }>
-                    <div className="patchIconHolder icon-large-patch">
+                <div
+                  block="ProductActions"
+                  elem="AddPatchButton"
+                  onClick={ addAnotherPatch }
+                >
+                    <div>
                         <AddIcon />
                     </div>
-                    <h4 className="patchHeading">{ __('Add Another Patch') }</h4>
+                    <h4
+                      block="ProductActions"
+                      elem="PatchHeading"
+                    >
+                        { __('Add Another Patch') }
+                    </h4>
                 </div>
             </>
         );
@@ -229,18 +265,6 @@ export class ProductActionsComponent extends SourceProductActions {
         );
     }
 
-    renderBorder() {
-        const {
-            isAddPatchDropOpen
-        } = this.props;
-
-        if (!isAddPatchDropOpen) {
-            return '';
-        }
-
-        return <div className="someHeightPatch bottomBorder" />;
-    }
-
     renderDesktop() {
         return (
             <>
@@ -260,7 +284,6 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderAddToCartActionBlock() }
                 { this.renderAddPatchBlock() }
                 { this.renderAddToCartButton() }
-                { this.renderBorder() }
             </>
         );
     }
@@ -291,7 +314,6 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderAddToCartMobile() }
                 { this.renderAddPatchBlock() }
                 { this.renderAddToCartButton() }
-                { this.renderBorder() }
             </>
         );
     }
