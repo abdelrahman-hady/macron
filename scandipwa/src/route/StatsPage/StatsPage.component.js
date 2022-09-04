@@ -1,3 +1,10 @@
+/*
+ * @category  Macron
+ * @author    Lena Sinichenkova <lena.sinichenkova@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ */
+
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -27,7 +34,7 @@ export class StatsPageComponent extends PureComponent {
     renderPage() {
         return (
             <ContentWrapper label="Stats Page">
-                <h1>__(Stats)</h1>
+                <h1>{ __('Stats') }</h1>
                 { this.renderPageContent() }
             </ContentWrapper>
         );

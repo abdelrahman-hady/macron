@@ -17,9 +17,11 @@ import { withStoreRegex } from 'Component/Router/Router.component';
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "MyClients" */ '../route/MyClientsPage'));
 export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
+export const StatsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "Stats" */ '../route/StatsPage'));
 
 export const INVOICES = 'INVOICES';
 export const MY_CLIENTS = 'MY_CLIENTS';
+export const STATS_PAGE = 'STATS_PAGE';
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
@@ -32,6 +34,11 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         component: <Route path={ withStoreRegex('/my-clients') } render={ (props) => <MyClientsPage { ...props } /> } />,
         position: 30,
         name: MY_CLIENTS
+    },
+    {
+        component: <Route path={ withStoreRegex('/stats') } render={ (props) => <StatsPage { ...props } /> } />,
+        position: 45,
+        name: STATS_PAGE
     }
 ];
 
