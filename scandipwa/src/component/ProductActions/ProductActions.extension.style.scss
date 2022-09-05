@@ -1,0 +1,98 @@
+/**
+  * @category    Macron
+  * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+  */
+
+.ProductActions {
+    &-PatchHeadingHolder {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &-PatchHeading {
+        display: inline;
+    }
+
+    &-PatchIconHolder {
+        display: inline-flex;
+        align-content: center;
+        justify-items: center;
+    }
+
+    &-PatchTable {
+        input, select {
+            height: 36px;
+            min-width: 15px;
+            padding: 8px;
+        }
+
+        th, td {
+            min-width: 15px;
+
+            form {
+                div {
+                    position: relative;
+
+                    span {
+                        z-index: 10;
+                        position: absolute;
+                        inset-inline-end: 8px;
+                        pointer-events: none;
+                    }
+                }
+            }
+        }
+
+        &_Length_Long {
+            width: 160px;
+        }
+
+        &_Length_Short {
+            width: 55px;
+        }
+
+        &_MarginTop {
+            inset-block-start: 10px;
+        }
+    }
+
+    &-PatchQuantityHolder {
+        display: flex;
+        gap: 2px;
+        justify-content: center;
+        align-content: center;
+    }
+
+    &-PatchQuantityButtonHolder {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        justify-content: center;
+        align-content: center;
+
+        button {
+            height: 16px;
+            width: 24px;
+            background-color: #F6F5F5;
+            border: 1px solid #C4C4C4;
+            text-align: center;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+    }
+
+    &-AddPatchButton {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+    }
+
+    &-PatchHeadingHolder:hover, &-PatchIconHolder:hover, &-AddPatchButton {
+        cursor: pointer;
+    }
+}
