@@ -30,10 +30,11 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
     {
         component: <Route path={ withStoreRegex('/invoices') } render={ (props) => <InvoicesPage { ...props } /> } />,
-        position: 25,
+        position: 30,
         name: INVOICES
     },
     {
+
         component: <Route path={ withStoreRegex('/my-clients') } render={ (props) => <MyClientsPage { ...props } /> } />,
         position: 30,
         name: MY_CLIENTS

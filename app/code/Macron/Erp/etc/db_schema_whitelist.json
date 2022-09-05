@@ -1,4 +1,19 @@
 {
+    "erp_shipment": {
+        "column": {
+            "user_sap_id": true,
+            "shipment_number": true,
+            "packing_list_link": true,
+            "status": true,
+            "tracking_number": true,
+            "date": true,
+            "business_partner_id": true,
+            "customer_name": true,
+            "address": true,
+            "connected_order_id": true,
+            "connected_invoice_id": true
+        }
+    },
     "erp_client": {
         "column": {
             "entity_id": true,
@@ -21,21 +36,6 @@
         },
         "constraint": {
             "PRIMARY": true
-        }
-    },
-    "erp_shipment": {
-        "column": {
-            "user_sap_id": true,
-            "shipment_number": true,
-            "packing_list_link": true,
-            "status": true,
-            "tracking_number": true,
-            "date": true,
-            "business_partner_id": true,
-            "customer_name": true,
-            "address": true,
-            "connected_order_id": true,
-            "connected_invoice_id": true
         }
     },
     "erp_invoice": {
