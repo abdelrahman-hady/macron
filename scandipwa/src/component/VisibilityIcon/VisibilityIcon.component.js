@@ -7,7 +7,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import showPasswordIcon from '../../../public/svg/MacronLogo.svg';
 import hidePasswordIcon from '../../../public/svg/Visible.icon.svg';
 
 import './VisibilityIcon.style';
@@ -28,11 +27,15 @@ export class VisibilityIconComponent extends PureComponent {
         const { onClick, isVisible } = this.props;
 
         return (
-            <button onClick={ onClick } block="VisibilityIcon" elem="Wrapper" id="visibilityButton">
+            <button
+              onClick={ onClick }
+              block="VisibilityButton"
+              elem="IconWrapper"
+            >
                 <img
-                  src={ isVisible ? hidePasswordIcon : showPasswordIcon }
+                  src={ isVisible ? hidePasswordIcon : hidePasswordIcon }
                   alt=""
-                  block="VisibilityIcon"
+                  block="VisibilityButton"
                   elem="Icon"
                 />
             </button>

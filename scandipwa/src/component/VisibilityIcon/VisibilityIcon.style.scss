@@ -1,4 +1,10 @@
-.VisibilityIcon {
+.VisibilityButton {
+    &-IconWrapper {
+        inset-block-start: 33px;
+        inset-inline-end: 18px;
+        position: absolute;
+    }
+
     &:hover {
         cursor: pointer;
     }
@@ -8,12 +14,21 @@
     }
 }
 
-#visibilityButton {
-    inset-block-start: 33px;
-    inset-inline-end: 18px;
-    position: absolute;
-    margin-block-start: 0px;
-    margin-block-end: 0px;
-    display: inline-block;
-    width: auto;
+.LoginAccount {
+    &-InnerWrapper {
+        .VisibilityButton {
+            &-IconWrapper {
+                margin-block-start: 0px;
+                margin-block-end: 0px;
+            }
+        }
+    }
+}
+
+.MyAccountOverlay {
+    .VisibilityButton {
+        &-IconWrapper {
+            width: auto;
+        }
+    }
 }

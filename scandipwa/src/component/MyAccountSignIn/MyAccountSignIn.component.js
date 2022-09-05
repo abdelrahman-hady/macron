@@ -56,23 +56,23 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
                   addRequiredTag
                 />
                 <div id="InputIconWrapper">
-                <Field
-                  label={ __('Password') }
-                  type={ visibilityState ? FIELD_TYPE.text : FIELD_TYPE.password }
-                  attr={ {
-                      id: 'password',
-                      name: 'password',
-                      placeholder: __('Enter your password'),
-                      autocomplete: 'current-password'
-                  } }
-                  validateOn={ ['onChange'] }
-                  validationRule={ {
-                      isRequired: true,
-                      inputType: VALIDATION_INPUT_TYPE.password
-                  } }
-                  addRequiredTag
-                />
-                <VisibilityIcon onClick={ onPasswordVisibilityClick } isVisible={ visibilityState } />
+                    <Field
+                      label={ __('Password') }
+                      type={ visibilityState ? FIELD_TYPE.text : FIELD_TYPE.password }
+                      attr={ {
+                          id: 'password',
+                          name: 'password',
+                          placeholder: __('Enter your password'),
+                          autocomplete: 'current-password'
+                      } }
+                      validateOn={ ['onChange'] }
+                      validationRule={ {
+                          isRequired: true,
+                          inputType: VALIDATION_INPUT_TYPE.password
+                      } }
+                      addRequiredTag
+                    />
+                    <VisibilityIcon onClick={ onPasswordVisibilityClick } isVisible={ visibilityState } />
                 </div>
                 <button
                   type="button"
