@@ -1,0 +1,13 @@
+.searchOrder {
+    position: relative;
+
+    &-searchIcon {
+        position: absolute;
+        inset-block-start: 12px;
+        inset-inline-start: 15px;
+    }
+
+    &-searchInput {
+        padding-inline-start: 40px;
+    }
+}
