@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @author    Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -38,7 +39,6 @@ export const mapDispatchToProps = (dispatch) => ({
         ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize)
     )
 });
-
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container */
 export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer {
     static propTypes = {
@@ -47,18 +47,25 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     state = {
-        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE
+        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
+        sortOptions: {
+            orderStatus: 0 // Filters orders list by status
+        },
+        statusOptions: []
     };
 
     containerFunctions = {
+        updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList } = this.props;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage, sortOptions, statusOptions } = this.state;
 
-        return { ...super.containerProps(), ordersPerPageList, ordersPerPage };
+        return {
+            ...super.containerProps(), ordersPerPageList, ordersPerPage, sortOptions, statusOptions
+        };
     }
 
     componentDidMount() {
@@ -66,21 +73,24 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { ordersPerPage } = this.state;
 
         getOrderList(this._getPageFromUrl(), ordersPerPage);
+        this.setState({ statusOptions: this._getStatusOptions() });
     }
 
     componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+
         const { getOrderList } = this.props;
-        const { location: prevLocation } = prevProps;
-        const { ordersPerPage } = this.state;
-        const { ordersPerPage: prevOrdersPerPage } = prevState;
+        const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
+        const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
 
-        const prevPage = this._getPageFromUrl(prevLocation);
-        const currentPage = this._getPageFromUrl();
-
-        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
+        if (orderStatus !== prevOrderStatus || ordersPerPage !== prevOrdersPerPage) {
             getOrderList(this._getPageFromUrl(), ordersPerPage);
             scrollToTop();
         }
+    }
+
+    updateOptions(option) {
+        this.setState(({ sortOptions }) => ({ sortOptions: { ...sortOptions, ...option } }));
     }
 
     onOrderPerPageChange(ordersPerPage) {
@@ -89,11 +99,36 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         this.setState({ ordersPerPage });
     }
 
+    _getStatusOptions() {
+    // Get Available Order Statuses Here
+        const { orderList: { items = [] } } = this.props;
+        const uniqueList = {};
+        if (items) {
+        // list available status
+            items.forEach((order) => {
+            // add to a hash map to avoid duplicates
+                uniqueList[order.status] = 1;
+            });
+
+            // correctly format statusList so it can be passed to Field
+            const statusArr = Array.from(Object.keys(uniqueList));
+            const statusOptions = statusArr.map((option, idx) => ({
+                id: idx + 1,
+                label: __(option),
+                value: idx + 1
+            }));
+
+            return statusOptions;
+        }
+
+        return [];
+    }
+
     render() {
         return (
             <MyAccountMyOrders
-              { ...this.containerFunctions }
               { ...this.containerProps() }
+              { ...this.containerFunctions }
             />
         );
     }
