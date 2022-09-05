@@ -24,20 +24,20 @@ export class AddToCartComponent extends SourceAddToCart {
 
         return (
             <>
-            <button
-              onClick={ handleButtonClick }
-              block="Button AddToCart"
-              mix={ mix }
-              mods={ { layout } }
-              disabled={ isDisabled || isAdding }
-            >
-                { this.renderCartIcon() }
-                { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
-                <span>{ isAdding ? __('Adding...') : __('Add to cart') }</span>
-            </button>
-            <OrderTypePopup
-              addProductToCart={ addProductToCart }
-            />
+                <button
+                  onClick={ handleButtonClick }
+                  block="Button AddToCart"
+                  mix={ mix }
+                  mods={ { layout } }
+                  disabled={ isDisabled || isAdding }
+                >
+                    { this.renderCartIcon() }
+                    { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
+                    <span>{ isAdding ? __('Adding...') : __('Add to cart') }</span>
+                </button>
+                <OrderTypePopup
+                  addProductToCart={ addProductToCart }
+                />
             </>
         );
     }
