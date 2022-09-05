@@ -14,6 +14,8 @@ import { MY_CLIENTS_URL } from 'Route/MyClientsPage/MyClientsPage.config';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { HistoryType, MatchType } from 'Type/Router.type';
+import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
 import { fetchMutation, fetchQuery, getErrorMessage } from 'Util/Request';
 import { appendWithStoreCode } from 'Util/Url';
 
@@ -130,6 +132,10 @@ export class ClientPageContainer extends PureComponent {
     }
 
     render() {
+        if (!isSignedIn()) {
+            history.replace(appendWithStoreCode('/'));
+        }
+
         return (
             <ClientPage
               { ...this.containerFunctions }
