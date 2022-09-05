@@ -17,7 +17,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Macron\ErpGraphQl\Model\ClientsModel;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 
-class Client implements ResolverInterface
+class DeleteClient implements ResolverInterface
 {
     /**
      * @var ClientsModel
@@ -49,10 +49,15 @@ class Client implements ResolverInterface
         array $args = null
     ) {
         $clientId = (int)$args['client_id'];
-        $clients = $this->clientsModelFactory->getCollection()->addFieldToFilter('entity_id', $clientId)->getData();
+        $collection = $this->clientsModelFactory->getCollection()->addFieldToFilter('entity_id', $clientId);
+        $clients = $collection->getData();
 
         if (count($clients) === 0) {
             throw new GraphQlInputException(__("Client doesn't exists"));
+        }
+
+        foreach ($collection as $item) {
+            $item->delete();
         }
 
         return $clients[0];
