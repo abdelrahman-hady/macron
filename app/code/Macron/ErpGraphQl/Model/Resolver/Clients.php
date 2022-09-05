@@ -16,6 +16,7 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Macron\ErpGraphQl\Model\ClientsModel;
 use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
+use Magento\GraphQl\Model\Query\ContextInterface;
 
 class Clients implements ResolverInterface
 {
@@ -40,8 +41,10 @@ class Clients implements ResolverInterface
     }
 
     /**
+     * Get all customer clients resolver
+     *
      * @param Field $field
-     * @param $context
+     * @param ContextInterface $context
      * @param ResolveInfo $info
      * @param array|null $value
      * @param array|null $args

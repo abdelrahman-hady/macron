@@ -17,6 +17,7 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Macron\ErpGraphQl\Model\ClientsModel;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
+use Magento\GraphQl\Model\Query\ContextInterface;
 
 class DeleteClient implements ResolverInterface
 {
@@ -32,6 +33,7 @@ class DeleteClient implements ResolverInterface
 
     /**
      * @param ClientsModel $clientsModelFactory
+     * @param GetCustomer $getCustomer
      */
     public function __construct(ClientsModel $clientsModelFactory, GetCustomer $getCustomer)
     {
@@ -40,8 +42,10 @@ class DeleteClient implements ResolverInterface
     }
 
     /**
+     * Delete client resolver
+     *
      * @param Field $field
-     * @param $context
+     * @param ContextInterface $context
      * @param ResolveInfo $info
      * @param array|null $value
      * @param array|null $args
@@ -61,6 +65,7 @@ class DeleteClient implements ResolverInterface
 
         $customerId = $this->getCustomer->execute($context)->getId();
         $clientId = (int)$args['client_id'];
+
         $collection = $this->clientsModelFactory->getCollection()
             ->addFieldToFilter('customer_id', $customerId)
             ->addFieldToFilter('entity_id', $clientId);
