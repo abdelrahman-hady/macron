@@ -8,11 +8,11 @@
 
 declare(strict_types=1);
 
-namespace Macron\ClientsGraphQl\Model\ResourceModel\ClientsCollection;
+namespace Macron\ErpGraphQl\Model\ResourceModel\ClientsCollection;
 
-use Macron\ClientsGraphQl\Model\ResourceModel\ClientsCollection;
+use Macron\ErpGraphQl\Model\ResourceModel\ClientsCollection;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Macron\ClientsGraphQl\Model\ClientsModel;
+use Macron\ErpGraphQl\Model\ClientsModel;
 
 class Collection extends AbstractCollection
 {

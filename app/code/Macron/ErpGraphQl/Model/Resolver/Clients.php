@@ -8,13 +8,13 @@
 
 declare(strict_types=1);
 
-namespace Macron\ClientsGraphQl\Model\Resolver;
+namespace Macron\ErpGraphQl\Model\Resolver;
 
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Macron\ClientsGraphQl\Model\ClientsModel;
+use Macron\ErpGraphQl\Model\ClientsModel;
 
 class Clients implements ResolverInterface
 {

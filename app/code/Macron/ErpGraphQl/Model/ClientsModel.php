@@ -8,10 +8,18 @@
 
 declare(strict_types=1);
 
-use Magento\Framework\Component\ComponentRegistrar;
+namespace Macron\ErpGraphQl\Model;
 
-ComponentRegistrar::register(
-    ComponentRegistrar::MODULE,
-    'Macron_ClientsGraphQl',
-    __DIR__
-);
+use Magento\Framework\Model\AbstractModel;
+use Macron\ErpGraphQl\Model\ResourceModel\ClientsCollection;
+
+class ClientsModel extends AbstractModel
+{
+    /**
+     * @return void
+     */
+    protected function _construct(): void
+    {
+        $this->_init(ClientsCollection::class);
+    }
+}
