@@ -478,6 +478,7 @@ return [
         'ScandiPWA_UrlrewriteGraphQl' => 1,
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
+        'Scandiweb_ProductPatches' => 0,
         'ScandiPWA_SliderGraphQl' => 1,
         'Temando_ShippingRemover' => 1
     ],
