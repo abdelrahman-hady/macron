@@ -24,7 +24,8 @@ import './ClientPage.styles.scss';
 export class ClientPageComponent extends PureComponent {
     static propTypes = {
         client: PropTypes.objectOf(ClientType).isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        onCreateClientHandler: PropTypes.func.isRequired
     };
 
     dataMap = {
@@ -119,6 +120,8 @@ export class ClientPageComponent extends PureComponent {
     }
 
     renderActions() {
+        const { onCreateClientHandler } = this.props;
+
         return (
             <div block="ClientPage" elem="Actions">
                 <button block="Button" mods={ { isHollow: true } }>
@@ -128,7 +131,7 @@ export class ClientPageComponent extends PureComponent {
                       <EditIcon />
                     { __('Edit client') }
                 </button>
-                <button block="Button" mods={ { isHollow: true } }>
+                <button block="Button" mods={ { isHollow: true } } onClick={ onCreateClientHandler }>
                     <AddIcon />
                     { __('Create new client') }
                 </button>

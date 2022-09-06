@@ -14,7 +14,9 @@ import { MY_CLIENTS_URL } from 'Route/MyClientsPage/MyClientsPage.config';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { MatchType } from 'Type/Router.type';
+import history from 'Util/History';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
+import { appendWithStoreCode } from 'Util/Url';
 
 import ClientPage from './ClientPage.component';
 
@@ -53,6 +55,7 @@ export class ClientPageContainer extends PureComponent {
     };
 
     containerFunctions = {
+        onCreateClientHandler: this.onCreateClientHandler.bind(this)
     };
 
     componentDidMount() {
@@ -112,6 +115,10 @@ export class ClientPageContainer extends PureComponent {
     updateMeta(title) {
         const { updateMeta } = this.props;
         updateMeta({ title });
+    }
+
+    onCreateClientHandler() {
+        history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/create-client`));
     }
 
     render() {
