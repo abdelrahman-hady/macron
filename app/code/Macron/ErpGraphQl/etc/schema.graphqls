@@ -16,12 +16,18 @@ type Mutation {
     ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
     @doc(description: "Delete client by id")
-	
-	createClient(
-		client: CreateClientInput!
-	): ClientType
+
+    createClient(
+        client: CreateClientInput!
+    ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
     @doc(description: "Create a new client")
+
+    updateClient(
+        client: UpdateClientInput!
+    ): ClientType
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
+    @doc(description: "Update client")
 }
 
 type ClientType {
@@ -45,6 +51,26 @@ type ClientType {
 }
 
 input CreateClientInput {
+    company_name: String!
+    address: String
+    vat_number: Int
+    contract_expiracy_date: String
+    affiliation: String
+    sport: Int
+    category: Int
+    primary_color: Int
+    secondary_color: Int
+    current_brand: String
+    coni_id: Int
+    membership_no: Int
+    distance: Int
+    contact_person: String
+    mobile: String
+    email: String
+}
+
+input UpdateClientInput {
+    entity_id: Int!
     company_name: String!
     address: String
     vat_number: Int
