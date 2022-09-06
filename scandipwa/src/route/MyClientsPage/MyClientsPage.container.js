@@ -72,7 +72,7 @@ export class MyClientsPageContainer extends PureComponent {
         const { updateBreadcrumbs } = this.props;
         const breadcrumbs = [
             {
-                url: '/my-clients',
+                url: MY_CLIENTS_URL,
                 name: __('My clients')
             }
         ];

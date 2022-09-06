@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import ClientsQuery from 'Query/Client.query';
 import { showNotification } from 'Store/Notification/Notification.action';
@@ -71,4 +72,4 @@ export class MyClientsTableContainer extends PureComponent {
     }
 }
 
-export default MyClientsTableContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(MyClientsTableContainer);
