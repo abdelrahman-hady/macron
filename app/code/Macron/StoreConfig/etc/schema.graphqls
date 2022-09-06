@@ -1,7 +1,3 @@
 extend type StoreConfig {
-<<<<<<< HEAD
     xperpage: String! @doc(description: "The X Per Page Configuration value")
-=======
-
->>>>>>> MCRB-199
 }
