@@ -24,25 +24,25 @@
         <column xsi:type="text" name="connected_invoice_id" comment="Connected Invoice ID"/>
     </table>
 
-    <table name="erp_client" resource="default" comment="Table to store my clients">
+    <table name="erp_client" resource="default" engine="innodb" comment="Table to store my clients">
         <column xsi:type="int" name="entity_id" identity="true" nullable="false" comment="Client Id"/>
         <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Client Id"/>
         <column xsi:type="text" name="company_name" nullable="false" comment="Company name"/>
-        <column xsi:type="text" name="address" nullable="false" comment="Address"/>
-        <column xsi:type="int" name="vat_number" unsigned="true" nullable="false" comment="VAT number"/>
-        <column xsi:type="text" name="contract_expiracy_date" nullable="true" comment="Сontract expiracy date"/>
-        <column xsi:type="text" name="affiliation" nullable="false" comment="Affiliation"/>
-        <column xsi:type="int" name="sport" nullable="false" comment="Sport"/>
-        <column xsi:type="int" name="category" nullable="false" comment="Category"/>
-        <column xsi:type="int" name="primary_color" nullable="true" comment="Primary color"/>
-        <column xsi:type="int" name="secondary_color" nullable="true" comment="Secondary color"/>
-        <column xsi:type="text" name="current_brand" nullable="true" comment="Current brand"/>
-        <column xsi:type="int" name="coni_id" unsigned="true" nullable="false" comment="Coni ID"/>
-        <column xsi:type="int" name="membership_no" unsigned="true" nullable="false" comment="Membership No."/>
-        <column xsi:type="int" name="distance" unsigned="true" nullable="false" comment="Distance from MS"/>
-        <column xsi:type="text" name="contact_person" nullable="false" comment="Contact person"/>
-        <column xsi:type="text" name="mobile" nullable="false" comment="Mobile"/>
-        <column xsi:type="text" name="email" nullable="false" comment="Email"/>
+        <column xsi:type="text" name="address" comment="Address"/>
+        <column xsi:type="int" name="vat_number" comment="VAT number"/>
+        <column xsi:type="text" name="contract_expiracy_date" comment="Сontract expiracy date"/>
+        <column xsi:type="text" name="affiliation" comment="Affiliation"/>
+        <column xsi:type="int" name="sport" comment="Sport"/>
+        <column xsi:type="int" name="category" comment="Category"/>
+        <column xsi:type="int" name="primary_color" comment="Primary color"/>
+        <column xsi:type="int" name="secondary_color" comment="Secondary color"/>
+        <column xsi:type="text" name="current_brand" comment="Current brand"/>
+        <column xsi:type="int" name="coni_id" comment="Coni ID"/>
+        <column xsi:type="int" name="membership_no" comment="Membership No."/>
+        <column xsi:type="int" name="distance" comment="Distance from MS"/>
+        <column xsi:type="text" name="contact_person" comment="Contact person"/>
+        <column xsi:type="text" name="mobile" comment="Mobile"/>
+        <column xsi:type="text" name="email" comment="Email"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
