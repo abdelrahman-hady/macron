@@ -22,6 +22,7 @@ export const MyProfilePage = lazy(() => import(/* webpackMode: "lazy", webpackCh
 export const INVOICES = 'INVOICES';
 export const MY_CLIENTS = 'MY_CLIENTS';
 export const MY_PROFILE = 'MY_PROFILE';
+
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
     {
@@ -36,7 +37,7 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
     },
     {
         component: <Route path={ withStoreRegex('/my-profile') } render={ (props) => <MyProfilePage { ...props } /> } />,
-        position: 26,
+        position: 27,
         name: MY_PROFILE
     }
 ];
