@@ -32,10 +32,12 @@
             "distance": true,
             "contact_person": true,
             "mobile": true,
-            "email": true
+            "email": true,
+            "customer_id": true
         },
         "constraint": {
-            "PRIMARY": true
+            "PRIMARY": true,
+            "ERP_CLIENT_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
         }
     }
 }

@@ -12,8 +12,12 @@ import { connect } from 'react-redux';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
+import { appendWithStoreCode } from 'Util/Url';
 
 import MyClientsPage from './MyClientsPage.component';
+import { MY_CLIENTS_URL } from './MyClientsPage.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -68,7 +72,7 @@ export class MyClientsPageContainer extends PureComponent {
         const { updateBreadcrumbs } = this.props;
         const breadcrumbs = [
             {
-                url: '/my-clients',
+                url: MY_CLIENTS_URL,
                 name: __('My clients')
             }
         ];
@@ -77,6 +81,10 @@ export class MyClientsPageContainer extends PureComponent {
     }
 
     render() {
+        if (!isSignedIn()) {
+            history.replace(appendWithStoreCode('/'));
+        }
+
         return (
             <MyClientsPage
               { ...this.containerFunctions }

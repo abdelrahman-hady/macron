@@ -1,11 +1,25 @@
 type Query {
     clients: [ClientType]
-    @resolver(class: "\\Macron\\ClientsGraphQl\\Model\\Resolver\\Clients")
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
     @doc(description: "Get list of clients")
+
+    client (
+        client_id: Int!
+    ): ClientType
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
+    @doc(description: "Get client by id")
+}
+
+type Mutation {
+    deleteClient(
+        client_id: Int!
+    ): ClientType
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
+    @doc(description: "Delete client by id")
 }
 
 type ClientType {
-    entity_id: ID
+    entity_id: Int
     company_name: String
     address: String
     vat_number: Int
