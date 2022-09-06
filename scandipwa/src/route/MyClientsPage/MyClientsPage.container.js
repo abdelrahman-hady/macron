@@ -12,8 +12,11 @@ import { connect } from 'react-redux';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import history from 'Util/History';
+import { appendWithStoreCode } from 'Util/Url';
 
 import MyClientsPage from './MyClientsPage.component';
+import { MY_CLIENTS_URL } from './MyClientsPage.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -43,6 +46,7 @@ export class MyClientsPageContainer extends PureComponent {
     };
 
     containerFunctions = {
+        onCreateClientHandler: this.onCreateClientHandler.bind(this)
     };
 
     componentDidMount() {
@@ -74,6 +78,10 @@ export class MyClientsPageContainer extends PureComponent {
         ];
 
         updateBreadcrumbs(breadcrumbs);
+    }
+
+    onCreateClientHandler() {
+        history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/create-client`));
     }
 
     render() {

@@ -14,6 +14,12 @@ export class ClientQuery {
             .addFieldList(this._getClientFields());
     }
 
+    getCreateClientMutation(client) {
+        return new Field('createClient')
+            .addArgument('client', 'CreateClientInput!', client)
+            .addFieldList(this._getClientFields());
+    }
+
     _getClientFields() {
         return [
             'entity_id',
