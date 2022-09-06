@@ -1,13 +1,8 @@
 /* eslint-disable max-lines */
 /*
  * @category  Macron
-<<<<<<< HEAD
- * @authors   Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
- *            Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
-=======
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
->>>>>>> origin/MCRB-91
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -66,7 +61,6 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         position: 30,
         name: MY_CLIENTS
     },
-<<<<<<< HEAD
     {
         component: <Route path={ withStoreRegex('/shipments') } render={ (props) => <Shipments { ...props } /> } />,
         position: 26,
@@ -81,10 +75,8 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         component: <Route path={ withStoreRegex('/my-clients/:clientId?') } render={ (props) => <ClientPage { ...props } /> } />,
         position: 31,
         name: CLIENT
-    }
-=======
+    },
     ...originalMember
->>>>>>> origin/MCRB-91
 ];
 
 export default {
