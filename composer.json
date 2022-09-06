@@ -11,7 +11,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "laminas/laminas-dependency-plugin": true,
             "magento/*": true,
-            "magento/composer-dependency-version-audit-plugin": true,
+            "magento/composer-dependency-version-audit-plugin": false,
             "magento/composer-root-update-plugin": true,
             "magento/inventory-composer-installer": true,
             "magento/magento-composer-installer": true,
@@ -22,6 +22,7 @@
     },
     "version": "2.4.4",
     "require": {
+        "magefan/module-blog": "^2.10",
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "~2.0",
         "magento/product-enterprise-edition": "2.4.4",
@@ -84,7 +85,8 @@
     "repositories": {
         "0": {
             "type": "composer",
-            "url": "https://repo.magento.com/"
+            "url": "https://repo.magento.com/",
+            "canonical": false
         },
         "macron": {
             "type": "composer",
@@ -102,5 +104,8 @@
                 "/.gitignore"
             ]
         }
+    },
+    "replace": {
+        "magefan/module-admin-user-guide": "*"
     }
 }
