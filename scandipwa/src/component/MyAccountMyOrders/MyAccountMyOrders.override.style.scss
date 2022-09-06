@@ -3,8 +3,9 @@
 
     &-searchIcon {
         position: absolute;
-        inset-block-start: 12px;
-        inset-inline-start: 15px;
+        inset-block-start: calc((100% - 24px) - 20%);
+        inset-inline-start: 10px;
+        z-index: 10;
     }
 
     &-searchInput {

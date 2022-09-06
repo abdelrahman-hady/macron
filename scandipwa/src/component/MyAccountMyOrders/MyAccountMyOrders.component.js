@@ -1,3 +1,10 @@
+/*
+ * @category  Macron
+ * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ */
+
 import PropTypes from 'prop-types';
 
 import Loader from 'Component/Loader';
@@ -52,10 +59,10 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 </div>
                 <Field
                   id="searchOrder"
-                  block="searchOrder"
-                  elem="searchInput"
                   type={ FIELD_TYPE.text }
                   attr={ {
+                      block: 'searchOrder',
+                      elem: 'searchInput',
                       name: 'searchOrder',
                       placeholder: __('Search by keyword')
                   } }
@@ -81,7 +88,6 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             ? ordersItems
             : Array.from({ length: 10 }, (_, id) => ({ base_order_info: { id } }));
 
-        console.log(orders);
         return orders.reduceRight(
             (acc, e) => [...acc, this.renderOrderRow(e)],
             []
