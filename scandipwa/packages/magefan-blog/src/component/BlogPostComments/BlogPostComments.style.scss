@@ -1,0 +1,149 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.PostPage {
+    .post-bottom {
+        .comments {
+            .c-reply,
+            .c-comment {
+                position: relative;
+                margin-block-end: 18px;
+            }
+
+            .c-reply {
+                .c-replyform {
+                    input,textarea {
+                        width: 100%;
+                    }
+
+                    textarea {
+                        padding: 8px;
+                        height: 70px;
+                        resize: vertical;
+                    }
+
+                    .c-btn-hld {
+                        margin-block-start: 20px;
+
+                        .lr-hld {
+                            display: -webkit-flex;
+                            display: -ms-flexbox;
+                            display: flex;
+                            -webkit-justify-content: center;
+                            -ms-flex-pack: justify;
+                            justify-content: space-between;
+
+                            .Field {
+                                margin-block-start: 0;
+                            }
+
+                            .left-hld, .right-hld {
+                                width: 49%;
+                                padding: 0;
+                                -webkit-flex: 0 0 49%;
+                                -ms-flex: 0 0 49%;
+                                flex: 0 0 49%;
+                            }
+                        }
+
+                        .privacy {
+                            margin-block-end: 0;
+
+                            a {
+                                text-decoration: underline;
+                                // because i need the link to be clickable
+                                z-index: 11;
+                            }
+                        }
+                    }
+
+                    .Button {
+                        margin-block-start: 20px;
+                    }
+
+                    .cancel {
+                        background-color: var(--secondary-base-color);
+                        border-color: var(--secondary-base-color);
+                        color: #4b4f56;
+                        margin-inline-end: 5px;
+
+                        &:hover {
+                            background-color: var(--secondary-dark-color);
+                            border-color: var(--secondary-dark-color);
+                        }
+                    }
+                }
+
+                .c-replyform.no-active {
+                    textarea {
+                        height: 60px;
+                    }
+                }
+            }
+
+            .c-comments {
+                margin-block-start: 20px;
+                border-top: 1px solid #ddd;
+                padding-block-start: 30px;
+                padding-inline-start: 25px;
+
+                .c-comment {
+                    border-bottom: 1px dashed #eee;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+
+                    .c-post {
+                        .p-info {
+                            margin-block-end: 10px;
+
+                            .p-name {
+                                font-weight: 700;
+                                color: #222222;
+                                display: inline-block;
+                                float: inline-start;
+                                margin-inline-end: 10px;
+                                font-size: 14px;
+                                line-height: 20px;
+                            }
+
+                            .publish-date {
+                                font-size: 11px;
+                                color: #bbbbbb;
+                                display: inline-block;
+                                line-height: 20px;
+                            }
+                        }
+
+                        .p-actions {
+                            font-size: 12px;
+                            padding: 8px 0 10px;
+
+                            button {
+                                color: #bbbbbb;
+                                cursor: pointer;
+
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+
+                        .p-replies {
+                            border-left: 1px dotted #bdbdbd;
+                            padding-inline-start: 10px;
+
+                            .c-post,
+                            .c-replyform {
+                                margin-inline-start: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

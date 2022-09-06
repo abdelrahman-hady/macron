@@ -1,0 +1,23 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.PDPRelatedPosts {
+    &-Wrapper {
+        padding: 36px 12px;
+
+        ol {
+            margin-block: 0rem 2.5rem;
+
+            > li {
+                margin-block: 0rem 1rem;
+
+                &::before {
+                    inset-block-start: 0;
+                    inset-inline-start: -1em;
+                }
+            }
+        }
+    }
+}

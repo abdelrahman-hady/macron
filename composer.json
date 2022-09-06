@@ -29,7 +29,8 @@
         "readymage/logger": "^1.0",
         "readymage/maintenance": "^1.0",
         "scandipwa/sample-data": "^1.2",
-        "scandipwa/theme": "^0.0.1"
+        "scandipwa/theme": "^0.0.1",
+        "scandiweb/magefan-blog": "^1.0"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -83,6 +84,10 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": {
+        "my_module": {
+            "type": "path",
+            "url": "./packages/MagefanBlog"
+        },
         "0": {
             "type": "composer",
             "url": "https://repo.magento.com/"
