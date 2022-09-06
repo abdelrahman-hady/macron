@@ -5,16 +5,18 @@
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
-
 declare(strict_types=1);
 
 namespace Macron\ErpGraphQl\Model\Resolver;
 
 use Magento\Framework\GraphQl\Config\Element\Field;
+use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Macron\ErpGraphQl\Model\ClientsModel;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
+use Magento\GraphQl\Model\Query\ContextInterface;
 
 class Clients implements ResolverInterface
 {
@@ -24,20 +26,30 @@ class Clients implements ResolverInterface
     protected ClientsModel $clientsModelFactory;
 
     /**
-     * @param ClientsModel $clientsModelFactory
+     * @var GetCustomer
      */
-    public function __construct(ClientsModel $clientsModelFactory)
+    protected GetCustomer $getCustomer;
+
+    /**
+     * @param ClientsModel $clientsModelFactory
+     * @param GetCustomer $getCustomer
+     */
+    public function __construct(ClientsModel $clientsModelFactory, GetCustomer $getCustomer)
     {
         $this->clientsModelFactory = $clientsModelFactory;
+        $this->getCustomer = $getCustomer;
     }
 
     /**
+     * Get all customer clients resolver
+     *
      * @param Field $field
-     * @param $context
+     * @param ContextInterface $context
      * @param ResolveInfo $info
      * @param array|null $value
      * @param array|null $args
      * @return array|Value|mixed|null
+     * @throws GraphQlAuthorizationException
      */
     public function resolve(
         Field $field,
@@ -46,6 +58,12 @@ class Clients implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        return $this->clientsModelFactory->getCollection()->getData();
+        if (!$context->getExtensionAttributes()->getIsCustomer()) {
+            throw new GraphQlAuthorizationException(__("The current customer isn't authorized."));
+        }
+
+        $customerId = $this->getCustomer->execute($context)->getId();
+
+        return $this->clientsModelFactory->getCollection()->addFieldToFilter('customer_id', $customerId)->getData();
     }
 }
