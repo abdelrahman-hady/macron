@@ -11,9 +11,34 @@ type Query {
 
 }
 
+type Mutation {
+    createClient(client: CreateClientInput!): ClientType
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
+    @doc(description: "Create a new client")
+}
+
 type ClientType {
     entity_id: Int
     company_name: String
+    address: String
+    vat_number: Int
+    contract_expiracy_date: String
+    affiliation: String
+    sport: Int
+    category: Int
+    primary_color: Int
+    secondary_color: Int
+    current_brand: String
+    coni_id: Int
+    membership_no: Int
+    distance: Int
+    contact_person: String
+    mobile: String
+    email: String
+}
+
+input CreateClientInput {
+    company_name: String!
     address: String
     vat_number: Int
     contract_expiracy_date: String
