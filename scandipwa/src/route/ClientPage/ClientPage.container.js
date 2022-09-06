@@ -57,7 +57,8 @@ export class ClientPageContainer extends PureComponent {
     };
 
     containerFunctions = {
-        onClickDelete: this.onClickDelete.bind(this)
+        onClickDelete: this.onClickDelete.bind(this),
+        onCreateClientHandler: this.onCreateClientHandler.bind(this)
     };
 
     componentDidMount() {
@@ -129,6 +130,10 @@ export class ClientPageContainer extends PureComponent {
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
         }
+    }
+
+    onCreateClientHandler() {
+        history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/create-client`));
     }
 
     render() {
