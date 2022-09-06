@@ -11,7 +11,8 @@
             "b2b_profile_id": true,
             "customer_discounts": true,
             "retail_price_list": true,
-            "wholesale_price_list": true
+            "wholesale_price_list": true,
+            "company_name":true
         }
     },
     "customer_entity_discounts": {

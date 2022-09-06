@@ -20,6 +20,7 @@
         <column xsi:type="text" name="customer_discounts" comment="Customer Discounts"/>
         <column xsi:type="text" name="retail_price_list" comment="Retail Price List"/>
         <column xsi:type="text" name="wholesale_price_list" comment="Wholesale Price List"/>
+        <column xsi:type="text" name="company_name" comment="Company Name"/>
     </table>
 
     <table name="customer_entity_discounts" resource="default" engine="innodb" comment="Customer Discounts">
