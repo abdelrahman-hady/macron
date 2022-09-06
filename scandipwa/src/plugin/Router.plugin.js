@@ -1,7 +1,13 @@
+/* eslint-disable max-lines */
 /*
  * @category  Macron
+<<<<<<< HEAD
  * @authors   Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  *            Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
+=======
+ * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+>>>>>>> origin/MCRB-91
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -14,7 +20,18 @@
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
 
-import { withStoreRegex } from 'Component/Router/Router.component';
+import {
+    HomePage,
+    LoginAccountPage,
+    withStoreRegex
+} from 'Component/Router/Router.component';
+import {
+    HOME,
+    LOGIN
+} from 'Component/Router/Router.config';
+import { appendWithStoreCode } from 'SourceUtil/Url';
+import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "my-clients" */ '../route/MyClientsPage'));
 export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
@@ -29,7 +46,16 @@ export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const CLIENT = 'CLIENT';
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
-    ...originalMember,
+    {
+        component: <Route path={ withStoreRegex('/') } exact render={ (props) => (isSignedIn() ? <HomePage { ...props } /> : <LoginAccountPage { ...props } />) } />,
+        position: 10,
+        name: HOME
+    },
+    {
+        component: <Route path={ withStoreRegex('/customer/account/login/') } render={ () => history.replace(appendWithStoreCode('/')) } />,
+        position: 62,
+        name: LOGIN
+    },
     {
         component: <Route path={ withStoreRegex('/invoices') } render={ (props) => <InvoicesPage { ...props } /> } />,
         position: 30,
@@ -40,6 +66,7 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         position: 30,
         name: MY_CLIENTS
     },
+<<<<<<< HEAD
     {
         component: <Route path={ withStoreRegex('/shipments') } render={ (props) => <Shipments { ...props } /> } />,
         position: 26,
@@ -55,6 +82,9 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         position: 31,
         name: CLIENT
     }
+=======
+    ...originalMember
+>>>>>>> origin/MCRB-91
 ];
 
 export default {
