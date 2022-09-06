@@ -16,7 +16,8 @@ export class ClientQuery {
 
     getCreateClientMutation(client) {
         return new Field('createClient')
-            .addArgument('client', 'CreateClientInput!', client);
+            .addArgument('client', 'CreateClientInput!', client)
+            .addFieldList(this._getClientFields());
     }
 
     getClientQuery(clientId) {

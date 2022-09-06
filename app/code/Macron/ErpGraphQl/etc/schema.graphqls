@@ -16,10 +16,10 @@ type Mutation {
     ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
     @doc(description: "Delete client by id")
-}
-
-type Mutation {
-    createClient(client: CreateClientInput!): ClientType
+	
+	createClient(
+		client: CreateClientInput!
+	): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
     @doc(description: "Create a new client")
 }
