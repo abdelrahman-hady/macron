@@ -439,6 +439,7 @@ return [
         'Magento_GiftCardGraphQl' => 1,
         'Macron_ClientsGraphQl' => 1,
         'Macron_Core' => 1,
+        'Macron_Customer' => 1,
         'Macron_DisableStock' => 1,
         'Macron_Erp' => 1,
         'Macron_ErpGraphQl' => 1,
