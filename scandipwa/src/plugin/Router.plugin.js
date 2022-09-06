@@ -33,12 +33,14 @@ export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChu
 export const Shipments = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "shipments" */ '../route/Shipments'));
 export const ClientPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "client" */ '../route/ClientPage'));
 export const CreateClientPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "create-client" */ '../route/CreateClientPage'));
+export const StatsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "Stats" */ '../route/StatsPage'));
 
 export const MY_CLIENTS = 'MY_CLIENTS';
 export const INVOICES = 'INVOICES';
 export const SHIPMENTS = 'SHIPMENTS';
 export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const CLIENT = 'CLIENT';
+export const STATS_PAGE = 'STATS_PAGE';
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     {
@@ -75,6 +77,11 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         component: <Route path={ withStoreRegex('/my-clients/:clientId?') } render={ (props) => <ClientPage { ...props } /> } />,
         position: 31,
         name: CLIENT
+    },
+    {
+        component: <Route path={ withStoreRegex('/stats') } render={ (props) => <StatsPage { ...props } /> } />,
+        position: 45,
+        name: STATS_PAGE
     },
     ...originalMember
 ];
