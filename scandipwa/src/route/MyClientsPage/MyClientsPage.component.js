@@ -8,6 +8,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import AddIcon from 'Component/AddIcon';
 import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
 import MyClientsTable from 'Component/MyClientsTable';
@@ -15,7 +16,8 @@ import MyClientsTable from 'Component/MyClientsTable';
 /** @namespace Scandipwa/Route/MyClientsPage/Component */
 export class MyClientsPageComponent extends PureComponent {
     static propTypes = {
-        isLoading: PropTypes.bool
+        isLoading: PropTypes.bool,
+        onCreateClientHandler: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -30,10 +32,21 @@ export class MyClientsPageComponent extends PureComponent {
         );
     }
 
+    renderCreateClient() {
+        const { onCreateClientHandler } = this.props;
+        return (
+            <button block="Button" mods={ { isHollow: true } } onClick={ onCreateClientHandler }>
+                <AddIcon />
+                { __('Create new client') }
+            </button>
+        );
+    }
+
     renderMainContent() {
         return (
             <ContentWrapper label="My Clients Page">
                 { this.renderHeading() }
+                { this.renderCreateClient() }
                 <MyClientsTable />
             </ContentWrapper>
         );

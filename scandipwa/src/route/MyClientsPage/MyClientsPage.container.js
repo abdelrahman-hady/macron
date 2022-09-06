@@ -47,6 +47,7 @@ export class MyClientsPageContainer extends PureComponent {
     };
 
     containerFunctions = {
+        onCreateClientHandler: this.onCreateClientHandler.bind(this)
     };
 
     componentDidMount() {
@@ -78,6 +79,10 @@ export class MyClientsPageContainer extends PureComponent {
         ];
 
         updateBreadcrumbs(breadcrumbs);
+    }
+
+    onCreateClientHandler() {
+        history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/create-client`));
     }
 
     render() {
