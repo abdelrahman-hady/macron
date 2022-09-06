@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
+import Pagination from 'Component/Pagination';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
@@ -58,6 +59,15 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderPagination() {
+        const { isLoading, orderList: { pageInfo = { total_pages: 1 } } } = this.props;
+        const { total_pages } = pageInfo;
+
+        return (
+             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
@@ -65,9 +75,10 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
                 { this.renderOrdersPerPage() }
-                { this.renderTable() }
                 { this.renderPagination() }
+                { this.renderTable() }
                 { this.renderOrdersPerPage() }
+                { this.renderPagination() }
             </div>
         );
     }
