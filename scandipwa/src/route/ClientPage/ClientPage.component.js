@@ -121,7 +121,7 @@ export class ClientPageComponent extends PureComponent {
     }
 
     renderActions() {
-        const { onCreateClientHandler, onClickDelete } = this.props;
+        const { onClickDelete, onCreateClientHandler } = this.props;
 
         return (
             <div block="ClientPage" elem="Actions">
