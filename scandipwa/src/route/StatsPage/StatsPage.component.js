@@ -15,8 +15,6 @@ import Loader from 'Component/Loader';
 export class StatsPageComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool
-        // isEnabled: PropTypes.bool.isRequired,
-        // isMobile: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
