@@ -8,6 +8,7 @@
 import {
     OrderQuery as SourceOrderQuery
 } from 'SourceQuery/Order.query';
+import { Field } from 'Util/Query';
 
 /**
  * Order Query
@@ -18,7 +19,8 @@ export class OrderQuery extends SourceOrderQuery {
         const basicFields = [
             ...super._getOrderItemsFields(isSingleOrder),
             'internal_note',
-            'reference_note'
+            'reference_note',
+            'sap_order_id'
         ];
 
         if (isSingleOrder) {
@@ -34,6 +36,28 @@ export class OrderQuery extends SourceOrderQuery {
             'internal_note',
             'reference_note'
         ];
+    }
+
+    _getOrdersField(options) {
+        const { orderId, page = 1 } = options || {};
+        const ordersField = new Field('orders');
+
+        if (orderId !== undefined ? orderId.includes('sap') : null) {
+            // 'sap' might have to be replaced with something else when real sap_order_id format will be known.
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { sap_order_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
+        }
+
+        if (orderId) {
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
+        }
+
+        return ordersField
+            .addArgument('currentPage', 'Int', page)
+            .addFieldList(this._getOrdersFields());
     }
 }
 
