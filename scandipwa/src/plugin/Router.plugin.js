@@ -13,7 +13,7 @@
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
 
 import { lazy } from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
 import {
     HomePage,
@@ -33,6 +33,15 @@ export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChu
 
 export const INVOICES = 'INVOICES';
 export const MY_CLIENTS = 'MY_CLIENTS';
+
+const BEFORE_ITEMS_TYPE = (originalMember) => [
+    ...originalMember,
+    !isSignedIn() && {
+        component: <Redirect to="/" />,
+        position: 40,
+        name: 'redirect'
+    }
+];
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     {
@@ -61,6 +70,7 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
 export default {
     'Component/Router/Component': {
         'member-property': {
+            BEFORE_ITEMS_TYPE,
             SWITCH_ITEMS_TYPE
         }
     }
