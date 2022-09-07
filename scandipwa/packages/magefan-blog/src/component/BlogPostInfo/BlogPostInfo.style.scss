@@ -1,0 +1,35 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.post-holder {
+    .post-header {
+        .post-info {
+            padding: 0 0 20px;
+
+            .item {
+                margin-inline-start: unset;
+                margin-inline-end: unset;
+                line-height: 1.42857143;
+                font-size: 1.4rem;
+
+                &::after {
+                    margin-inline-end: 5px;
+                    margin-inline-start: 5px;
+                }
+
+                &.item.post-tags,
+                &.item.post-categories {
+                    a {
+                        display: inline-block;
+                    }
+                }
+
+                *:not(:first-child) {
+                    margin-inline-start: 5px;
+                }
+            }
+        }
+    }
+}

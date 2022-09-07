@@ -1,0 +1,79 @@
+type Query {
+    sw_blogPost(
+        identifier: String
+        ): BlogPost @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\PostResolver")
+    sw_blogAuthor(
+        identifier: String
+        ): BlogAuthor @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\AuthorResolver")
+    sw_blogCategory(
+        identifier: String
+        ): BlogCategory @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\CategoryResolver")
+    sw_blogTag(
+        identifier: String
+        ): BlogTag @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\TagResolver")
+    sw_blogPath(
+        path: String
+        ): Path @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\PathResolver")
+    sw_sidebarBlogTags (
+        tagCount: Int
+    ): blogTagsOutput @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\SidebarTagsResolver")
+    sw_sidebarArchive: [BlogArchive] @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\ArchiveResolver")
+}
+
+type BlogPost {
+    comments_count: Int @resolver(class: "\\Scandiweb\\MagefanBlog\\Model\\Resolver\\GetCommentCount")
+    media_gallery: [String] @doc(description: "Blog Post Media gallery")
+    nextPost: NextPrevPostType @doc(description: "Next Post details")
+    prevPost: NextPrevPostType @doc(description: "previous Post details")
+}
+
+ type NextPrevPostType {
+    url: String @doc(description: "Blog Post url")
+    title: String @doc(description: "Blog Post title")
+ }
+
+type Path {
+    id: String
+    type: String
+    details: PathDetails
+}
+
+type PathDetails {
+    title: String
+    name: String
+    content: String
+    meta_title: String
+    meta_keywords: String
+    meta_description: String
+    og_title: String
+    og_description: String
+    og_img: String
+    og_type: String
+    og_url: String
+    breadcrumbs: [Breadcrumb]
+}
+
+type BlogArchive {
+    id: String
+    title: String
+    url: String
+}
+
+type StoreConfig {
+    mfblog_index_page_template: String
+    mfblog_index_page_display_mode: String
+    mfblog_sidebar_recent_posts_display_image: Int
+    mfblog_sidebar_featured_posts_display_image: Int
+    mfblog_sidebar_popular_posts_display_image: Int
+    mfblog_sidebar_tag_claud_animated: Int
+    mfblog_sidebar_tag_claud_cloud_height: Int
+    mfblog_sidebar_tag_claud_text_highlight_color: String
+    mfblog_post_list_template: String
+    mfblog_post_list_shortcontent_length: Int
+    mfblog_post_list_lazyload_padding: Int
+    mfblog_top_menu_show_item: String
+    mfblog_top_menu_item_text: String
+    mfblog_top_menu_include_categories: String
+    mfblog_top_menu_max_depth: String
+    mfblog_index_page_post_ids: String
+}
