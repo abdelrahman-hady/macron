@@ -10,7 +10,7 @@ import { withRouter } from 'react-router';
 
 import OrderQuery from 'Query/Order.query';
 import {
-    mapDispatchToProps as sourceMapDispatchToProps,
+    mapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
     MyAccountMyOrdersContainer as SourceMyAccountMyOrdersContainer
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.container';
@@ -20,15 +20,14 @@ import { fetchQuery } from 'Util/Request';
 
 import MyAccountMyOrders from './MyAccountMyOrders.component';
 
+export {
+    mapDispatchToProps
+};
+
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
     device: state.ConfigReducer.device
-});
-
-/** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
-export const mapDispatchToProps = (dispatch) => ({
-    ...sourceMapDispatchToProps(dispatch)
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container */
@@ -42,6 +41,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         searchInput: '',
         orderListSearchResult: []
     };
+
+    timer = null;
 
     containerProps() {
         const {
@@ -66,12 +67,24 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { value } = e.target;
         this.setState({ searchInput: value });
         const query = OrderQuery.getOrdersByKeywordQuery(value);
-        fetchQuery(query).then(
-            /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/fetchQuery/then */
-            ({ OrdersByKeyword }) => {
-                this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+        this.debounce(
+            () => {
+                fetchQuery(query).then(
+                    /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/debounce/fetchQuery/then */
+                    ({ OrdersByKeyword }) => {
+                        this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+                    }
+                );
             }
         );
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    debounce(func, timeout = 500) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            func();
+        }, timeout);
     }
 
     render() {

@@ -48,22 +48,22 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const { onInputChange } = this.props;
         return (
             <div
-              block="searchOrder"
+              block="SearchOrder"
               elem="SearchInnerWrapper"
             >
                 <div
-                  block="searchOrder"
-                  elem="searchIcon"
+                  block="SearchOrder"
+                  elem="SearchIcon"
                 >
                     <SearchIcon />
                 </div>
                 <Field
-                  id="searchOrder"
+                  id="SearchOrder"
                   type={ FIELD_TYPE.text }
                   attr={ {
-                      block: 'searchOrder',
-                      elem: 'searchInput',
-                      name: 'searchOrder',
+                      block: 'SearchOrder',
+                      elem: 'SearchInput',
+                      name: 'SearchOrder',
                       placeholder: __('Search by keyword')
                   } }
                   events={ {

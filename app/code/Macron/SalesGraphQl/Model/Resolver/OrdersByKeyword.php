@@ -79,17 +79,29 @@ class OrdersByKeyword implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        if (empty($args['keyword'])) {
-            throw new GraphQlInputException(__('Required parameter "keyword" is missing'));
-        }
+//        if (empty($args['keyword'])) {
+//            throw new GraphQlInputException(__('Required parameter "keyword" is missing'));
+//        }
 
         $userId = $context->getUserId();
         $store = $context->getExtensionAttributes()->getStore();
-        $orders = $this->orderCollection->create();
-        $fields = $orders->getFirstItem()->getData();
+        $fields = [
+            'increment_id',
+            'sap_order_id',
+            'user_sap_id',
+            'user_customer_sap_id',
+            'user_customer_name',
+            'sales_business_pool_id',
+            'sales_business_pool_name',
+            'date',
+            'status',
+            'internal_note',
+            'reference_note',
+            'grand_total'
+        ];
 
         $filterCondition = [];
-        foreach ($fields as $fieldName => $data) {
+        foreach ($fields as $fieldName) {
             $filterCondition['filter'][$fieldName] = ['match' => $args['keyword']];
         }
         $filterGroups = $this->orderFilter->createFilterGroups($filterCondition, $userId, (int)$store->getId());
