@@ -9,7 +9,14 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import InvoicesQuery from 'Query/Invoice.query';
 import { updateMeta } from 'Store/Meta/Meta.action';
+import { showNotification } from 'Store/Notification/Notification.action';
+import { HistoryType, MatchType } from 'Type/Router.type';
+import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
+import { appendWithStoreCode } from 'Util/Url';
 
 import InvoicesPage from './InvoicesPage.component';
 
@@ -20,6 +27,7 @@ export const BreadcrumbsDispatcher = import(
 
 /** @namespace Scandipwa/Route/InvoicesPage/Container/mapStateToProps */
 export const mapStateToProps = (_state) => ({
+    // TODO add the state to be passed to component
 });
 
 /** @namespace Scandipwa/Route/InvoicesPage/Container/mapDispatchToProps */
@@ -29,32 +37,48 @@ export const mapDispatchToProps = (dispatch) => ({
         BreadcrumbsDispatcher.then(
             ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
         );
-    }
+    },
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
 });
 
 /** @namespace Scandipwa/Route/InvoicesPage/Container */
 export class InvoicesPageContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,
-        updateBreadcrumbs: PropTypes.func.isRequired
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        showErrorNotification: PropTypes.func.isRequired,
+        match: MatchType.isRequired,
+        history: HistoryType.isRequired
+    };
+
+    state = {
+        invoices: [],
+        isLoading: false
     };
 
     containerFunctions = {
     };
 
     componentDidMount() {
+        this.requestInvoices();
         this.updateMeta();
+        // ToDo check if 'updateBreadcrumbs' is not needed as it is already invoked in __construct
         this.updateBreadcrumbs();
     }
 
     __construct(props) {
         super.__construct(props, 'InvoicesPageContainer');
-
         this.updateBreadcrumbs();
     }
 
-    containerProps = () => {
-    };
+    containerProps() {
+        const { invoices, isLoading } = this.state;
+
+        return {
+            invoices,
+            isLoading
+        };
+    }
 
     updateMeta() {
         const { updateMeta } = this.props;
@@ -73,7 +97,31 @@ export class InvoicesPageContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
+    async requestInvoices() {
+        const { showErrorNotification, match: { params: { invoiceId } } } = this.props;
+
+        this.setState({ isLoading: true });
+
+        try {
+            const { invoices } = await fetchQuery(InvoicesQuery.getInvoiceQuery(invoiceId));
+
+            const { company_name: companyName } = invoices;
+
+            this.updateMeta(companyName);
+            this.updateBreadcrumbs(companyName);
+
+            this.setState({ invoices, isLoading: false });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+            this.setState({ isLoading: false });
+        }
+    }
+
     render() {
+        if (!isSignedIn()) {
+            history.replace(appendWithStoreCode('/'));
+        }
+
         return (
             <InvoicesPage
               { ...this.containerFunctions }
