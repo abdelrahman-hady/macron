@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1ed9ffffb437e736e6750bd722f85d1",
+    "content-hash": "cd82fe49b56c18b0d8670f4146a02e74",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -4349,16 +4349,17 @@
         },
         {
             "name": "magefan/module-blog",
-            "version": "2.10.10",
+            "version": "2.10.10.2",
             "source": {
                 "type": "git",
-                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_blog.git",
-                "reference": "4394a1acdf32c282600bab46a287158d57fbc35f"
+                "url": "https://github.com/magefan/module-blog.git",
+                "reference": "56bde1d852d5f3f25f91bf04be19b75b647f456a"
             },
             "dist": {
-                "type": "tar",
-                "url": "https://packages.dev.macron.com/dist/magefan/module-blog/magefan-module-blog-2.10.10-6f96cc.tar",
-                "reference": "4394a1acdf32c282600bab46a287158d57fbc35f"
+                "type": "zip",
+                "url": "https://api.github.com/repos/magefan/module-blog/zipball/56bde1d852d5f3f25f91bf04be19b75b647f456a",
+                "reference": "56bde1d852d5f3f25f91bf04be19b75b647f456a",
+                "shasum": ""
             },
             "require": {
                 "magefan/module-blog-graph-ql": ">=2.1.7",
@@ -4379,21 +4380,27 @@
                     "Magefan\\Blog\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "description": "Implements Blog functionality on Magento 2 store",
-            "time": "2022-08-30T16:05:58+00:00"
+            "support": {
+                "issues": "https://github.com/magefan/module-blog/issues",
+                "source": "https://github.com/magefan/module-blog/tree/2.10.10.2"
+            },
+            "time": "2022-09-06T07:17:36+00:00"
         },
         {
             "name": "magefan/module-blog-graph-ql",
             "version": "2.1.7",
             "source": {
                 "type": "git",
-                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_bloggraphql.git",
-                "reference": "c755aeb0d1806ba366b520c6b7b408e137c9d2b1"
+                "url": "https://github.com/magefan/module-blog-graph-ql.git",
+                "reference": "59687bde8e3000f061abb345a3acda06cf18ffad"
             },
             "dist": {
-                "type": "tar",
-                "url": "https://packages.dev.macron.com/dist/magefan/module-blog-graph-ql/magefan-module-blog-graph-ql-2.1.7-6be5c2.tar",
-                "reference": "c755aeb0d1806ba366b520c6b7b408e137c9d2b1"
+                "type": "zip",
+                "url": "https://api.github.com/repos/magefan/module-blog-graph-ql/zipball/59687bde8e3000f061abb345a3acda06cf18ffad",
+                "reference": "59687bde8e3000f061abb345a3acda06cf18ffad",
+                "shasum": ""
             },
             "type": "magento2-module",
             "autoload": {
@@ -4404,21 +4411,27 @@
                     "Magefan\\BlogGraphQl\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "description": "GrapQl for Magento 2 Blog extension by Magefan",
-            "time": "2022-08-30T16:07:17+00:00"
+            "support": {
+                "issues": "https://github.com/magefan/module-blog-graph-ql/issues",
+                "source": "https://github.com/magefan/module-blog-graph-ql/tree/2.1.7"
+            },
+            "time": "2022-08-17T09:05:10+00:00"
         },
         {
             "name": "magefan/module-community",
-            "version": "2.1.10",
+            "version": "2.1.11",
             "source": {
                 "type": "git",
-                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_community.git",
-                "reference": "92417fce2a960bbdde878365182ddf06ecb80578"
+                "url": "https://github.com/magefan/module-community.git",
+                "reference": "91075db11392e2befe89d6b9c31b39e82776ae51"
             },
             "dist": {
-                "type": "tar",
-                "url": "https://packages.dev.macron.com/dist/magefan/module-community/magefan-module-community-2.1.10-df3cad.tar",
-                "reference": "92417fce2a960bbdde878365182ddf06ecb80578"
+                "type": "zip",
+                "url": "https://api.github.com/repos/magefan/module-community/zipball/91075db11392e2befe89d6b9c31b39e82776ae51",
+                "reference": "91075db11392e2befe89d6b9c31b39e82776ae51",
+                "shasum": ""
             },
             "require": {
                 "magefan/module-admin-user-guide": ">=2.0.1"
@@ -4432,20 +4445,26 @@
                     "Magefan\\Community\\": ""
                 }
             },
-            "time": "2022-08-30T16:09:48+00:00"
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/magefan/module-community/issues",
+                "source": "https://github.com/magefan/module-community/tree/2.1.11"
+            },
+            "time": "2022-09-05T09:42:08+00:00"
         },
         {
             "name": "magefan/module-wysiwyg-advanced",
             "version": "2.0.12",
             "source": {
                 "type": "git",
-                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_wysiwygadvanced.git",
-                "reference": "dbbb66215f8645371304969ba38abcb1cbce3e36"
+                "url": "https://github.com/magefan/module-wysiwyg-advanced.git",
+                "reference": "760b0746bb4f7acd0da10a9b0bff928bd52cfad9"
             },
             "dist": {
-                "type": "tar",
-                "url": "https://packages.dev.macron.com/dist/magefan/module-wysiwyg-advanced/magefan-module-wysiwyg-advanced-2.0.12-ae553a.tar",
-                "reference": "dbbb66215f8645371304969ba38abcb1cbce3e36"
+                "type": "zip",
+                "url": "https://api.github.com/repos/magefan/module-wysiwyg-advanced/zipball/760b0746bb4f7acd0da10a9b0bff928bd52cfad9",
+                "reference": "760b0746bb4f7acd0da10a9b0bff928bd52cfad9",
+                "shasum": ""
             },
             "require": {
                 "magefan/module-community": ">=2.1.8"
@@ -4459,12 +4478,17 @@
                     "Magefan\\WysiwygAdvanced\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0",
                 "AFL-3.0"
             ],
             "description": "Extend TinyMCE 4 in Magento 2",
-            "time": "2022-08-30T16:10:52+00:00"
+            "support": {
+                "issues": "https://github.com/magefan/module-wysiwyg-advanced/issues",
+                "source": "https://github.com/magefan/module-wysiwyg-advanced/tree/2.0.12"
+            },
+            "time": "2022-04-20T08:57:37+00:00"
         },
         {
             "name": "magento/adobe-ims",
