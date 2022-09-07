@@ -9,15 +9,21 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import ClientsQuery from 'Query/Client.query';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { showNotification } from 'Store/Notification/Notification.action';
+import { LocationType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
+import { scrollToTop } from 'Util/Browser';
+import BrowserDatabase from 'Util/BrowserDatabase';
 import history from 'Util/History';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
 import { appendWithStoreCode } from 'Util/Url';
 
 import MyClientsPage from './MyClientsPage.component';
-import { MY_CLIENTS_URL } from './MyClientsPage.config';
+import { CLIENTS_PER_PAGE, CLIENTS_PER_PAGE_ITEM, MY_CLIENTS_URL } from './MyClientsPage.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -25,7 +31,8 @@ export const BreadcrumbsDispatcher = import(
 );
 
 /** @namespace Scandipwa/Route/MyClientsPage/Container/mapStateToProps */
-export const mapStateToProps = (_state) => ({
+export const mapStateToProps = (state) => ({
+    clientsPerPageList: state.ConfigReducer.xperpage
 });
 
 /** @namespace Scandipwa/Route/MyClientsPage/Container/mapDispatchToProps */
@@ -36,23 +43,47 @@ export const mapDispatchToProps = (dispatch) => ({
         BreadcrumbsDispatcher.then(
             ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
         );
-    }
+    },
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
 });
 
 /** @namespace Scandipwa/Route/MyClientsPage/Container */
 export class MyClientsPageContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,
-        updateBreadcrumbs: PropTypes.func.isRequired
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        clientsPerPageList: PropTypes.string.isRequired,
+        showErrorNotification: PropTypes.func.isRequired,
+        location: LocationType.isRequired
+    };
+
+    state = {
+        clientsPerPage: +BrowserDatabase.getItem(CLIENTS_PER_PAGE_ITEM) ?? CLIENTS_PER_PAGE,
+        clients: [],
+        isLoading: false
     };
 
     containerFunctions = {
-        onCreateClientHandler: this.onCreateClientHandler.bind(this)
+        onCreateClientHandler: this.onCreateClientHandler.bind(this),
+        onClientsPerPageChange: this.onClientsPerPageChange.bind(this)
     };
 
     componentDidMount() {
+        const { clientsPerPage } = this.state;
+
         this.updateMeta();
         this.updateBreadcrumbs();
+        this.requestClients(1, clientsPerPage);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { clientsPerPage } = this.state;
+        const { clientsPerPage: prevClientsPerPage } = prevState;
+
+        if (clientsPerPage !== prevClientsPerPage) {
+            this.requestClients(1, clientsPerPage);
+            scrollToTop();
+        }
     }
 
     __construct(props) {
@@ -62,6 +93,12 @@ export class MyClientsPageContainer extends PureComponent {
     }
 
     containerProps = () => {
+        const { clientsPerPageList } = this.props;
+        const { clients, isLoading, clientsPerPage } = this.state;
+
+        return {
+            clients, isLoading, clientsPerPageList, clientsPerPage
+        };
     };
 
     updateMeta() {
@@ -81,8 +118,29 @@ export class MyClientsPageContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
+    async requestClients(currentPage, pageSize) {
+        const { showErrorNotification } = this.props;
+
+        this.setState({ isLoading: true });
+
+        try {
+            const { clients = [] } = await fetchQuery(ClientsQuery.getClientsQuery({ currentPage, pageSize }));
+
+            this.setState({ clients, isLoading: false });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+            this.setState({ isLoading: false });
+        }
+    }
+
     onCreateClientHandler() {
         history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/create-client`));
+    }
+
+    onClientsPerPageChange(clientsPerPage) {
+        BrowserDatabase.setItem(clientsPerPage, CLIENTS_PER_PAGE_ITEM);
+
+        this.setState({ clientsPerPage });
     }
 
     render() {

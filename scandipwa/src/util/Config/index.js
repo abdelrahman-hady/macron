@@ -4,7 +4,5 @@
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
- 
-.MyClientsTable {
-    min-width: 100%;
-}
+
+export * from './Config';
