@@ -37,7 +37,7 @@ export const MY_CLIENTS = 'MY_CLIENTS';
 const BEFORE_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
     !isSignedIn() && {
-        component: <Redirect to="/" />,
+        component: <Redirect to={ appendWithStoreCode('/') } />,
         position: 40,
         name: 'redirect'
     }
