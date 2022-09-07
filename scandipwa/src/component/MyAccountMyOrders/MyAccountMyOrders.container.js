@@ -47,18 +47,25 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     state = {
-        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE
+        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
+        sortOptions: {
+            customerId: '0' // Filters orders list by customerId
+        },
+        customerOptions: []
     };
 
     containerFunctions = {
-        onOrderPerPageChange: this.onOrderPerPageChange.bind(this)
+        onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
+        updateOptions: this.updateOptions.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList } = this.props;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage, sortOptions, customerOptions } = this.state;
 
-        return { ...super.containerProps(), ordersPerPageList, ordersPerPage };
+        return {
+            ...super.containerProps(), ordersPerPageList, ordersPerPage, sortOptions, customerOptions
+        };
     }
 
     componentDidMount() {
@@ -81,6 +88,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             getOrderList(this._getPageFromUrl(), ordersPerPage);
             scrollToTop();
         }
+    }
+
+    updateOptions(option) {
+        this.setState(({ sortOptions }) => ({ sortOptions: { ...sortOptions, ...option } }));
     }
 
     onOrderPerPageChange(ordersPerPage) {

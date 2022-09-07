@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
@@ -21,7 +22,9 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     static propTypes = {
         ...super.propTypes,
         ordersPerPageList: PropTypes.string.isRequired,
-        ordersPerPage: PropTypes.number.isRequired
+        ordersPerPage: PropTypes.number.isRequired,
+        sortOptions: PropTypes.object.isRequired,
+        updateOptions: PropTypes.func.isRequired
     };
 
     renderOrdersPerPage() {
@@ -58,12 +61,31 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderSortByCustomerId() {
+        const { sortOptions: { customerId }, updateOptions, customerOptions } = this.props;
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by customer') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByCustomer' } }
+              options={ customerOptions }
+              value={ customerId }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ customerId: val });
+                  }
+              } }
+            />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
+                { this.renderSortByCustomerId() }
                 { this.renderOrdersPerPage() }
                 { this.renderTable() }
                 { this.renderPagination() }
