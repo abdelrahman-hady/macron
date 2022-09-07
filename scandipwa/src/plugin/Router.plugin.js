@@ -12,6 +12,12 @@
 
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
+import {
+    ACCOUNT_FORGOT_PASSWORD,
+    CHANGE_PASSWORD,
+    CONFIRM_ACCOUNT,
+    CREATE_ACCOUNT
+} from 'scandipwa/node_modules/@scandipwa/scandipwa/src/component/Router/Router.config.js';
 
 import { withStoreRegex } from 'Component/Router/Router.component';
 
@@ -21,15 +27,20 @@ export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChu
 export const INVOICES = 'INVOICES';
 export const MY_CLIENTS = 'MY_CLIENTS';
 
-const modifyUrls = (originalMembers) => {
-    function checkUrl(memberElement) {
-        if (memberElement.name === 'CREATE_ACCOUNT' || memberElement.name === 'CHANGE_PASSWORD' || memberElement.name === 'ACCOUNT_FORGOT_PASSWORD' || memberElement.name === 'CONFIRM_ACCOUNT') {
+const URL_REMOVAL_LIST = [
+    CREATE_ACCOUNT,
+    CHANGE_PASSWORD,
+    ACCOUNT_FORGOT_PASSWORD,
+    CONFIRM_ACCOUNT
+];
+const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
+    const newMembers = originalMembers.filter((CurrentUrls) => {
+        if (URL_REMOVAL_LIST.includes(CurrentUrls.name)) {
             return false;
         }
 
         return true;
-    }
-    const newMembers = originalMembers.filter((route) => checkUrl(route));
+    });
 
     return [
         ...newMembers,
@@ -49,7 +60,7 @@ const modifyUrls = (originalMembers) => {
 export default {
     'Component/Router/Component': {
         'member-property': {
-            SWITCH_ITEMS_TYPE: modifyUrls
+            SWITCH_ITEMS_TYPE: AROUND_SWITCH_ITEMS_TYPE
         }
     }
 };
