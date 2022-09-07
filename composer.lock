@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0a96d77321a5b27c0142f273c52918d",
+    "content-hash": "d1ed9ffffb437e736e6750bd722f85d1",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -4347,7 +4347,125 @@
             ],
             "time": "2022-04-17T13:12:02+00:00"
         },
-        
+        {
+            "name": "magefan/module-blog",
+            "version": "2.10.10",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_blog.git",
+                "reference": "4394a1acdf32c282600bab46a287158d57fbc35f"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.dev.macron.com/dist/magefan/module-blog/magefan-module-blog-2.10.10-6f96cc.tar",
+                "reference": "4394a1acdf32c282600bab46a287158d57fbc35f"
+            },
+            "require": {
+                "magefan/module-blog-graph-ql": ">=2.1.7",
+                "magefan/module-community": ">=2.1.10",
+                "magefan/module-wysiwyg-advanced": ">=2.0.12"
+            },
+            "suggest": {
+                "magefan/module-blog-amp": "Install this module to activate Blog integration with the Plumrocket AMP extension.",
+                "magefan/module-blog-comments-recaptcha": "Install this module to activate ReCaptcha on blog comments form to protect against spam.",
+                "magefan/module-blog-graph-ql": "Install this module to activate GraphQl integration for the blog."
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magefan\\Blog\\": ""
+                }
+            },
+            "description": "Implements Blog functionality on Magento 2 store",
+            "time": "2022-08-30T16:05:58+00:00"
+        },
+        {
+            "name": "magefan/module-blog-graph-ql",
+            "version": "2.1.7",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_bloggraphql.git",
+                "reference": "c755aeb0d1806ba366b520c6b7b408e137c9d2b1"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.dev.macron.com/dist/magefan/module-blog-graph-ql/magefan-module-blog-graph-ql-2.1.7-6be5c2.tar",
+                "reference": "c755aeb0d1806ba366b520c6b7b408e137c9d2b1"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magefan\\BlogGraphQl\\": ""
+                }
+            },
+            "description": "GrapQl for Magento 2 Blog extension by Magefan",
+            "time": "2022-08-30T16:07:17+00:00"
+        },
+        {
+            "name": "magefan/module-community",
+            "version": "2.1.10",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_community.git",
+                "reference": "92417fce2a960bbdde878365182ddf06ecb80578"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.dev.macron.com/dist/magefan/module-community/magefan-module-community-2.1.10-df3cad.tar",
+                "reference": "92417fce2a960bbdde878365182ddf06ecb80578"
+            },
+            "require": {
+                "magefan/module-admin-user-guide": ">=2.0.1"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magefan\\Community\\": ""
+                }
+            },
+            "time": "2022-08-30T16:09:48+00:00"
+        },
+        {
+            "name": "magefan/module-wysiwyg-advanced",
+            "version": "2.0.12",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@bitbucket.macron.com:7999/sat/magefan_wysiwygadvanced.git",
+                "reference": "dbbb66215f8645371304969ba38abcb1cbce3e36"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "https://packages.dev.macron.com/dist/magefan/module-wysiwyg-advanced/magefan-module-wysiwyg-advanced-2.0.12-ae553a.tar",
+                "reference": "dbbb66215f8645371304969ba38abcb1cbce3e36"
+            },
+            "require": {
+                "magefan/module-community": ">=2.1.8"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magefan\\WysiwygAdvanced\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "Extend TinyMCE 4 in Magento 2",
+            "time": "2022-08-30T16:10:52+00:00"
+        },
         {
             "name": "magento/adobe-ims",
             "version": "2.1.3",
