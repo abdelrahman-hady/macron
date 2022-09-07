@@ -7,6 +7,7 @@
         "@scandipwa/scandipwa": "5.3.1",
         "@scandipwa/scandipwa-scripts": "2.4.21",
         "@scandipwa/webpack-i18n-runtime": "0.0.31",
+        "@scandiweb/magefan-blog": "file:./packages/magefan-blog",
         "@tilework/mosaic": "0.1.7",
         "@tilework/mosaic-craco": "0.0.5",
         "postcss": "8.4.5"
@@ -18,12 +19,15 @@
         },
         "parentTheme": "@scandipwa/scandipwa",
         "extensions": {
-            "@scandipwa/webpack-i18n-runtime": true
+            "@scandipwa/webpack-i18n-runtime": true,
+            "@scandiweb/magefan-blog": true
         }
     },
     "scripts": {
         "start": "scandipwa-scripts start",
-        "build": "scandipwa-scripts build"
+        "build": "scandipwa-scripts build",
+        "postinstall": "scandipwa-scripts link",
+        "postupdate": "scandipwa-scripts link"
     },
     "browserslist": {
         "production": [

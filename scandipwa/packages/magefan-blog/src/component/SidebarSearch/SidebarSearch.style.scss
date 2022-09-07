@@ -1,0 +1,69 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.widget {
+    &.block {
+        &.blog-search {
+            .block-content {
+                .FieldForm-Body {
+                    .Button {
+                        position: absolute;
+                        inset-block: 0;
+                        inset-inline-end: 0;
+                        height: 100%;
+                        z-index: 1;
+                        display: flex;
+                        background: #222;
+                        -moz-box-sizing: content-box;
+                        border: 0;
+                        box-shadow: none;
+                        line-height: inherit;
+                        margin: 0;
+                        padding: 0 10px;
+                        text-decoration: none;
+                        text-shadow: none;
+                        font-weight: 400;
+                        border-radius: 0;
+
+                        @include mobile {
+                            width: auto;
+                        }
+                    }
+
+                    .Field {
+                        input, textarea, select {
+                            background: #fff;
+                            background-clip: padding-box;
+                            border: 1px solid #c2c2c2;
+                            border-radius: 1px;
+                            font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+                            font-size: 14px;
+                            height: 32px;
+                            line-height: 1.42857143;
+                            padding: 0 9px;
+                            vertical-align: baseline;
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding-inline-end: 35px;
+                        }
+
+                        input {
+                            &:focus {
+                                position: static;
+                                margin: 0;
+                                inset-inline-start: -300%;
+                                border: 1px solid #bbb;
+                            }
+                        }
+                    }
+
+                    .SearchIcon {
+                        fill: var(--color-white);
+                    }
+                }
+            }
+        }
+    }
+}
