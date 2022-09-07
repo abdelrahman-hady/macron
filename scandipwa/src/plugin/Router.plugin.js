@@ -54,6 +54,11 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
         component: <Route path={ withStoreRegex('/my-clients/:clientId?') } render={ (props) => <ClientPage { ...props } /> } />,
         position: 31,
         name: CLIENT
+    },
+    {
+        component: <Route path={ withStoreRegex('/my-clients/edit/:clientId') } render={ (props) => <CreateClientPage { ...props } isEdit /> } />,
+        position: 28,
+        name: CREATE_CLIENT
     }
 ];
 
