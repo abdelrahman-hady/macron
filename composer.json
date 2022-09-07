@@ -88,10 +88,6 @@
             "url": "https://repo.magento.com/",
             "canonical": false
         },
-        "macron": {
-            "type": "composer",
-            "url": "https://packages.dev.macron.com/"
-        },
         "scandipwa": {
             "type": "path",
             "url": "scandipwa"
