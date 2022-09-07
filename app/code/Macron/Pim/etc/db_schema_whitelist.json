@@ -1,0 +1,14 @@
+{
+    "erp_invoice": {
+        "column": {
+            "id": true,
+            "sku": true,
+            "warehouse": true,
+            "qty": true,
+            "new_arrivals": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
