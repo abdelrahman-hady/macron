@@ -79,10 +79,6 @@ class OrdersByKeyword implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-//        if (empty($args['keyword'])) {
-//            throw new GraphQlInputException(__('Required parameter "keyword" is missing'));
-//        }
-
         $userId = $context->getUserId();
         $store = $context->getExtensionAttributes()->getStore();
         $fields = [
