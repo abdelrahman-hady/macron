@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
+import MyAccountOrderTableRow from 'Component/MyAccountOrderTableRow';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
@@ -58,12 +59,77 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderFilters() {
+        const {
+            onDateFromSelectorChange,
+            onDateToSelectorChange,
+            dateFrom,
+            dateTo
+        } = this.props;
+
+        return (
+            <div block="MyAccountMyOrders" elem="Filters">
+                <div block="MyAccountMyOrders" elem="DateFilter">
+                    <p>{ __('Data from:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'date-from-selector',
+                          name: 'date-from-selector',
+                          value: dateFrom
+                      } }
+                      events={ {
+                          onChange: onDateFromSelectorChange
+                      } }
+                    />
+                </div>
+                <div block="MyAccountMyOrders" elem="DateFilter">
+                    <p>{ __('Data to:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'date-to-selector',
+                          name: 'date-to-selector',
+                          value: dateTo
+                      } }
+                      events={ {
+                          onChange: onDateToSelectorChange
+                      } }
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    renderOrderRow(order) {
+        const { id, order_date, base_order_info: { id: defaultId } = {} } = order;
+        const { dateFrom, dateTo } = this.props;
+        const adjustedOrderDate = order_date !== undefined ? order_date.split(' ')[0] : null;
+        const orderDate = new Date(adjustedOrderDate).getDate();
+        const fromDate = new Date(dateFrom).getDate();
+        const toDate = new Date(dateTo).getDate();
+
+        if (orderDate < fromDate) {
+            return null;
+        } if (orderDate > toDate) {
+            return null;
+        }
+
+        return (
+            <MyAccountOrderTableRow
+              key={ id || defaultId }
+              order={ order }
+            />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
+                { this.renderFilters() }
                 { this.renderOrdersPerPage() }
                 { this.renderTable() }
                 { this.renderPagination() }

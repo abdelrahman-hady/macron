@@ -47,18 +47,28 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     state = {
-        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE
+        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
+        dateFrom: '',
+        dateTo: ''
     };
 
     containerFunctions = {
-        onOrderPerPageChange: this.onOrderPerPageChange.bind(this)
+        onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
+        onDateFromSelectorChange: this.onDateFromSelectorChange.bind(this),
+        onDateToSelectorChange: this.onDateToSelectorChange.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList } = this.props;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage, dateFrom, dateTo } = this.state;
 
-        return { ...super.containerProps(), ordersPerPageList, ordersPerPage };
+        return {
+            ...super.containerProps(),
+            ordersPerPageList,
+            ordersPerPage,
+            dateFrom,
+            dateTo
+        };
     }
 
     componentDidMount() {
@@ -71,13 +81,16 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     componentDidUpdate(prevProps, prevState) {
         const { getOrderList } = this.props;
         const { location: prevLocation } = prevProps;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage, dateFrom, dateTo } = this.state;
         const { ordersPerPage: prevOrdersPerPage } = prevState;
+        const { dateFrom: prevDateFrom } = prevState;
+        const { dateTo: prevDateTo } = prevState;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
+        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage
+            || dateFrom !== prevDateFrom || dateTo !== prevDateTo) {
             getOrderList(this._getPageFromUrl(), ordersPerPage);
             scrollToTop();
         }
@@ -87,6 +100,14 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         BrowserDatabase.setItem(ordersPerPage, ORDERS_PER_PAGE_ITEM);
 
         this.setState({ ordersPerPage });
+    }
+
+    onDateFromSelectorChange(e) {
+        this.setState({ dateFrom: e.target.value });
+    }
+
+    onDateToSelectorChange(e) {
+        this.setState({ dateTo: e.target.value });
     }
 
     render() {
