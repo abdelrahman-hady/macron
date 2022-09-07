@@ -78,7 +78,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const currentPage = this._getPageFromUrl();
 
         if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage);
+            getOrderList(currentPage, ordersPerPage);
             scrollToTop();
         }
     }

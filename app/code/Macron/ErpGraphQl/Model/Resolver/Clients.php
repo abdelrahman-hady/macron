@@ -58,10 +58,18 @@ class Clients implements ResolverInterface
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
 
-        return $this->clientsCollection
+        $collection = $this->clientsCollection
             ->create($customerId)
             ->setPageSize($pageSize)
-            ->setCurPage($currentPage)
-            ->getData();
+            ->setCurPage($currentPage);
+
+        return [
+            'items' => $collection->getData(),
+            'page_info' => [
+                'page_size' => $collection->getPageSize(),
+                'current_page' => $collection->getCurPage(),
+                'total_pages' => $collection->getLastPageNumber()
+            ],
+        ];
     }
 }

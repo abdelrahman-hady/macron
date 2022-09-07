@@ -20,7 +20,7 @@ import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import history from 'Util/History';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
-import { appendWithStoreCode } from 'Util/Url';
+import { appendWithStoreCode, getQueryParam } from 'Util/Url';
 
 import MyClientsPage from './MyClientsPage.component';
 import { CLIENTS_PER_PAGE, CLIENTS_PER_PAGE_ITEM, MY_CLIENTS_URL } from './MyClientsPage.config';
@@ -59,7 +59,7 @@ export class MyClientsPageContainer extends PureComponent {
 
     state = {
         clientsPerPage: +BrowserDatabase.getItem(CLIENTS_PER_PAGE_ITEM) ?? CLIENTS_PER_PAGE,
-        clients: [],
+        clientList: [],
         isLoading: false
     };
 
@@ -73,15 +73,19 @@ export class MyClientsPageContainer extends PureComponent {
 
         this.updateMeta();
         this.updateBreadcrumbs();
-        this.requestClients(1, clientsPerPage);
+        this.requestClients(this._getPageFromUrl(), clientsPerPage);
     }
 
     componentDidUpdate(prevProps, prevState) {
         const { clientsPerPage } = this.state;
         const { clientsPerPage: prevClientsPerPage } = prevState;
+        const { location: prevLocation } = prevProps;
 
-        if (clientsPerPage !== prevClientsPerPage) {
-            this.requestClients(1, clientsPerPage);
+        const prevPage = this._getPageFromUrl(prevLocation);
+        const currentPage = this._getPageFromUrl();
+
+        if (currentPage !== prevPage || clientsPerPage !== prevClientsPerPage) {
+            this.requestClients(currentPage, clientsPerPage);
             scrollToTop();
         }
     }
@@ -94,10 +98,10 @@ export class MyClientsPageContainer extends PureComponent {
 
     containerProps = () => {
         const { clientsPerPageList } = this.props;
-        const { clients, isLoading, clientsPerPage } = this.state;
+        const { clientList, isLoading, clientsPerPage } = this.state;
 
         return {
-            clients, isLoading, clientsPerPageList, clientsPerPage
+            clientList, isLoading, clientsPerPageList, clientsPerPage
         };
     };
 
@@ -118,15 +122,15 @@ export class MyClientsPageContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
-    async requestClients(currentPage, pageSize) {
+    async requestClients(page, pageSize) {
         const { showErrorNotification } = this.props;
 
         this.setState({ isLoading: true });
 
         try {
-            const { clients = [] } = await fetchQuery(ClientsQuery.getClientsQuery({ currentPage, pageSize }));
+            const { clients: clientList } = await fetchQuery(ClientsQuery.getClientsQuery({ page, pageSize }));
 
-            this.setState({ clients, isLoading: false });
+            this.setState({ clientList, isLoading: false });
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
             this.setState({ isLoading: false });
@@ -141,6 +145,13 @@ export class MyClientsPageContainer extends PureComponent {
         BrowserDatabase.setItem(clientsPerPage, CLIENTS_PER_PAGE_ITEM);
 
         this.setState({ clientsPerPage });
+    }
+
+    _getPageFromUrl(url) {
+        const { location: currentLocation } = this.props;
+        const location = url || currentLocation;
+
+        return +(getQueryParam('page', location) || 1);
     }
 
     render() {

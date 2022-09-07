@@ -26,3 +26,14 @@ export const ClientType = PropTypes.shape({
     sport: PropTypes.number,
     vat_number: PropTypes.number
 });
+
+export const PageInfoType = PropTypes.shape({
+    current_page: PropTypes.number,
+    page_size: PropTypes.number,
+    total_pages: PropTypes.number
+});
+
+export const ClientListType = PropTypes.shape({
+    items: [ClientType],
+    page_info: PageInfoType
+});
