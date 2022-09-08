@@ -6,3 +6,5 @@
  */
 
 export const MY_CLIENTS_URL = '/my-clients';
+export const CLIENTS_PER_PAGE = 10;
+export const CLIENTS_PER_PAGE_ITEM = 'CLIENTS_PER_PAGE_ITEM';

@@ -1,5 +1,8 @@
 type Query {
-    clients: [ClientType]
+    clients(
+        pageSize: Int = 10
+        currentPage: Int = 1
+    ): [ClientType]
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
     @doc(description: "Get list of clients")
 

@@ -15,6 +15,7 @@ import Loader from 'Component/Loader';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
+import { getListViewAllowedOptions } from 'Util/Config';
 
 import './MyAccountMyOrders.override.style';
 
@@ -85,19 +86,10 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
-    renderOrdersPerPage() {
+    renderPerPageDropdown() {
         const { ordersPerPageList, ordersPerPage, onOrderPerPageChange } = this.props;
 
-        const ordersPerPageOptions = [];
-
-        if (ordersPerPageList) {
-            ordersPerPageList.split(',').forEach((value) => {
-                const perPage = +value;
-                ordersPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
-            });
-        } else {
-            ordersPerPageOptions.push({ label: ordersPerPage, value: ordersPerPage });
-        }
+        const ordersPerPageOptions = getListViewAllowedOptions(ordersPerPageList, ordersPerPage);
 
         return (
             <div block="MyAccountMyOrders" elem="PerPageDropdown">
@@ -125,10 +117,11 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
-                { this.renderOrdersPerPage() }
+                { this.renderPerPageDropdown() }
                 { this.renderToolbar() }
                 { this.renderTable() }
                 { this.renderPagination() }
+                { this.renderPerPageDropdown() }
             </div>
         );
     }

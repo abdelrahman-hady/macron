@@ -55,7 +55,13 @@ class Clients implements ResolverInterface
         }
 
         $customerId = $context->getUserId();
+        $pageSize = $args['pageSize'];
+        $currentPage = $args['currentPage'];
 
-        return $this->clientsCollection->create($customerId)->getData();
+        return $this->clientsCollection
+            ->create($customerId)
+            ->setPageSize($pageSize)
+            ->setCurPage($currentPage)
+            ->getData();
     }
 }

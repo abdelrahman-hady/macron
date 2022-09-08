@@ -5,12 +5,17 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import { CLIENTS_PER_PAGE } from 'Route/MyClientsPage/MyClientsPage.config';
 import { Field } from 'Util/Query';
 
 /** @namespace Scandipwa/Query/Client/Query */
 export class ClientQuery {
-    getClientsQuery() {
+    getClientsQuery(options) {
+        const { page = 1, pageSize = CLIENTS_PER_PAGE } = options ?? {};
+
         return new Field('clients')
+            .addArgument('currentPage', 'Int', page)
+            .addArgument('pageSize', 'Int', pageSize)
             .addFieldList(this._getClientFields());
     }
 
