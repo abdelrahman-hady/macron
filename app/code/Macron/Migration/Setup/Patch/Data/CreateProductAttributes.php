@@ -77,7 +77,7 @@ class CreateProductAttributes implements DataPatchInterface
             [
                 'label' => 'Brand',
                 'group' => 'Product Details',
-                'input' => 'select',
+                'input' => 'text',
                 'type' => 'varchar',
                 'default' => null,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
@@ -305,7 +305,7 @@ class CreateProductAttributes implements DataPatchInterface
             [
                 'label' => 'Mcr Season',
                 'group' => 'Product Details',
-                'input' => 'select',
+                'input' => 'text',
                 'type' => 'varchar',
                 'default' => null,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
@@ -324,7 +324,7 @@ class CreateProductAttributes implements DataPatchInterface
             [
                 'label' => 'Macron Sport',
                 'group' => 'Product Details',
-                'input' => 'select',
+                'input' => 'text',
                 'type' => 'varchar',
                 'default' => null,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
@@ -343,7 +343,7 @@ class CreateProductAttributes implements DataPatchInterface
             [
                 'label' => 'Team',
                 'group' => 'Product Details',
-                'input' => 'select',
+                'input' => 'text',
                 'type' => 'varchar',
                 'default' => null,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
@@ -382,7 +382,7 @@ class CreateProductAttributes implements DataPatchInterface
             [
                 'label' => 'Total Look',
                 'group' => 'Product Details',
-                'input' => 'multiselect',
+                'input' => 'text',
                 'type' => 'varchar',
                 'default' => null,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
