@@ -59,7 +59,7 @@ export class MyClientsPageComponent extends PureComponent {
     renderPerPageDropdown() {
         const { clientsPerPageList, clientsPerPage, onClientsPerPageChange } = this.props;
 
-        const clientsPerPageOptions = getListViewAllowedOptions(clientsPerPageList);
+        const clientsPerPageOptions = getListViewAllowedOptions(clientsPerPageList, clientsPerPage);
 
         return (
             <div block="MyClientsPage" elem="PerPageDropdown">

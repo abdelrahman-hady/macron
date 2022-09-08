@@ -47,7 +47,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     state = {
-        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE
+        ordersPerPage: +(BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE)
     };
 
     containerFunctions = {

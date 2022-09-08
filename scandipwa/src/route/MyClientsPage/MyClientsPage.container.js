@@ -58,7 +58,7 @@ export class MyClientsPageContainer extends PureComponent {
     };
 
     state = {
-        clientsPerPage: +BrowserDatabase.getItem(CLIENTS_PER_PAGE_ITEM) ?? CLIENTS_PER_PAGE,
+        clientsPerPage: +(BrowserDatabase.getItem(CLIENTS_PER_PAGE_ITEM) ?? CLIENTS_PER_PAGE),
         clientList: [],
         isLoading: false
     };
