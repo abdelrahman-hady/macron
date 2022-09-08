@@ -26,7 +26,8 @@ export class ClientPageComponent extends PureComponent {
         client: PropTypes.objectOf(ClientType).isRequired,
         isLoading: PropTypes.bool.isRequired,
         onClickDelete: PropTypes.func.isRequired,
-        onCreateClientHandler: PropTypes.func.isRequired
+        onClickCreate: PropTypes.func.isRequired,
+        onClickEdit: PropTypes.func.isRequired
     };
 
     dataMap = {
@@ -121,18 +122,18 @@ export class ClientPageComponent extends PureComponent {
     }
 
     renderActions() {
-        const { onClickDelete, onCreateClientHandler } = this.props;
+        const { onClickDelete, onClickCreate, onClickEdit } = this.props;
 
         return (
             <div block="ClientPage" elem="Actions">
                 <button block="Button" mods={ { isHollow: true } }>
                     { __('See quote history >') }
                 </button>
-                <button block="Button" mods={ { isHollow: true } }>
+                <button block="Button" mods={ { isHollow: true } } onClick={ onClickEdit }>
                       <EditIcon />
                     { __('Edit client') }
                 </button>
-                <button block="Button" mods={ { isHollow: true } } onClick={ onCreateClientHandler }>
+                <button block="Button" mods={ { isHollow: true } } onClick={ onClickCreate }>
                     <AddIcon />
                     { __('Create new client') }
                 </button>

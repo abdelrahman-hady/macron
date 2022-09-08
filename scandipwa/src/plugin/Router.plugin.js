@@ -47,6 +47,7 @@ export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const CLIENT = 'CLIENT';
 export const STATS_PAGE = 'STATS_PAGE';
 export const MY_PROFILE = 'MY_PROFILE';
+export const EDIT_CLIENT = 'EDIT_CLIENT';
 
 const URL_REMOVAL_LIST = [
     CREATE_ACCOUNT,
@@ -118,6 +119,11 @@ const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
             component: <Route path={ withStoreRegex('/my-profile') } render={ (props) => <MyProfilePage { ...props } /> } />,
             position: 27,
             name: MY_PROFILE
+        },
+        {
+            component: <Route path={ withStoreRegex('/my-clients/edit/:clientId') } render={ (props) => <CreateClientPage { ...props } isEdit /> } />,
+            position: 28,
+            name: EDIT_CLIENT
         },
         ...newMembers
     ];

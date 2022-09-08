@@ -32,6 +32,12 @@ export class ClientQuery {
             .addFieldList(this._getClientFields());
     }
 
+    getUpdateClientMutation(client) {
+        return new Field('updateClient')
+            .addArgument('client', 'UpdateClientInput!', client)
+            .addFieldList(this._getClientFields());
+    }
+
     _getClientFields() {
         return [
             'entity_id',

@@ -58,7 +58,8 @@ export class ClientPageContainer extends PureComponent {
 
     containerFunctions = {
         onClickDelete: this.onClickDelete.bind(this),
-        onCreateClientHandler: this.onCreateClientHandler.bind(this)
+        onClickCreate: this.onClickCreate.bind(this),
+        onClickEdit: this.onClickEdit.bind(this)
     };
 
     componentDidMount() {
@@ -94,6 +95,11 @@ export class ClientPageContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
+    updateMeta(title) {
+        const { updateMeta } = this.props;
+        updateMeta({ title });
+    }
+
     async requestClient() {
         const { showErrorNotification, match: { params: { clientId } } } = this.props;
 
@@ -114,11 +120,6 @@ export class ClientPageContainer extends PureComponent {
         }
     }
 
-    updateMeta(title) {
-        const { updateMeta } = this.props;
-        updateMeta({ title });
-    }
-
     async onClickDelete() {
         const { showErrorNotification, history } = this.props;
         const { client: { entity_id: clientId } } = this.state;
@@ -132,8 +133,14 @@ export class ClientPageContainer extends PureComponent {
         }
     }
 
-    onCreateClientHandler() {
+    onClickCreate() {
         history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/create-client`));
+    }
+
+    onClickEdit() {
+        const { client: { entity_id: clientId } } = this.state;
+
+        history.push(appendWithStoreCode(`${MY_CLIENTS_URL}/edit/${clientId}`));
     }
 
     render() {

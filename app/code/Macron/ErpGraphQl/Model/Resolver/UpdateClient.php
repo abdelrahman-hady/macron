@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Macron\ErpGraphQl\Model\Resolver;
 
+use Macron\ErpGraphQl\Model\ResourceModel\Clients\ClientsModel;
 use Macron\ErpGraphQl\Model\ResourceModel\Clients\CollectionFactory;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
@@ -18,7 +20,7 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\GraphQl\Model\Query\ContextInterface;
 
-class CreateClient implements ResolverInterface
+class UpdateClient implements ResolverInterface
 {
     /**
      * @var CollectionFactory
@@ -34,7 +36,7 @@ class CreateClient implements ResolverInterface
     }
 
     /**
-     * Create client resolver
+     * Update client resolver
      *
      * @param Field $field
      * @param ContextInterface $context
@@ -50,21 +52,25 @@ class CreateClient implements ResolverInterface
         ResolveInfo $info,
         array $value = null,
         array $args = null
-    )
-    {
+    ) {
         if (!$context->getExtensionAttributes()->getIsCustomer()) {
             throw new GraphQlAuthorizationException(__("The current customer isn't authorized."));
         }
 
         $customerId = $context->getUserId();
-        $newClient = $args['client'];
+        $client = $args['client'];
+        $clientId = $client['entity_id'];
 
-        $saveClient = $this->clientsCollection
+        $collection = $this->clientsCollection
             ->create($customerId)
-            ->getNewEmptyItem()
-            ->setData(array_merge($newClient, ['customer_id' => $customerId]))
-            ->save();
+            ->addFieldToFilter('entity_id', $clientId);
 
-        return $saveClient->getData();
+        if (count($collection->getData()) === 0) {
+            throw new GraphQlInputException(__("Client doesn't exists"));
+        }
+
+        $collection->setDataToAll($client)->save();
+
+        return $collection->getData()[0];
     }
 }
