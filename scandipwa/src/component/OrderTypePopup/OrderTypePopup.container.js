@@ -10,12 +10,11 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import CustomerQuery from 'Query/Customer.query';
-import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
+import { updateTypeAndCustomerSelect } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { fetchQuery } from 'Util/Request';
 
-// import history from 'Util/History';
 import OrderTypePopup from './OrderTypePopup.component';
 import {
     ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT
@@ -27,7 +26,7 @@ export const mapStateToProps = (_state) => ({
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
-    updateOrderType: (notes) => dispatch(updateOrderType(notes)),
+    updateTypeAndCustomerSelect: (payload) => dispatch(updateTypeAndCustomerSelect(payload)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     showPopup: (type, payload) => dispatch(showPopup(type, payload))
 });
@@ -35,7 +34,7 @@ export const mapDispatchToProps = (dispatch) => ({
 /** @namespace Scandipwa/Component/OrderTypePopup/Container */
 export class OrderTypePopupContainer extends PureComponent {
     static propTypes = {
-        updateOrderType: PropTypes.func.isRequired,
+        updateTypeAndCustomerSelect: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         addProductToCart: PropTypes.func,
         showPopup: PropTypes.func.isRequired
@@ -85,8 +84,8 @@ export class OrderTypePopupContainer extends PureComponent {
     }
 
     onSubmit(_form, fields) {
-        const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
-        updateOrderType({ type: TYPE_CUSTOMER, selectedCustomer: fields[0].value });
+        const { updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart } = this.props;
+        updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fields[0].value });
         hideActiveOverlay();
 
         if (addProductToCart) {
@@ -95,9 +94,9 @@ export class OrderTypePopupContainer extends PureComponent {
     }
 
     handleReplenishmentClick() {
-        const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
+        const { updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart } = this.props;
         const { companies } = this.state;
-        updateOrderType(TYPE_REPLENISHMENT, companies.currentCustomerId);
+        updateTypeAndCustomerSelect({ orderType: TYPE_REPLENISHMENT, selectedCustomer: companies.currentCustomerId });
         hideActiveOverlay();
 
         if (addProductToCart) {

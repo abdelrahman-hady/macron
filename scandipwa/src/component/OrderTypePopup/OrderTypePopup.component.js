@@ -82,7 +82,7 @@ export class OrderTypePopupComponent extends PureComponent {
                   mods={ { isHollow: true } }
                   onClick={ onGoBack }
                 >
-                        { __('< Go back') }
+                    { __('< Go back') }
                 </button>
                 <Form onSubmit={ onSubmit }>
                     <div block="Wrapper">

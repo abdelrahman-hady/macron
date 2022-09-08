@@ -1,9 +1,15 @@
 <?php
+/**
+ * @category  Macron
+ * @author    Marian Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ */
+declare(strict_types=1);
 
 namespace Macron\CustomerGraphQl\Model\Resolver;
 
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
-use Magento\CustomerGraphQl\Model\Customer\ExtractCustomerData;
 use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
@@ -14,7 +20,6 @@ use Magento\GraphQl\Model\Query\ContextInterface;
 
 class PartnerCompanyNames implements ResolverInterface
 {
-
     /**
      * @var GetCustomer
      */
@@ -26,22 +31,15 @@ class PartnerCompanyNames implements ResolverInterface
     private CollectionFactory $customerCollection;
 
     /**
-     * @var ExtractCustomerData
-     */
-    private $extractCustomerData;
-
-    /**
      * @param GetCustomer $getCustomer
      * @param CollectionFactory $customerCollection
      */
     public function __construct(
         GetCustomer $getCustomer,
-        CollectionFactory $customerCollection,
-        ExtractCustomerData $extractCustomerData
+        CollectionFactory $customerCollection
     ) {
         $this->getCustomer = $getCustomer;
         $this->customerCollection = $customerCollection;
-        $this->extractCustomerData = $extractCustomerData;
     }
 
     /**
