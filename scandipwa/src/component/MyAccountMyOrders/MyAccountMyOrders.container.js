@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @author    Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -49,42 +50,83 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     state = {
         ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
         sortOptions: {
-            customerId: '0' // Filters orders list by customerId
-        },
-        customerOptions: []
+            status: null,
+            user_customer_name: null
+        }
     };
 
     containerFunctions = {
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
-        updateOptions: this.updateOptions.bind(this)
+        updateOptions: this.updateOptions.bind(this),
+        getAvailableSortOptions: this.getAvailableSortOptions.bind(this),
+        formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList } = this.props;
-        const { ordersPerPage, sortOptions, customerOptions } = this.state;
+        const { ordersPerPage, sortOptions } = this.state;
 
         return {
-            ...super.containerProps(), ordersPerPageList, ordersPerPage, sortOptions, customerOptions
+            ...super.containerProps(), ordersPerPageList, ordersPerPage, sortOptions
         };
     }
 
     componentDidMount() {
         const { getOrderList } = this.props;
-        const { ordersPerPage } = this.state;
-
+        // eslint-disable-next-line no-unused-vars
+        const { ordersPerPage, sortOptions } = this.state;
+        // TODO : Pass Sort Options To this
         getOrderList(this._getPageFromUrl(), ordersPerPage);
+    }
+
+    getAvailableSortOptions() {
+        const { orderList: { items = [] } } = this.props;
+
+        const uniqueLists = {
+            status: {},
+            user_customer_name: {}
+        };
+
+        // list available options
+        items.forEach((order) => {
+            // add to a hash map to avoid duplicates
+            const { status, user_customer_name } = order;
+            if (status) {
+                uniqueLists.status[status] = 1;
+            }
+            if (user_customer_name) {
+                uniqueLists.user_customer_name[user_customer_name] = 1;
+            }
+        });
+
+        return {
+            status: Object.keys(uniqueLists.status),
+            user_customer_name: Object.keys(uniqueLists.user_customer_name)
+        };
+    }
+
+    formatToFieldOptions(options) {
+        return options.map((option, idx) => ({
+            id: idx + 1,
+            label: __(option),
+            value: idx + 1
+        }));
     }
 
     componentDidUpdate(prevProps, prevState) {
         const { getOrderList } = this.props;
         const { location: prevLocation } = prevProps;
-        const { ordersPerPage } = this.state;
-        const { ordersPerPage: prevOrdersPerPage } = prevState;
+        const { ordersPerPage, sortOptions } = this.state;
+        const {
+            ordersPerPage: prevOrdersPerPage,
+            sortOptions: prevSortOptions
+        } = prevState;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
+        const sortOptionsChanged = () => !(JSON.stringify(sortOptions) === JSON.stringify(prevSortOptions));
+        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage || sortOptionsChanged()) {
             getOrderList(this._getPageFromUrl(), ordersPerPage);
             scrollToTop();
         }

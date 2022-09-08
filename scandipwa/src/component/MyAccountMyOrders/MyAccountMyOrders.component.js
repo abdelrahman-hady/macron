@@ -2,6 +2,7 @@
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @author    Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -61,18 +62,56 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
-    renderSortByCustomerId() {
-        const { sortOptions: { customerId }, updateOptions, customerOptions } = this.props;
+    renderOrderHeadingRow() {
+        return (
+            <tr>
+                <th>{ __('Order') }</th>
+                <th>{ __('Customer') }</th>
+                <th>{ __('Date') }</th>
+                <th>{ __('Status') }</th>
+                <th block="hidden-mobile">{ __('Total') }</th>
+            </tr>
+        );
+    }
+
+    renderSortByCustomerName() {
+        const {
+            sortOptions: { user_customer_name }, getAvailableSortOptions, formatToFieldOptions, updateOptions
+        } = this.props;
+
         return (
             <Field
               type={ FIELD_TYPE.select }
               label={ __('Sort by customer') }
               mix={ { block: 'MyAccountMyOrders', elem: 'SortByCustomer' } }
-              options={ customerOptions }
-              value={ customerId }
+              options={ formatToFieldOptions(getAvailableSortOptions().user_customer_name) }
+              value={ user_customer_name }
               events={ {
                   onChange: (val) => {
-                      updateOptions({ customerId: val });
+                      updateOptions({
+                          user_customer_name: +val === 0 ? null : getAvailableSortOptions().user_customer_name[+val - 1]
+                      });
+                  }
+              } }
+            />
+        );
+    }
+
+    renderSortByOrderStatus() {
+        const {
+            sortOptions: { status }, getAvailableSortOptions, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+              options={ formatToFieldOptions(getAvailableSortOptions().status) }
+              value={ status }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ status: +val === 0 ? null : getAvailableSortOptions().status[+val - 1] });
                   }
               } }
             />
@@ -85,7 +124,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
-                { this.renderSortByCustomerId() }
+                { this.renderSortByOrderStatus() }
+                { this.renderSortByCustomerName() }
                 { this.renderOrdersPerPage() }
                 { this.renderTable() }
                 { this.renderPagination() }
