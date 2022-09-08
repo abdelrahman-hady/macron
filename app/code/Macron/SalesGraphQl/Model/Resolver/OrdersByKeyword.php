@@ -48,6 +48,13 @@ class OrdersByKeyword implements ResolverInterface
      */
     protected OrderFormatter $orderFormatter;
 
+    /**
+     * @param OrderRepositoryInterface $orderRepository
+     * @param CollectionFactory $orderCollection
+     * @param OrderFilter $orderFilter
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param OrderFormatter $orderFormatter
+     */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         CollectionFactory $orderCollection,

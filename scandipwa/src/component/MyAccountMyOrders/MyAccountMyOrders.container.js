@@ -5,24 +5,22 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import OrderQuery from 'Query/Order.query';
 import {
-    mapDispatchToProps,
+    mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
     MyAccountMyOrdersContainer as SourceMyAccountMyOrdersContainer
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.container';
+import { setLoadingStatus } from 'Store/Order/Order.action';
 import { DeviceType } from 'Type/Device.type';
 import { formatOrders } from 'Util/Orders';
 import { fetchQuery } from 'Util/Request';
 
 import MyAccountMyOrders from './MyAccountMyOrders.component';
-
-export {
-    mapDispatchToProps
-};
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
@@ -30,11 +28,18 @@ export const mapStateToProps = (state) => ({
     device: state.ConfigReducer.device
 });
 
+/** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
+    setLoadingStatus: (status) => dispatch(setLoadingStatus(status))
+});
+
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container */
 export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer {
     static propTypes = {
         ...super.propTypes,
-        device: DeviceType.isRequired
+        device: DeviceType.isRequired,
+        setLoadingStatus: PropTypes.func.isRequired
     };
 
     state = {
@@ -64,17 +69,24 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     onInputChange(e) {
+        const { setLoadingStatus } = this.props;
         const { value } = e.target;
         this.setState({ searchInput: value });
         const query = OrderQuery.getOrdersByKeywordQuery(value);
         this.debounce(
             () => {
-                fetchQuery(query).then(
+                setLoadingStatus(true);
+                try {
+                    fetchQuery(query).then(
                     /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/debounce/fetchQuery/then */
-                    ({ OrdersByKeyword }) => {
-                        this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
-                    }
-                );
+                        ({ OrdersByKeyword }) => {
+                            setLoadingStatus(false);
+                            this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+                        }
+                    );
+                } catch (error) {
+                    setLoadingStatus(false);
+                }
             }
         );
     }
