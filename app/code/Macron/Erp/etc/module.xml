@@ -3,12 +3,19 @@
 /**
  * @category    Macron
  * @author      Deniss Dubinins <denissd@scandiweb.com | info@scandiweb.com>
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
 -->
 <config
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Macron_Erp" />
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Macron_Erp">
+        <sequence>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Customer"/>
+            <module name="Macron_ErpGraphQl"/>
+        </sequence>
+    </module>
 </config>
