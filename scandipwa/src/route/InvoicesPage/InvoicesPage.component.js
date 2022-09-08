@@ -17,48 +17,11 @@ import { InvoiceType } from 'Type/Invoice.type';
 export class InvoicesPageComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
-        // ToDo adjust this to add ".isRequired"
-        // invoices: PropTypes.arrayOf(InvoiceType).isRequired,
-        invoices: PropTypes.arrayOf(InvoiceType)
+        invoices: PropTypes.arrayOf(InvoiceType).isRequired
     };
 
     static defaultProps = {
-        isLoading: false,
-        invoices: [
-            {
-                id: 1,
-                invoice_number: 12588,
-                date: '25-12-2025',
-                customer: 'Abdelhakk Bakry',
-                address: 'test',
-                total: 1500.25,
-                status: 'Paid'
-            }, {
-                id: 2,
-                invoice_number: 12588,
-                date: '25-12-2025',
-                customer: 'Abdelhakk Bakry',
-                address: 'test',
-                total: 125,
-                status: 'Unpaind'
-            }, {
-                id: 3,
-                invoice_number: 12588,
-                date: '25-12-2025',
-                customer: 'Abdelhakk Bakry',
-                address: 'test',
-                total: 1500.25,
-                status: 'Paid'
-            }, {
-                id: 4,
-                invoice_number: 12588,
-                date: '25-12-2025',
-                customer: 'Abdelhakk Bakry',
-                address: 'test',
-                total: 125,
-                status: 'Unpaind'
-            }
-        ]
+        isLoading: false
     };
 
     renderHeading() {
@@ -95,7 +58,7 @@ export class InvoicesPageComponent extends PureComponent {
 
     renderTableRow(data) {
         const {
-            id, invoice_number, date, customer, address, total, status
+            id, invoice_number, date, customer, address, grand_total, status
         } = data;
 
         return (
@@ -104,7 +67,7 @@ export class InvoicesPageComponent extends PureComponent {
                 <td>{ date }</td>
                 <td>{ customer }</td>
                 <td>{ address }</td>
-                <td>{ total }</td>
+                <td>{ grand_total }</td>
                 <td>{ status }</td>
                 <td>{ this.renderActionButtons(id) }</td>
             </tr>

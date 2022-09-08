@@ -8,6 +8,11 @@ type Query {
     ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
+
+    invoices: [InvoiceType]
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+    @doc(description: "Get list of invoices")
+
 }
 
 type Mutation {
@@ -16,10 +21,10 @@ type Mutation {
     ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
     @doc(description: "Delete client by id")
-	
-	createClient(
-		client: CreateClientInput!
-	): ClientType
+
+    createClient(
+        client: CreateClientInput!
+    ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
     @doc(description: "Create a new client")
 }
@@ -61,4 +66,16 @@ input CreateClientInput {
     contact_person: String
     mobile: String
     email: String
+}
+
+type InvoiceType {
+    id: Int
+    invoice_number: String
+    user_sap_id: String
+    date: String
+    grand_total: String
+    status: String
+    download_link: String
+    customer:String
+    address:String
 }
