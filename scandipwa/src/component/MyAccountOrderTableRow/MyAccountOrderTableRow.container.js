@@ -9,22 +9,12 @@ import { connect } from 'react-redux';
 
 import { ACCOUNT_ORDER_URL } from 'Route/MyAccount/MyAccount.config';
 import {
-    mapDispatchToProps as sourceMapDispatchToProps,
-    mapStateToProps as sourceMapStateToProps,
+    mapDispatchToProps,
+    mapStateToProps,
     MyAccountOrderTableRowContainer as SourceMyAccountOrderTableRowContainer
 } from 'SourceComponent/MyAccountOrderTableRow/MyAccountOrderTableRow.container';
 import history from 'Util/History';
 import { appendWithStoreCode } from 'Util/Url';
-
-/** @namespace Scandipwa/Component/MyAccountOrderTableRow/Container/mapDispatchToProps */
-export const mapDispatchToProps = (dispatch) => ({
-    ...sourceMapDispatchToProps(dispatch)
-});
-
-/** @namespace Scandipwa/Component/MyAccountOrderTableRow/Container/mapStateToProps */
-export const mapStateToProps = (state) => ({
-    ...sourceMapStateToProps(state)
-});
 
 /** @namespace Scandipwa/Component/MyAccountOrderTableRow/Container */
 export class MyAccountOrderTableRowContainer extends SourceMyAccountOrderTableRowContainer {
