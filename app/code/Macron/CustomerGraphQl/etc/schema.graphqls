@@ -1,0 +1,13 @@
+type Query {
+    getPartnerCompanies: partnerCompanies @resolver(class:"\\Macron\\CustomerGraphQl\\Model\\Resolver\\PartnerCompanyNames")
+}
+
+type partnerCompanies {
+    currentCustomerId: String
+    partnerCompanies: [partnerCompany]
+}
+
+type partnerCompany {
+    companyName: String,
+    companyId: String
+}

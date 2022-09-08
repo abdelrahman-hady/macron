@@ -10,6 +10,7 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
+import Form from 'Component/Form';
 import Popup from 'Component/Popup';
 
 import { ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP } from './OrderTypePopup.config';
@@ -22,7 +23,8 @@ export class OrderTypePopupComponent extends PureComponent {
         handleCustomerClick: PropTypes.func.isRequired,
         handleReplenishmentClick: PropTypes.func.isRequired,
         onGoBack: PropTypes.func.isRequired,
-        onSave: PropTypes.func.isRequired
+        onSubmit: PropTypes.func.isRequired,
+        companies: PropTypes.objectOf.isRequired
     };
 
     renderFirstStep() {
@@ -55,7 +57,19 @@ export class OrderTypePopupComponent extends PureComponent {
     }
 
     renderCustomerOrderStep() {
-        const { onGoBack, onSave } = this.props;
+        const { onGoBack, onSubmit, companies } = this.props;
+
+        // eslint-disable-next-line fp/no-let
+        let options = [];
+        if (companies.partnerCompanies) {
+            options = companies.partnerCompanies.map((company) => (
+                {
+                    value: company.companyId,
+                    label: company.companyName
+                }
+            ));
+        }
+
         return (
             <Popup
               id={ ORDER_CHOOSE_CUSTOMER_POPUP }
@@ -70,26 +84,27 @@ export class OrderTypePopupComponent extends PureComponent {
                 >
                         { __('< Go back') }
                 </button>
-                <div block="Wrapper">
-                    <Field
-                      type={ FIELD_TYPE.select }
-                      label={ <b>{ __('Select the customer') }</b> }
-                      mix={ { block: 'OrderChooseCustomerPopup', elem: 'SelectCustomer' } }
-                    //   options={ statusOptions }
-                    //   value={ orderStatus }
-                    //   events={ {
-                    //       onChange: (val) => {
-                    //           updateOptions({ orderStatus: val });
-                    //       }
-                    //   } }
-                    />
-                    <button
-                      block="Button"
-                      onClick={ onSave }
-                    >
-                        { __('save') }
-                    </button>
-                </div>
+                <Form onSubmit={ onSubmit }>
+                    <div block="Wrapper">
+                        <Field
+                          type={ FIELD_TYPE.select }
+                          attr={ {
+                              id: 'CompanyNames',
+                              name: 'CompanyNames',
+                              noPlaceholder: true
+                          } }
+                          label={ <b>{ __('Select the customer') }</b> }
+                          mix={ { block: 'OrderChooseCustomerPopup', elem: 'SelectCustomer' } }
+                          options={ options }
+                        />
+                        <button
+                          block="Button"
+                          type={ FIELD_TYPE.submit }
+                        >
+                            { __('save') }
+                        </button>
+                    </div>
+                </Form>
             </Popup>
         );
     }

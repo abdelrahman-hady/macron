@@ -9,9 +9,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import CustomerQuery from 'Query/Customer.query';
 import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
+import { fetchQuery } from 'Util/Request';
 
 // import history from 'Util/History';
 import OrderTypePopup from './OrderTypePopup.component';
@@ -43,11 +45,33 @@ export class OrderTypePopupContainer extends PureComponent {
         addProductToCart: null
     };
 
+    state = {
+        companies: {}
+    };
+
     containerFunctions = {
         handleCustomerClick: this.handleCustomerClick.bind(this),
         handleReplenishmentClick: this.handleReplenishmentClick.bind(this),
         onGoBack: this.onGoBack.bind(this),
-        onSave: this.onSave.bind(this)
+        onSubmit: this.onSubmit.bind(this)
+    };
+
+    componentDidMount() {
+        const query = CustomerQuery.getPartnerCompanyNamesQuery();
+        fetchQuery(query).then(
+            /** @namespace Scandipwa/Component/OrderTypePopup/Container/OrderTypePopupContainer/componentDidMount/fetchQuery/then */
+            ({ getPartnerCompanies }) => {
+                this.setState({ companies: getPartnerCompanies });
+            }
+        );
+    }
+
+    containerProps = () => {
+        const { companies } = this.state;
+
+        return {
+            companies
+        };
     };
 
     handleCustomerClick() {
@@ -60,9 +84,9 @@ export class OrderTypePopupContainer extends PureComponent {
         showPopup(ORDER_TYPE_POPUP);
     }
 
-    onSave() {
+    onSubmit(_form, fields) {
         const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
-        updateOrderType(TYPE_CUSTOMER);
+        updateOrderType({ type: TYPE_CUSTOMER, selectedCustomer: fields[0].value });
         hideActiveOverlay();
 
         if (addProductToCart) {
@@ -72,7 +96,8 @@ export class OrderTypePopupContainer extends PureComponent {
 
     handleReplenishmentClick() {
         const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
-        updateOrderType(TYPE_REPLENISHMENT);
+        const { companies } = this.state;
+        updateOrderType(TYPE_REPLENISHMENT, companies.currentCustomerId);
         hideActiveOverlay();
 
         if (addProductToCart) {
@@ -84,6 +109,7 @@ export class OrderTypePopupContainer extends PureComponent {
         return (
             <OrderTypePopup
               { ...this.containerFunctions }
+              { ...this.containerProps() }
             />
         );
     }
