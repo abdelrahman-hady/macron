@@ -12,14 +12,14 @@
 
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
+
+import { withStoreRegex } from 'Component/Router/Router.component';
 import {
     ACCOUNT_FORGOT_PASSWORD,
     CHANGE_PASSWORD,
     CONFIRM_ACCOUNT,
     CREATE_ACCOUNT
-} from 'scandipwa/node_modules/@scandipwa/scandipwa/src/component/Router/Router.config.js';
-
-import { withStoreRegex } from 'Component/Router/Router.component';
+} from 'Component/Router/Router.config';
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "MyClients" */ '../route/MyClientsPage'));
 export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
