@@ -1,0 +1,37 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.sidebar {
+    .widget {
+        &.block-list-posts {
+            .block-content {
+                .item {
+                    line-height: 1.42857143;
+
+                    .post-image {
+                        z-index: 1;
+
+                        .post-item-link {
+                            img {
+                                width: 100%;
+                                height: auto;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+
+                    .post-item-content {
+                        display: flex;
+                        flex-direction: column;
+
+                        .post-item-date {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

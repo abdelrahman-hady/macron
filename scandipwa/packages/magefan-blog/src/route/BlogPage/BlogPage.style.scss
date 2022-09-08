@@ -1,0 +1,21 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.Blog {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &-Title {
+        width: 100%;
+        height: 40px;
+        display: inline-block;
+    }
+
+    .ContentWrapper {
+        width: 100%;
+    }
+}

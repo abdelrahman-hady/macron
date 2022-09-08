@@ -1,0 +1,20 @@
+/**
+ * Magefan Blog compatibility for ScandiPWA
+ * @copyright Scandiweb, Inc. All rights reserved.
+ */
+
+.sidebar {
+    .widget {
+        &.block-archive {
+            .item {
+                display: inline-block;
+
+                &:not(:last-child) {
+                    &::after {
+                        padding-inline-end: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
