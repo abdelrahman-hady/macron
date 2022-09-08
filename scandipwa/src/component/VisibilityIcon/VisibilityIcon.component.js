@@ -28,6 +28,7 @@ export class VisibilityIconComponent extends PureComponent {
 
         return (
             <button
+              type="button"
               onClick={ onClick }
               block="VisibilityButton"
               elem="IconWrapper"
