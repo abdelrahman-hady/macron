@@ -21,88 +21,84 @@ export class OrderTypePopupComponent extends PureComponent {
     static propTypes = {
         handleCustomerClick: PropTypes.func.isRequired,
         handleReplenishmentClick: PropTypes.func.isRequired,
-        renderStep: PropTypes.string.isRequired
+        onGoBack: PropTypes.func.isRequired,
+        onSave: PropTypes.func.isRequired
     };
 
     renderFirstStep() {
         const { handleCustomerClick, handleReplenishmentClick } = this.props;
         return (
-            <div block="Buttons">
-                <h3>{ __('Choose the order type') }</h3>
-                <button
-                  block="Button"
-                  mods={ { isHollow: true } }
-                  onClick={ handleCustomerClick }
-                >
-                    { __('Customer order') }
-                </button>
-                <button
-                  block="Button"
-                  mods={ { isHollow: true } }
-                  onClick={ handleReplenishmentClick }
-                >
-                    { __('Replenishment order') }
-                </button>
-            </div>
-        );
-    }
-
-    renderCustomerOrderStep() {
-        return (
             <Popup
-              id={ ORDER_CHOOSE_CUSTOMER_POPUP }
+              id={ ORDER_TYPE_POPUP }
               clickOutside={ false }
               mix={ { block: 'OrderTypePopup' } }
             >
-                <div block="Buttons">
-                <button
-                  block="Button"
-                  mods={ { isHollow: true } }
-                //   onClick={ handleClick }
-                >
-                    { __('< Go back') }
-                </button>
-                <Field
-                  type={ FIELD_TYPE.select }
-                  label={ __('Sort by status') }
-                  mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-                //   options={ statusOptions }
-                //   value={ orderStatus }
-                //   events={ {
-                //       onChange: (val) => {
-                //           updateOptions({ orderStatus: val });
-                //       }
-                //   } }
-                />
+                <div block="Wrapper">
+                    <h3>{ __('Choose the order type') }</h3>
+                    <button
+                      block="Button"
+                      mods={ { isHollow: true } }
+                      onClick={ handleCustomerClick }
+                    >
+                        { __('Customer order') }
+                    </button>
+                    <button
+                      block="Button"
+                      mods={ { isHollow: true } }
+                      onClick={ handleReplenishmentClick }
+                    >
+                        { __('Replenishment order') }
+                    </button>
                 </div>
             </Popup>
         );
     }
 
-    renderContent() {
-        const { renderStep } = this.props;
-
-        if (renderStep === 'first') {
-            return this.renderFirstStep();
-        }
-
-        if (renderStep === 'customerOrderStep') {
-            return this.renderCustomerOrderStep();
-        }
-
-        return null;
+    renderCustomerOrderStep() {
+        const { onGoBack, onSave } = this.props;
+        return (
+            <Popup
+              id={ ORDER_CHOOSE_CUSTOMER_POPUP }
+              clickOutside={ false }
+              mix={ { block: 'OrderChooseCustomerPopup' } }
+            >
+                <button
+                  block="Button"
+                  elem="GoBack"
+                  mods={ { isHollow: true } }
+                  onClick={ onGoBack }
+                >
+                        { __('< Go back') }
+                </button>
+                <div block="Wrapper">
+                    <Field
+                      type={ FIELD_TYPE.select }
+                      label={ <b>{ __('Select the customer') }</b> }
+                      mix={ { block: 'OrderChooseCustomerPopup', elem: 'SelectCustomer' } }
+                    //   options={ statusOptions }
+                    //   value={ orderStatus }
+                    //   events={ {
+                    //       onChange: (val) => {
+                    //           updateOptions({ orderStatus: val });
+                    //       }
+                    //   } }
+                    />
+                    <button
+                      block="Button"
+                      onClick={ onSave }
+                    >
+                        { __('save') }
+                    </button>
+                </div>
+            </Popup>
+        );
     }
 
     render() {
         return (
             <div block="OrderTypePopup">
-                <Popup
-                  id={ ORDER_TYPE_POPUP }
-                  clickOutside={ false }
-                  mix={ { block: 'OrderTypePopup' } }
-                >
-                { this.renderContent() }
-                </Popup>
+                { this.renderFirstStep() }
+                { this.renderCustomerOrderStep() }
             </div>
         );
     }

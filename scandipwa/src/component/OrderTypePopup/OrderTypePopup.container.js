@@ -15,8 +15,9 @@ import { showPopup } from 'Store/Popup/Popup.action';
 
 // import history from 'Util/History';
 import OrderTypePopup from './OrderTypePopup.component';
-// import { ORDER_CHOOSE_CUSTOMER_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT } from './OrderTypePopup.config';
-import { ORDER_CHOOSE_CUSTOMER_POPUP } from './OrderTypePopup.config';
+import {
+    ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT
+} from './OrderTypePopup.config';
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapStateToProps */
 export const mapStateToProps = (_state) => ({
@@ -26,7 +27,7 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     updateOrderType: (notes) => dispatch(updateOrderType(notes)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-    showPopup: (payload) => dispatch(showPopup(ORDER_CHOOSE_CUSTOMER_POPUP, payload))
+    showPopup: (type, payload) => dispatch(showPopup(type, payload))
 });
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container */
@@ -34,52 +35,55 @@ export class OrderTypePopupContainer extends PureComponent {
     static propTypes = {
         updateOrderType: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        addProductToCart: PropTypes.func
+        addProductToCart: PropTypes.func,
+        showPopup: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         addProductToCart: null
     };
 
-    state = {
-        renderStep: 'first'
-    };
-
     containerFunctions = {
         handleCustomerClick: this.handleCustomerClick.bind(this),
-        handleReplenishmentClick: this.handleReplenishmentClick.bind(this)
-    };
-
-    containerProps = () => {
-        const { renderStep } = this.state;
-
-        return {
-            renderStep
-        };
+        handleReplenishmentClick: this.handleReplenishmentClick.bind(this),
+        onGoBack: this.onGoBack.bind(this),
+        onSave: this.onSave.bind(this)
     };
 
     handleCustomerClick() {
-        showPopup();
+        const { showPopup } = this.props;
+        showPopup(ORDER_CHOOSE_CUSTOMER_POPUP);
+    }
 
-        // const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
-        // updateOrderType(orderType);
-        // hideActiveOverlay();
-        // history.goBack();
+    onGoBack() {
+        const { showPopup } = this.props;
+        showPopup(ORDER_TYPE_POPUP);
+    }
 
-        // if (addProductToCart) {
-        //     addProductToCart();
-        // }
+    onSave() {
+        const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
+        updateOrderType(TYPE_CUSTOMER);
+        hideActiveOverlay();
+
+        if (addProductToCart) {
+            addProductToCart();
+        }
     }
 
     handleReplenishmentClick() {
+        const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
+        updateOrderType(TYPE_REPLENISHMENT);
+        hideActiveOverlay();
 
+        if (addProductToCart) {
+            addProductToCart();
+        }
     }
 
     render() {
         return (
             <OrderTypePopup
               { ...this.containerFunctions }
-              { ...this.containerProps() }
             />
         );
     }
