@@ -27,6 +27,7 @@ export const MY_CLIENTS = 'MY_CLIENTS';
 export const SHIPMENTS = 'SHIPMENTS';
 export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const CLIENT = 'CLIENT';
+export const EDIT_CLIENT = 'EDIT_CLIENT';
 
 const SWITCH_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
@@ -58,7 +59,7 @@ const SWITCH_ITEMS_TYPE = (originalMember) => [
     {
         component: <Route path={ withStoreRegex('/my-clients/edit/:clientId') } render={ (props) => <CreateClientPage { ...props } isEdit /> } />,
         position: 28,
-        name: CREATE_CLIENT
+        name: EDIT_CLIENT
     }
 ];
 
