@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd82fe49b56c18b0d8670f4146a02e74",
+    "content-hash": "333dffacb19d8d1ceb03431c16903951",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -23884,6 +23884,31 @@
                 "source": "https://github.com/scandipwa/wishlist-graphql/tree/2.0.16"
             },
             "time": "2022-05-13T16:05:03+00:00"
+        },
+        {
+            "name": "scandiweb/magefan-blog",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "./packages/MagefanBlog",
+                "reference": "514032c69392e393c98fbd50faadd09ab08e2e88"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Scandiweb\\MagefanBlog\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Magefan Blog backend compatibility ScandiPWA",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "scandiweb/module-core",
