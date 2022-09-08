@@ -14,12 +14,6 @@
 
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
-import {
-    ACCOUNT_FORGOT_PASSWORD,
-    CHANGE_PASSWORD,
-    CONFIRM_ACCOUNT,
-    CREATE_ACCOUNT
-} from 'scandipwa/node_modules/@scandipwa/scandipwa/src/component/Router/Router.config.js';
 
 import {
     HomePage,
@@ -27,19 +21,16 @@ import {
     withStoreRegex
 } from 'Component/Router/Router.component';
 import {
+    ACCOUNT_FORGOT_PASSWORD,
+    CHANGE_PASSWORD,
+    CONFIRM_ACCOUNT,
+    CREATE_ACCOUNT,
     HOME,
     LOGIN
 } from 'Component/Router/Router.config';
 import { appendWithStoreCode } from 'SourceUtil/Url';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
-
-const URL_REMOVAL_LIST = [
-    CREATE_ACCOUNT,
-    CHANGE_PASSWORD,
-    ACCOUNT_FORGOT_PASSWORD,
-    CONFIRM_ACCOUNT
-];
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "my-clients" */ '../route/MyClientsPage'));
 export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
@@ -56,6 +47,13 @@ export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const CLIENT = 'CLIENT';
 export const STATS_PAGE = 'STATS_PAGE';
 export const MY_PROFILE = 'MY_PROFILE';
+
+const URL_REMOVAL_LIST = [
+    CREATE_ACCOUNT,
+    CHANGE_PASSWORD,
+    ACCOUNT_FORGOT_PASSWORD,
+    CONFIRM_ACCOUNT
+];
 
 const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
     const newMembers = originalMembers.filter((CurrentUrls) => {
