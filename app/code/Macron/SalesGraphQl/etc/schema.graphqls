@@ -2,3 +2,7 @@ input CustomerOrdersFilterInput @doc(description: "Identifies the filter to use 
     entity_id: FilterStringTypeInput @doc(description: "Filters by order entity id.")
     sap_order_id: FilterStringTypeInput @doc(description: "Filters by sap order entity id.")
 }
+
+type Query {
+    OrdersByKeyword(keyword: String!): [CustomerOrder] @resolver(class: "Macron\\SalesGraphQl\\Model\\Resolver\\OrdersByKeyword")
+}
