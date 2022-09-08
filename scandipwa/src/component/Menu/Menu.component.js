@@ -50,7 +50,17 @@ export class MenuComponent extends SourceMenu {
         const categoryArray = Object.values(menu);
 
         if (!categoryArray.length) {
-            return null;
+            return (
+                <div block="Menu" elem="MainCategories">
+                    <ul
+                      block="Menu"
+                      elem="ItemList"
+                      mods={ { type: 'main' } }
+                    >
+                        { this.renderNewOrderButton() }
+                    </ul>
+                </div>
+            );
         }
 
         const [{ children, title: mainCategoriesTitle }] = categoryArray;

@@ -8,41 +8,89 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Field from 'Component/Field';
+import FIELD_TYPE from 'Component/Field/Field.config';
 import Popup from 'Component/Popup';
 
-import { ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT } from './OrderTypePopup.config';
+import { ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP } from './OrderTypePopup.config';
 
 import './OrderTypePopup.style';
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Component */
 export class OrderTypePopupComponent extends PureComponent {
     static propTypes = {
-        handleClick: PropTypes.func.isRequired
+        handleCustomerClick: PropTypes.func.isRequired,
+        handleReplenishmentClick: PropTypes.func.isRequired,
+        renderStep: PropTypes.string.isRequired
     };
 
-    renderContent() {
-        const { handleClick } = this.props;
+    renderFirstStep() {
+        const { handleCustomerClick, handleReplenishmentClick } = this.props;
         return (
             <div block="Buttons">
                 <h3>{ __('Choose the order type') }</h3>
                 <button
                   block="Button"
                   mods={ { isHollow: true } }
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onClick={ () => handleClick(TYPE_CUSTOMER) }
+                  onClick={ handleCustomerClick }
                 >
                     { __('Customer order') }
                 </button>
                 <button
                   block="Button"
                   mods={ { isHollow: true } }
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onClick={ () => handleClick(TYPE_REPLENISHMENT) }
+                  onClick={ handleReplenishmentClick }
                 >
                     { __('Replenishment order') }
                 </button>
             </div>
         );
+    }
+
+    renderCustomerOrderStep() {
+        return (
+            <Popup
+              id={ ORDER_CHOOSE_CUSTOMER_POPUP }
+              clickOutside={ false }
+              mix={ { block: 'OrderTypePopup' } }
+            >
+                <div block="Buttons">
+                <button
+                  block="Button"
+                  mods={ { isHollow: true } }
+                //   onClick={ handleClick }
+                >
+                    { __('< Go back') }
+                </button>
+                <Field
+                  type={ FIELD_TYPE.select }
+                  label={ __('Sort by status') }
+                  mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+                //   options={ statusOptions }
+                //   value={ orderStatus }
+                //   events={ {
+                //       onChange: (val) => {
+                //           updateOptions({ orderStatus: val });
+                //       }
+                //   } }
+                />
+                </div>
+            </Popup>
+        );
+    }
+
+    renderContent() {
+        const { renderStep } = this.props;
+
+        if (renderStep === 'first') {
+            return this.renderFirstStep();
+        }
+
+        if (renderStep === 'customerOrderStep') {
+            return this.renderCustomerOrderStep();
+        }
+
+        return null;
     }
 
     render() {

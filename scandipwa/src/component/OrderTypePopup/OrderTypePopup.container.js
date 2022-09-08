@@ -11,9 +11,12 @@ import { connect } from 'react-redux';
 
 import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
-import history from 'Util/History';
+import { showPopup } from 'Store/Popup/Popup.action';
 
+// import history from 'Util/History';
 import OrderTypePopup from './OrderTypePopup.component';
+// import { ORDER_CHOOSE_CUSTOMER_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT } from './OrderTypePopup.config';
+import { ORDER_CHOOSE_CUSTOMER_POPUP } from './OrderTypePopup.config';
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapStateToProps */
 export const mapStateToProps = (_state) => ({
@@ -22,7 +25,8 @@ export const mapStateToProps = (_state) => ({
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateOrderType: (notes) => dispatch(updateOrderType(notes)),
-    hideActiveOverlay: () => dispatch(hideActiveOverlay())
+    hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+    showPopup: (payload) => dispatch(showPopup(ORDER_CHOOSE_CUSTOMER_POPUP, payload))
 });
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container */
@@ -37,25 +41,45 @@ export class OrderTypePopupContainer extends PureComponent {
         addProductToCart: null
     };
 
-    containerFunctions = {
-        handleClick: this.handleClick.bind(this)
+    state = {
+        renderStep: 'first'
     };
 
-    handleClick(orderType) {
-        const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
-        updateOrderType(orderType);
-        hideActiveOverlay();
-        history.goBack();
+    containerFunctions = {
+        handleCustomerClick: this.handleCustomerClick.bind(this),
+        handleReplenishmentClick: this.handleReplenishmentClick.bind(this)
+    };
 
-        if (addProductToCart) {
-            addProductToCart();
-        }
+    containerProps = () => {
+        const { renderStep } = this.state;
+
+        return {
+            renderStep
+        };
+    };
+
+    handleCustomerClick() {
+        showPopup();
+
+        // const { updateOrderType, hideActiveOverlay, addProductToCart } = this.props;
+        // updateOrderType(orderType);
+        // hideActiveOverlay();
+        // history.goBack();
+
+        // if (addProductToCart) {
+        //     addProductToCart();
+        // }
+    }
+
+    handleReplenishmentClick() {
+
     }
 
     render() {
         return (
             <OrderTypePopup
               { ...this.containerFunctions }
+              { ...this.containerProps() }
             />
         );
     }
