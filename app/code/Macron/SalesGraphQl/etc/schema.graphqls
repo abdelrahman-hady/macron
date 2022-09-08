@@ -1,0 +1,5 @@
+type CustomerOrder  {
+    internal_note: String
+    reference_note: String
+    user_customer_name: String,
+}

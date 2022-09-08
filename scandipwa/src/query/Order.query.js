@@ -21,7 +21,8 @@ export class OrderQuery extends SourceOrderQuery {
         const basicFields = [
             ...super._getOrderItemsFields(isSingleOrder),
             'internal_note',
-            'reference_note'
+            'reference_note',
+            'user_customer_name'
         ];
 
         if (isSingleOrder) {
