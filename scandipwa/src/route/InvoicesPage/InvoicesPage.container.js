@@ -27,7 +27,6 @@ export const BreadcrumbsDispatcher = import(
 
 /** @namespace Scandipwa/Route/InvoicesPage/Container/mapStateToProps */
 export const mapStateToProps = (_state) => ({
-    // TODO add the state to be passed to component
 });
 
 /** @namespace Scandipwa/Route/InvoicesPage/Container/mapDispatchToProps */
@@ -60,9 +59,11 @@ export class InvoicesPageContainer extends PureComponent {
     };
 
     componentDidMount() {
+        if (!isSignedIn()) {
+            history.replace(appendWithStoreCode('/'));
+        }
         this.requestInvoices();
         this.updateMeta();
-        // ToDo check if 'updateBreadcrumbs' is not needed as it is already invoked in __construct
         this.updateBreadcrumbs();
     }
 
@@ -98,18 +99,11 @@ export class InvoicesPageContainer extends PureComponent {
     }
 
     async requestInvoices() {
-        const { showErrorNotification, match: { params: { invoiceId } } } = this.props;
-
+        const { showErrorNotification } = this.props;
         this.setState({ isLoading: true });
 
         try {
-            const { invoices } = await fetchQuery(InvoicesQuery.getInvoiceQuery(invoiceId));
-
-            const { company_name: companyName } = invoices;
-
-            this.updateMeta(companyName);
-            this.updateBreadcrumbs(companyName);
-
+            const { invoices } = await fetchQuery(InvoicesQuery.getInvoicesQuery());
             this.setState({ invoices, isLoading: false });
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
@@ -118,10 +112,6 @@ export class InvoicesPageContainer extends PureComponent {
     }
 
     render() {
-        if (!isSignedIn()) {
-            history.replace(appendWithStoreCode('/'));
-        }
-
         return (
             <InvoicesPage
               { ...this.containerFunctions }

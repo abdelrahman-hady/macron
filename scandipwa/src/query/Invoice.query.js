@@ -14,12 +14,6 @@ export class InvoiceQuery {
             .addFieldList(this._getInvoiceFields());
     }
 
-    getInvoiceQuery(invoiceId) {
-        return new Field('invoice')
-            .addArgument('invoice_id', 'Int!', invoiceId)
-            .addFieldList(this._getInvoiceFields());
-    }
-
     _getInvoiceFields() {
         return [
             'id',
@@ -27,7 +21,7 @@ export class InvoiceQuery {
             'date',
             'customer',
             'address',
-            'total',
+            'grand_total',
             'status'
         ];
     }

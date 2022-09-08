@@ -1,8 +1,5 @@
 type Query {
-    clients(
-        pageSize: Int = 10
-        currentPage: Int = 1
-    ): Clients
+    clients: [ClientType]
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
     @doc(description: "Get list of clients")
 
@@ -12,18 +9,10 @@ type Query {
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
 
-    clientsByKeyword(
-        keyword: String!
-    ): [ClientType]
-    @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
-    @doc(description: "Get clients by keyword")
+    invoices: [InvoiceType]
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+    @doc(description: "Get list of invoices")
 
-    shipments(
-        currentPage: Int = 1
-        pageSize: Int = 10
-    ): [Shipment]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
-    @doc(description: "Get shipments list")
 }
 
 type Mutation {
@@ -100,22 +89,14 @@ input CreateClientInput {
     email: String
 }
 
-input UpdateClientInput {
-    entity_id: Int!
-    company_name: String!
-    address: String
-    vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
-    coni_id: Int
-    membership_no: Int
-    distance: Int
-    contact_person: String
-    mobile: String
-    email: String
+type InvoiceType {
+    id: Int
+    invoice_number: String
+    user_sap_id: String
+    date: String
+    grand_total: String
+    status: String
+    download_link: String
+    customer:String
+    address:String
 }
