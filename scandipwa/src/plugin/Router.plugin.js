@@ -13,7 +13,7 @@
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
 
 import { lazy } from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
 import {
     HomePage,
@@ -53,6 +53,15 @@ const URL_REMOVAL_LIST = [
     CHANGE_PASSWORD,
     ACCOUNT_FORGOT_PASSWORD,
     CONFIRM_ACCOUNT
+];
+
+const BEFORE_ITEMS_TYPE = (originalMember) => [
+    ...originalMember,
+    !isSignedIn() && {
+        component: <Redirect to={ appendWithStoreCode('/') } />,
+        position: 40,
+        name: 'redirect'
+    }
 ];
 
 const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
@@ -117,7 +126,8 @@ const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
 export default {
     'Component/Router/Component': {
         'member-property': {
-            SWITCH_ITEMS_TYPE: AROUND_SWITCH_ITEMS_TYPE
+            SWITCH_ITEMS_TYPE: AROUND_SWITCH_ITEMS_TYPE,
+            BEFORE_ITEMS_TYPE
         }
     }
 };
