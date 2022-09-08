@@ -13,6 +13,10 @@ import { MyAccountSignIn as SourceMyAccountSignInComponent } from
 'SourceComponent/MyAccountSignIn/MyAccountSignIn.component';
 import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
 
+import VisibilityIcon from '../VisibilityIcon/VisibilityIcon.component';
+
+import './MyAccountSignIn.override.style';
+
 /** @namespace Scandipwa/Component/MyAccountSignIn/Component */
 export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
     renderSignInForm() {
@@ -23,7 +27,9 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
             emailValue,
             isCheckout,
             handleEmailInput,
-            isLoading
+            isLoading,
+            onPasswordVisibilityClick,
+            visibilityState
         } = this.props;
 
         return (
@@ -50,22 +56,25 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
                   events={ { onChange: handleEmailInput } }
                   addRequiredTag
                 />
-                <Field
-                  label={ __('Password') }
-                  type={ FIELD_TYPE.password }
-                  attr={ {
-                      id: 'password',
-                      name: 'password',
-                      placeholder: __('Enter your password'),
-                      autocomplete: 'current-password'
-                  } }
-                  validateOn={ ['onChange'] }
-                  validationRule={ {
-                      isRequired: true,
-                      inputType: VALIDATION_INPUT_TYPE.password
-                  } }
-                  addRequiredTag
-                />
+                <div id="InputIconWrapper">
+                    <Field
+                      label={ __('Password') }
+                      type={ visibilityState ? FIELD_TYPE.text : FIELD_TYPE.password }
+                      attr={ {
+                          id: 'password',
+                          name: 'password',
+                          placeholder: __('Enter your password'),
+                          autocomplete: 'current-password'
+                      } }
+                      validateOn={ ['onChange'] }
+                      validationRule={ {
+                          isRequired: true,
+                          inputType: VALIDATION_INPUT_TYPE.password
+                      } }
+                      addRequiredTag
+                    />
+                    <VisibilityIcon onClick={ onPasswordVisibilityClick } isVisible={ visibilityState } />
+                </div>
                 <button
                   type="button"
                   block="Button"

@@ -1,0 +1,34 @@
+.VisibilityButton {
+    &-IconWrapper {
+        inset-block-start: 33px;
+        inset-inline-end: 18px;
+        position: absolute;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &-Icon {
+        width: 22px;
+    }
+}
+
+.LoginAccount {
+    &-InnerWrapper {
+        .VisibilityButton {
+            &-IconWrapper {
+                margin-block-start: 0px;
+                margin-block-end: 0px;
+            }
+        }
+    }
+}
+
+.MyAccountOverlay {
+    .VisibilityButton {
+        &-IconWrapper {
+            width: auto;
+        }
+    }
+}
