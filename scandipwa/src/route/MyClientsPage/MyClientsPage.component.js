@@ -8,6 +8,7 @@
 import Field from '@scandipwa/scandipwa/src/component/Field';
 import FIELD_TYPE from '@scandipwa/scandipwa/src/component/Field/Field.config';
 import Link from '@scandipwa/scandipwa/src/component/Link';
+import Pagination from '@scandipwa/scandipwa/src/component/Pagination';
 import { appendWithStoreCode } from '@scandipwa/scandipwa/src/util/Url';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -15,7 +16,7 @@ import { PureComponent } from 'react';
 import AddIcon from 'Component/AddIcon';
 import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
-import { ClientType } from 'Type/Client.type';
+import { ClientListType } from 'Type/Client.type';
 import { getListViewAllowedOptions } from 'Util/Config';
 
 import { MY_CLIENTS_URL } from './MyClientsPage.config';
@@ -27,7 +28,7 @@ export class MyClientsPageComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
         onCreateClientHandler: PropTypes.func.isRequired,
-        clients: PropTypes.arrayOf(ClientType).isRequired,
+        clientList: ClientListType.isRequired,
         clientsPerPageList: PropTypes.string.isRequired,
         clientsPerPage: PropTypes.number.isRequired,
         onClientsPerPageChange: PropTypes.func.isRequired
@@ -58,7 +59,7 @@ export class MyClientsPageComponent extends PureComponent {
     renderPerPageDropdown() {
         const { clientsPerPageList, clientsPerPage, onClientsPerPageChange } = this.props;
 
-        const clientsPerPageOptions = getListViewAllowedOptions(clientsPerPageList);
+        const clientsPerPageOptions = getListViewAllowedOptions(clientsPerPageList, clientsPerPage);
 
         return (
             <div block="MyClientsPage" elem="PerPageDropdown">
@@ -115,7 +116,7 @@ export class MyClientsPageComponent extends PureComponent {
     }
 
     renderTable() {
-        const { clients } = this.props;
+        const { clientList: { items = [] } } = this.props;
 
         return (
             <div block="MyClientsPage">
@@ -124,10 +125,28 @@ export class MyClientsPageComponent extends PureComponent {
                         { this.renderOrderHeadingRow() }
                     </thead>
                     <tbody>
-                        { clients.map(this.renderTableRow.bind(this)) }
+                        { items.map(this.renderTableRow.bind(this)) }
                     </tbody>
                 </table>
             </div>
+        );
+    }
+
+    renderPagination() {
+        const {
+            isLoading,
+            clientList: {
+                page_info: {
+                    total_pages = 0
+                } = {}
+            }
+        } = this.props;
+
+        return (
+            <Pagination
+              isLoading={ isLoading }
+              totalPages={ total_pages }
+            />
         );
     }
 
@@ -137,8 +156,10 @@ export class MyClientsPageComponent extends PureComponent {
                 { this.renderHeading() }
                 { this.renderCreateClient() }
                 { this.renderPerPageDropdown() }
+                { this.renderPagination() }
                 { this.renderTable() }
                 { this.renderPerPageDropdown() }
+                { this.renderPagination() }
             </ContentWrapper>
         );
     }

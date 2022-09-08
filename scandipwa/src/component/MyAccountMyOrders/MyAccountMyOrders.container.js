@@ -47,7 +47,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     state = {
-        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
+        ordersPerPage: +(BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE),
         sortOptions: {
             orderStatus: 0 // Filters orders list by status
         },
@@ -82,9 +82,13 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { getOrderList } = this.props;
         const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
         const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
+        const { location: prevLocation } = prevProps;
 
-        if (orderStatus !== prevOrderStatus || ordersPerPage !== prevOrdersPerPage) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage);
+        const prevPage = this._getPageFromUrl(prevLocation);
+        const currentPage = this._getPageFromUrl();
+
+        if (orderStatus !== prevOrderStatus || currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
+            getOrderList(currentPage, ordersPerPage);
             scrollToTop();
         }
     }
