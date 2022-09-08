@@ -16,6 +16,7 @@ class Order extends SourceOrder
 {
     private const FIELD_INTERNAL_NOTE= 'internal_note';
     private const FIELD_REFERENCE_NOTE = 'reference_note';
+    private const FIELD_SAP_ORDER_ID = 'sap_order_id';
 
     /**
      * Format order model for graphql schema
@@ -28,6 +29,7 @@ class Order extends SourceOrder
         $data = [
             'internal_note' => $orderModel->getData(self::FIELD_INTERNAL_NOTE),
             'reference_note' => $orderModel->getData(self::FIELD_REFERENCE_NOTE),
+            'sap_order_id' => $orderModel->getData(self::FIELD_SAP_ORDER_ID),
         ];
 
         return array_merge($data, parent::format($orderModel));
