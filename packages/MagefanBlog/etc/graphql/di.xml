@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData">
+                <!-- Index -->
+                <item name="mfblog_index_page_display_mode" xsi:type="string">mfblog/index_page/display_mode</item>
+                <item name="mfblog_index_page_template" xsi:type="string">mfblog/index_page/template</item>
+                <item name="mfblog_index_page_post_ids" xsi:type="string">mfblog/index_page/post_ids</item>
+                <!-- Sidebar -->
+                <item name="mfblog_sidebar_recent_posts_display_image" xsi:type="string">mfblog/sidebar/recent_posts/display_image</item>
+                <item name="mfblog_sidebar_featured_posts_display_image" xsi:type="string">mfblog/sidebar/featured_posts/display_image</item>
+                <item name="mfblog_sidebar_popular_posts_display_image" xsi:type="string">mfblog/sidebar/popular_posts/display_image</item>
+                <item name="mfblog_sidebar_tag_claud_animated" xsi:type="string">mfblog/sidebar/tag_claud/animated</item>
+                <item name="mfblog_sidebar_tag_claud_cloud_height" xsi:type="string">mfblog/sidebar/tag_claud/cloud_height</item>
+                <item name="mfblog_sidebar_tag_claud_text_highlight_color" xsi:type="string">mfblog/sidebar/tag_claud/text_highlight_color</item>
+                <!-- Post list -->
+                <item name="mfblog_post_list_template" xsi:type="string">mfblog/post_list/template</item>
+                <item name="mfblog_post_list_shortcontent_length" xsi:type="string">mfblog/post_list/shortcotent_length</item>
+                <item name="mfblog_post_list_lazyload_padding" xsi:type="string">mfblog/post_list/lazyload_padding</item>
+                <!-- Top menu -->
+                <item name="mfblog_top_menu_show_item" xsi:type="string">mfblog/top_menu/show_item</item>
+                <item name="mfblog_top_menu_item_text" xsi:type="string">mfblog/top_menu/item_text</item>
+                <item name="mfblog_top_menu_include_categories" xsi:type="string">mfblog/top_menu/include_categories</item>
+                <item name="mfblog_top_menu_max_depth" xsi:type="string">mfblog/top_menu/max_depth</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name ="Magefan\BlogGraphQl\Model\Resolver\Post">
+        <plugin name ="Replace_gallery_with_image_url" type="Scandiweb\MagefanBlog\Plugin\AfterPost" />
+    </type>
+    <type name ="Magefan\BlogGraphQl\Model\Resolver\Posts">
+        <plugin name ="Replace_gallery_with_image_url" type="Scandiweb\MagefanBlog\Plugin\AfterPosts" />
+    </type>
+</config>
