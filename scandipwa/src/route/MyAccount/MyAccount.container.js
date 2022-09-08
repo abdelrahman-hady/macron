@@ -13,19 +13,17 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import NoMatch from 'Route/NoMatch';
 import { mapDispatchToProps, mapStateToProps, MyAccountContainer as SourceMyAccountContainer } from 'SourceRoute/MyAccount/MyAccount.container';
-import { updateNoMatch } from 'Store/NoMatch/NoMatch.action';
 import OrderReducer from 'Store/Order/Order.reducer';
 import {
-    MY_ACCOUNT,
-    MY_DOWNLOADABLE,
-    MY_WISHLIST,
-    NEWSLETTER_SUBSCRIPTION
+    ACCOUNT_INFORMATION,
+    ADDRESS_BOOK,
+    FIRST_SECTION,
+    MY_ACCOUNT, MY_DOWNLOADABLE, MY_ORDERS,
+    MY_WISHLIST, NEWSLETTER_SUBSCRIPTION,
+    SECOND_SECTION
 } from 'Type/Account.type';
 import { withReducers } from 'Util/DynamicReducer';
-
-import { ACCOUNT_URL } from './MyAccount.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -40,38 +38,63 @@ export { mapStateToProps, mapDispatchToProps };
 
 /** @namespace Scandipwa/Route/MyAccount/Container */
 export class MyAccountContainer extends SourceMyAccountContainer {
-    static isTabEnabled() {
-        return false;
-    }
+    static defaultProps = {
+        selectedTab: null
+    };
 
-    isTabEnabled() {
-        return false;
-    }
+    static tabMap = {
+        [MY_ACCOUNT]: {
+            url: '',
+            tabName: __('My Account'),
+            section: FIRST_SECTION
+        },
+        [MY_ORDERS]: {
+            url: '/sales/order/history',
+            tabName: __('My Orders'),
+            section: FIRST_SECTION,
+            isFullUrl: true
+        },
+        [ADDRESS_BOOK]: {
+            url: '/customer/address',
+            tabName: __('Address Book'),
+            section: SECOND_SECTION,
+            isFullUrl: true
+        },
+        [ACCOUNT_INFORMATION]: {
+            url: '/edit',
+            tabName: __('Account Information'),
+            title: __('Edit Account Information'),
+            section: SECOND_SECTION
+        }
+    };
 
-    updateBreadcrumbs() {
-        const { updateBreadcrumbs } = this.props;
-        const breadcrumbs = [];
-
-        breadcrumbs.push({ name: __('My Account'), url: ACCOUNT_URL });
-
-        updateBreadcrumbs(breadcrumbs);
-    }
-
-    render() {
-        const { selectedTab, props } = this.props;
-
-        switch (selectedTab) {
-        case MY_ACCOUNT:
-            updateNoMatch(false);
-            return null;
-        case MY_DOWNLOADABLE:
+    static isTabEnabled(props, tabName) {
+        switch (tabName) {
         case MY_WISHLIST:
         case NEWSLETTER_SUBSCRIPTION:
-            updateNoMatch({ noMatch: true });
-            return <NoMatch { ...props } />;
+        case MY_DOWNLOADABLE:
+            return false;
         default:
-            return null;
+            return true;
         }
+    }
+
+    isTabEnabled(tabName) {
+        switch (tabName) {
+        case MY_WISHLIST:
+        case NEWSLETTER_SUBSCRIPTION:
+        case MY_DOWNLOADABLE:
+            return false;
+        default:
+            return true;
+        }
+    }
+
+    tabsFilterEnabled(tabMap) {
+        return Object.entries(tabMap).reduce((enabledTabs, [key, value]) => (
+            MyAccountContainer.isTabEnabled(this.props, key)
+                ? { ...enabledTabs, [key]: value } : enabledTabs
+        ), {});
     }
 }
 

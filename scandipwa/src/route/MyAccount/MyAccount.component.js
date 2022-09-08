@@ -9,18 +9,117 @@
 /* eslint-disable @scandipwa/scandipwa-guidelines/no-jsx-variables */
 /* eslint-disable max-len */
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
+/* eslint-disable @scandipwa/scandipwa-guidelines/only-render-in-component */
 
+import PropTypes from 'prop-types';
+import { lazy, Suspense } from 'react';
+
+import ContentWrapper from 'Component/ContentWrapper';
+import Loader from 'Component/Loader/Loader.component';
+import MyAccountInformation from 'Component/MyAccountInformation';
+import MyAccountOrder from 'Component/MyAccountOrder';
+import NoMatch from 'Route/NoMatch';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
+import {
+    ACCOUNT_INFORMATION,
+    ActiveTabType,
+    ADDRESS_BOOK,
+    MY_ACCOUNT,
+    MY_ORDER,
+    MY_ORDERS,
+    TabMapType
+} from 'Type/Account.type';
+import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
+
+export const MyAccountAddressBook = lazy(() => import(
+    /* webpackMode: "lazy", webpackChunkName: "account-address" */
+    'Component/MyAccountAddressBook'
+));
+export const MyAccountDashboard = lazy(() => import(
+    /* webpackMode: "lazy", webpackChunkName: "account-dashboard" */
+    'Component/MyAccountDashboard'
+));
+
+export const MyAccountMyOrders = lazy(() => import(
+    /* webpackMode: "lazy", webpackChunkName: "account-orders" */
+    'Component/MyAccountMyOrders'
+));
 
 /** @namespace Scandipwa/Route/MyAccount/Component */
 export class MyAccountComponent extends SourceMyAccount {
+    static propTypes = {
+        isEditingActive: PropTypes.bool.isRequired,
+        subHeading: PropTypes.string,
+        activeTab: ActiveTabType.isRequired,
+        tabMap: TabMapType.isRequired,
+        onSignIn: PropTypes.func.isRequired,
+        location: LocationType.isRequired,
+        match: MatchType.isRequired,
+        changeTabName: PropTypes.func.isRequired,
+        tabName: PropTypes.string,
+        setTabSubheading: PropTypes.func.isRequired,
+        isTabEnabled: PropTypes.func.isRequired
+    };
+
+    renderMap = {
+        [MY_ACCOUNT]: MyAccountDashboard,
+        [MY_ORDER]: MyAccountOrder,
+        [MY_ORDERS]: MyAccountMyOrders,
+        [ADDRESS_BOOK]: MyAccountAddressBook,
+        [ACCOUNT_INFORMATION]: MyAccountInformation
+    };
+
     renderContent() {
+        const {
+            activeTab,
+            tabMap,
+            isEditingActive,
+            match,
+            changeTabName,
+            tabName,
+            setTabSubheading,
+            isTabEnabled
+        } = this.props;
+
         if (!isSignedIn()) {
             return this.renderLoginOverlay();
         }
 
-        return null;
+        if (!isTabEnabled(activeTab)) {
+            return <NoMatch />;
+        }
+
+        const TabContent = this.getTabContent();
+        const { title } = tabMap[activeTab];
+
+        return (
+            <ContentWrapper
+              label={ __('My Account page') }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+            >
+
+                <div
+                  block="MyAccount"
+                  elem="TabContent"
+                  mods={ { activeTab } }
+                >
+                    <h2 block="MyAccount" elem="Heading">
+                        { title || tabName }
+                        { this.renderSubHeading() }
+                    </h2>
+                    <Suspense fallback={ <Loader /> }>
+                        <TabContent
+                          isEditingActive={ isEditingActive }
+                          match={ match }
+                          changeTabName={ changeTabName }
+                          tabMap={ tabMap }
+                          setTabSubheading={ setTabSubheading }
+                        />
+                    </Suspense>
+                </div>
+            </ContentWrapper>
+        );
     }
 }
 
