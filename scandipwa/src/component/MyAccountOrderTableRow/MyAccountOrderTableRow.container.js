@@ -1,15 +1,8 @@
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
+/*
  * @category  Macron
- * @author    Juris Kucinskis <info@scandiweb.com>
- * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ * @author    Juris Kucinskis <juris.kucinskis@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
 import { connect } from 'react-redux';
@@ -37,7 +30,7 @@ export const mapStateToProps = (state) => ({
 export class MyAccountOrderTableRowContainer extends SourceMyAccountOrderTableRowContainer {
     onViewClick() {
         const { order: { id, sap_order_id } } = this.props;
-        const orderId = sap_order_id != null ? sap_order_id : id;
+        const orderId = sap_order_id ?? id;
 
         history.push({ pathname: appendWithStoreCode(`${ACCOUNT_ORDER_URL}/${orderId}`) });
     }
