@@ -57,14 +57,14 @@ export class ShipmentsTableComponent extends PureComponent {
         } = data;
 
         return (
-            <tr key={ __(tracking_number) }>
-                <td>{ __(shipment_number) }</td>
-                <td>{ __(date) }</td>
-                <td>{ __(customer_name) }</td>
-                <td>{ __(address) }</td>
-                <td>__(Way of delivery)</td>
-                <td>{ __(status) }</td>
-                <td>{ __(tracking_number) }</td>
+            <tr key={ tracking_number }>
+                <td>{ shipment_number }</td>
+                <td>{ date }</td>
+                <td>{ customer_name }</td>
+                <td>{ address }</td>
+                <td>{ __('Way of delivery') }</td>
+                <td>{ status }</td>
+                <td>{ tracking_number }</td>
                 <td>{ this.renderActionButtons() }</td>
             </tr>
         );
