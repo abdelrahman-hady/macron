@@ -77,12 +77,23 @@ export class MyClientsPageContainer extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { clientsPerPage } = this.state;
+        const {
+            clientsPerPage, clientList: {
+                page_info: {
+                    total_pages = 0
+                } = {}
+            }
+        } = this.state;
         const { clientsPerPage: prevClientsPerPage } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
+            const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
+            history.replace(`${MY_CLIENTS_URL}${pageParam}`);
+        }
 
         if (currentPage !== prevPage || clientsPerPage !== prevClientsPerPage) {
             this.requestClients(currentPage, clientsPerPage);
