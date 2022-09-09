@@ -17,15 +17,9 @@ import './LoginAccount.override.style';
 /** @namespace Scandipwa/Route/LoginAccount/Component */
 export class LoginAccountComponent extends SourceLoginAccountComponent {
     renderSignInWrapper() {
-        const { isMobile } = this.props;
-
-        if (isMobile) {
-            return this.renderSignIn();
-        }
-
         return (
             <div block="LoginAccount" elem="SignInWrapper">
-                <h3>{ __('Macron') }</h3>
+                <h2>{ __('Macron') }</h2>
                 { this.renderSignIn() }
             </div>
         );

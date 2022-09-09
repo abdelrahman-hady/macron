@@ -60,7 +60,7 @@ const BEFORE_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
     !isSignedIn() && {
         component: <Redirect to={ appendWithStoreCode('/') } />,
-        position: 40,
+        position: 1,
         name: 'redirect'
     }
 ];
