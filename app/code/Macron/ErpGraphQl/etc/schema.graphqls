@@ -11,6 +11,13 @@ type Query {
     ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
+
+    shipments(
+        currentPage: Int = 1
+        pageSize: Int = 10
+    ): [Shipment]
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
+    @doc(description: "Get shipments list")
 }
 
 type Mutation {
@@ -51,6 +58,16 @@ type ClientType {
     contact_person: String
     mobile: String
     email: String
+}
+
+type Shipment {
+    entity_id: Int
+    shipment_number: String,
+    status: String,
+    tracking_number: String,
+    date: String,
+    customer_name: String,
+    address: String
 }
 
 input CreateClientInput {

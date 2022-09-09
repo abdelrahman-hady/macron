@@ -10,17 +10,23 @@
 /* eslint-disable max-len */
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import Loader from 'Component/Loader';
+import ShipmentsTable from 'Component/ShipmentsTable';
 
 import './Shipments.style';
 
 /** @namespace Scandipwa/Route/Shipments/Component */
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        isLoading: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isLoading: false
     };
 
     title = __('Shipments');
@@ -33,12 +39,22 @@ export class ShipmentsComponent extends PureComponent {
         );
     }
 
+    renderContent() {
+        return (
+            <ContentWrapper label="Shipments">
+                { this.renderTitle() }
+                <ShipmentsTable />
+            </ContentWrapper>
+        );
+    }
+
     render() {
+        const { isLoading } = this.props;
+
         return (
             <main block="Shipments">
-                <ContentWrapper label="Shipments">
-                  { this.renderTitle() }
-                </ContentWrapper>
+                <Loader isLoading={ isLoading } />
+                { this.renderContent() }
             </main>
         );
     }

@@ -448,10 +448,6 @@ return [
         'Macron_Sales' => 1,
         'ScandiPWA_SalesGraphQl' => 1,
         'ScandiPWA_StoreGraphQL' => 1,
-        'Magefan_Community' => 1,
-        'Magefan_Blog' => 1,
-        'Magefan_BlogGraphQl' => 1,
-        'Magefan_WysiwygAdvanced' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'ReadyMage_Logger' => 1,
@@ -483,7 +479,6 @@ return [
         'ScandiPWA_UrlrewriteGraphQl' => 1,
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
-        'Scandiweb_MagefanBlog' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
         'Temando_ShippingRemover' => 1
     ],

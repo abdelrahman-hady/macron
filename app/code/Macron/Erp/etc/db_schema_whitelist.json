@@ -11,7 +11,13 @@
             "customer_name": true,
             "address": true,
             "connected_order_id": true,
-            "connected_invoice_id": true
+            "connected_invoice_id": true,
+            "entity_id": true,
+            "customer_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_SHIPMENT_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
         }
     },
     "erp_client": {
