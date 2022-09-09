@@ -17,7 +17,7 @@
         <column xsi:type="text" name="packing_list_link" comment="Packing list link"/>
         <column xsi:type="text" name="status" comment="Status"/>
         <column xsi:type="text" name="tracking_number" comment="Tracking number"/>
-        <column xsi:type="text" name="date" comment="Date"/>
+        <column xsi:type="date" name="date" comment="Date"/>
         <column xsi:type="text" name="business_partner_id" comment="Business partner ID"/>
         <column xsi:type="text" name="customer_name" comment="Customer name"/>
         <column xsi:type="text" name="address" comment="Address"/>
