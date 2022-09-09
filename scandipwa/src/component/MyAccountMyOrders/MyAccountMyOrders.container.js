@@ -18,6 +18,7 @@ import {
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.container';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { transformListViewAllowedValues } from 'Util/Config';
 
 import { ORDERS_PER_PAGE, ORDERS_PER_PAGE_ITEM } from './MyAccountMyOrders.config';
 
@@ -29,7 +30,7 @@ export const OrderDispatcher = import(
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-    ordersPerPageList: state.ConfigReducer.xperpage
+    ordersPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage)
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
@@ -79,13 +80,18 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { getOrderList } = this.props;
+        const { getOrderList, ordersPerPageList } = this.props;
         const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
         const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (!ordersPerPageList.includes(ordersPerPage)) {
+            this.setState({ ordersPerPage: ordersPerPageList[0] });
+            return;
+        }
 
         if (orderStatus !== prevOrderStatus || currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
             getOrderList(currentPage, ordersPerPage);

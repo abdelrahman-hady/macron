@@ -18,6 +18,7 @@ import { LocationType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { transformListViewAllowedValues } from 'Util/Config';
 import history from 'Util/History';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
 import { appendWithStoreCode, getQueryParam } from 'Util/Url';
@@ -32,7 +33,7 @@ export const BreadcrumbsDispatcher = import(
 
 /** @namespace Scandipwa/Route/MyClientsPage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
-    clientsPerPageList: state.ConfigReducer.xperpage
+    clientsPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage)
 });
 
 /** @namespace Scandipwa/Route/MyClientsPage/Container/mapDispatchToProps */
@@ -79,10 +80,16 @@ export class MyClientsPageContainer extends PureComponent {
     componentDidUpdate(prevProps, prevState) {
         const { clientsPerPage } = this.state;
         const { clientsPerPage: prevClientsPerPage } = prevState;
+        const { clientsPerPageList } = this.props;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (!clientsPerPageList.includes(clientsPerPage)) {
+            this.setState({ clientsPerPage: clientsPerPageList[0] });
+            return;
+        }
 
         if (currentPage !== prevPage || clientsPerPage !== prevClientsPerPage) {
             this.requestClients(currentPage, clientsPerPage);
