@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+@category Macron
+@author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+@copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Macron_XperPage::xperpage_config" title="x per page store configuration" translate="title" sortOrder="10"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
+
