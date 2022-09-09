@@ -22,7 +22,7 @@ export class PaginationComponent extends SourcePagination {
                     currentPage.toString()
                 ) }
                 <li block="Pagination" elem="ListItem">
-                    <p>of</p>
+                    <p>{ __('Of') }</p>
                 </li>
                 <li block="Pagination" elem="ListItem">
                     <p>{ totalPages }</p>
