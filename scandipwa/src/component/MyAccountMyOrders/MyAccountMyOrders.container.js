@@ -64,7 +64,9 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         sortOptions: {
             orderStatus: 0 // Filters orders list by status
         },
-        statusOptions: []
+        statusOptions: [],
+        searchInput: '',
+        orderListSearchResult: []
     };
 
     containerFunctions = {
