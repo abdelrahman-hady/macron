@@ -13,11 +13,11 @@ use Macron\ErpGraphQl\Model\ResourceModel\Clients\Collection as ClientsCollectio
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\Api\Search\SearchResultInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\Search\AggregationInterface;
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
 use Magento\Framework\Data\Collection\EntityFactoryInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Search\AggregationInterface;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
 
@@ -26,7 +26,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
     /**
      * @var AggregationInterface
      */
-    protected $aggregations;
+    protected AggregationInterface $aggregations;
 
     /**
      * constructor
@@ -40,7 +40,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * @param $eventObject
      * @param $resourceModel
      * @param string $model
-     * @param null $connection
+     * @param $connection
      * @param AbstractDb|null $resource
      */
     public function __construct(
@@ -68,7 +68,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
      *
      * @return AggregationInterface
      */
-    public function getAggregations()
+    public function getAggregations(): AggregationInterface
     {
         return $this->aggregations;
     }
@@ -91,7 +91,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * @param int|null $offset
      * @return array
      */
-    public function getAllIds(int $limit = null, int $offset = null)
+    public function getAllIds(int $limit = null, int $offset = null): array
     {
         return $this->getConnection()->fetchCol($this->_getAllIdsSelect($limit, $offset), $this->_bindParams);
     }
@@ -101,7 +101,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
      *
      * @return SearchCriteriaInterface|null
      */
-    public function getSearchCriteria()
+    public function getSearchCriteria(): ?SearchCriteriaInterface
     {
         return null;
     }
