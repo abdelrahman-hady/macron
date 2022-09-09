@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
+import Pagination from 'Component/Pagination';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
@@ -170,6 +171,15 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 />
                 <span>{ __('per page') }</span>
             </div>
+        );
+    }
+
+    renderPagination() {
+        const { isLoading, orderList: { pageInfo = { total_pages: 1 } } } = this.props;
+        const { total_pages } = pageInfo;
+
+        return (
+             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
         );
     }
 
