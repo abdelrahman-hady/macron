@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category    Macron
+ * @package     Macron_Pim
+ * @author      Marian Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="pim_stock" engine="innodb" comment="Sales Flat Order">
+        <column xsi:type="int" name="id" identity="true" nullable="false" comment="Id"/>
+        <column xsi:type="text" name="sku" comment="Sku"/>
+        <column xsi:type="text" name="warehouse" comment="Warehouse"/>
+        <column xsi:type="int" name="qty" comment="Quantity"/>
+        <column xsi:type="text" name="new_arrivals" comment="New Arrivals"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>
