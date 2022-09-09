@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -11,6 +12,7 @@ import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
 import MyAccountOrderTableRow from 'Component/MyAccountOrderTableRow';
+import SearchIcon from 'Component/SearchIcon';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
@@ -22,8 +24,29 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     static propTypes = {
         ...super.propTypes,
         ordersPerPageList: PropTypes.string.isRequired,
-        ordersPerPage: PropTypes.number.isRequired
+        ordersPerPage: PropTypes.number.isRequired,
+        onInputChange: PropTypes.func.isRequired,
+        searchInput: PropTypes.string.isRequired,
+        orderListSearchResult: PropTypes.arrayOf.isRequired
     };
+
+    // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
+    shouldComponentUpdate(nextProps) {
+        const {
+            device, orderList, isLoading, orderListSearchResult
+        } = this.props;
+        const {
+            device: nextDevice,
+            orderList: nextOrderList,
+            isLoading: nextIsLoading,
+            orderListSearchResult: nextOrderListSearchResult
+        } = nextProps;
+
+        return device !== nextDevice
+        || orderList !== nextOrderList
+        || isLoading !== nextIsLoading
+        || orderListSearchResult !== nextOrderListSearchResult;
+    }
 
     renderOrdersPerPage() {
         const { ordersPerPageList, ordersPerPage, onOrderPerPageChange } = this.props;
@@ -55,6 +78,36 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                   options={ ordersPerPageOptions }
                 />
                 <span>{ __('per page') }</span>
+            </div>
+        );
+    }
+
+    renderSearchBar() {
+        const { onInputChange } = this.props;
+        return (
+            <div
+              block="SearchOrder"
+              elem="SearchInnerWrapper"
+            >
+                <div
+                  block="SearchOrder"
+                  elem="SearchIcon"
+                >
+                    <SearchIcon />
+                </div>
+                <Field
+                  id="SearchOrder"
+                  type={ FIELD_TYPE.text }
+                  attr={ {
+                      block: 'SearchOrder',
+                      elem: 'SearchInput',
+                      name: 'SearchOrder',
+                      placeholder: __('Search by keyword')
+                  } }
+                  events={ {
+                      onChange: onInputChange
+                  } }
+                />
             </div>
         );
     }
@@ -123,6 +176,26 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderOrderRows() {
+        const {
+            orderList: { items = [] }, isLoading, searchInput, orderListSearchResult
+        } = this.props;
+
+        if (!isLoading && !items.length && !orderListSearchResult.length) {
+            return this.renderNoOrders();
+        }
+
+        const ordersItems = searchInput !== '' ? orderListSearchResult : items;
+        const orders = ordersItems.length
+            ? ordersItems
+            : Array.from({ length: 10 }, (_, id) => ({ base_order_info: { id } }));
+
+        return orders.reduceRight(
+            (acc, e) => [...acc, this.renderOrderRow(e)],
+            []
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
@@ -130,6 +203,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
                 { this.renderFilters() }
+                { this.renderSearchBar() }
                 { this.renderOrdersPerPage() }
                 { this.renderTable() }
                 { this.renderPagination() }

@@ -17,6 +17,12 @@ import { Field } from 'Util/Query';
  * @class OrderQuery
  * @namespace Scandipwa/Query/Order/Query */
 export class OrderQuery extends SourceOrderQuery {
+    getOrdersByKeywordQuery(keyword) {
+        return new Field('OrdersByKeyword')
+            .addArgument('keyword', 'String!', keyword)
+            .addFieldList(this._getOrderItemsFields(false));
+    }
+
     _getOrderItemsFields(isSingleOrder) {
         const basicFields = [
             ...super._getOrderItemsFields(isSingleOrder),

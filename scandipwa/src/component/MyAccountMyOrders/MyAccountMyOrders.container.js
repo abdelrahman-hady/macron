@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -10,13 +11,18 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import MyAccountMyOrders from 'Component/MyAccountMyOrders/MyAccountMyOrders.component';
+import OrderQuery from 'Query/Order.query';
 import {
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
     MyAccountMyOrdersContainer as SourceMyAccountMyOrdersContainer
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.container';
+import { setLoadingStatus } from 'Store/Order/Order.action';
+import { DeviceType } from 'Type/Device.type';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { formatOrders } from 'Util/Orders';
+import { fetchQuery } from 'Util/Request';
 
 import { ORDERS_PER_PAGE, ORDERS_PER_PAGE_ITEM } from './MyAccountMyOrders.config';
 
@@ -28,7 +34,8 @@ export const OrderDispatcher = import(
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-    ordersPerPageList: state.ConfigReducer.xperpage
+    ordersPerPageList: state.ConfigReducer.xperpage,
+    device: state.ConfigReducer.device
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
@@ -36,38 +43,51 @@ export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     getOrderList: (page, pageSize) => OrderDispatcher.then(
         ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize)
-    )
+    ),
+    setLoadingStatus: (status) => dispatch(setLoadingStatus(status))
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container */
 export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer {
     static propTypes = {
         ...super.propTypes,
-        ordersPerPageList: PropTypes.string.isRequired
+        ordersPerPageList: PropTypes.string.isRequired,
+        device: DeviceType.isRequired,
+        setLoadingStatus: PropTypes.func.isRequired
     };
+
+    timer = null;
 
     state = {
         ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
         dateFrom: '',
-        dateTo: ''
+        dateTo: '',
+        searchInput: '',
+        orderListSearchResult: []
     };
 
     containerFunctions = {
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
         onDateFromSelectorChange: this.onDateFromSelectorChange.bind(this),
-        onDateToSelectorChange: this.onDateToSelectorChange.bind(this)
+        onDateToSelectorChange: this.onDateToSelectorChange.bind(this),
+        onInputChange: this.onInputChange.bind(this)
     };
 
     containerProps() {
-        const { ordersPerPageList } = this.props;
-        const { ordersPerPage, dateFrom, dateTo } = this.state;
+        const { ordersPerPageList, device } = this.props;
+        const {
+            ordersPerPage, dateFrom, dateTo, searchInput, orderListSearchResult
+        } = this.state;
 
         return {
             ...super.containerProps(),
             ordersPerPageList,
             ordersPerPage,
             dateFrom,
-            dateTo
+            dateTo,
+            device,
+            searchInput,
+            orderListSearchResult
         };
     }
 
@@ -108,6 +128,37 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     onDateToSelectorChange(e) {
         this.setState({ dateTo: e.target.value });
+    }
+
+    onInputChange(e) {
+        const { setLoadingStatus } = this.props;
+        const { value } = e.target;
+        this.setState({ searchInput: value });
+        const query = OrderQuery.getOrdersByKeywordQuery(value);
+        this.debounce(
+            () => {
+                setLoadingStatus(true);
+                try {
+                    fetchQuery(query).then(
+                    /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/debounce/fetchQuery/then */
+                        ({ OrdersByKeyword }) => {
+                            setLoadingStatus(false);
+                            this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+                        }
+                    );
+                } catch (error) {
+                    setLoadingStatus(false);
+                }
+            }
+        );
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    debounce(func, timeout = 500) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            func();
+        }, timeout);
     }
 
     render() {
