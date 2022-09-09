@@ -141,7 +141,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             const statusArr = Array.from(Object.keys(uniqueList));
             const statusOptions = statusArr.map((option, idx) => ({
                 id: idx + 1,
-                label: __(option),
+                label: option,
                 value: idx + 1
             }));
 

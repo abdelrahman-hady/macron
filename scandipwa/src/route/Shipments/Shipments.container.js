@@ -14,6 +14,7 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 
 import Shipments from './Shipments.component';
+import { SHIPMENT_URL } from './Shipments.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -62,7 +63,7 @@ export class ShipmentsContainer extends PureComponent {
         const { updateBreadcrumbs } = this.props;
         const breadcrumbs = [
             {
-                url: '/shipments',
+                url: SHIPMENT_URL,
                 name: __('Shipments')
             }
         ];
