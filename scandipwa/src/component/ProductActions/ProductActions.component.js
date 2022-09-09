@@ -26,11 +26,12 @@ export class ProductActionsComponent extends SourceProductActions {
 
         return (
             <div>
-                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                 <div
                   block="ProductActions"
                   elem="PatchHeadingHolder"
+                  role="presentation"
                   onClick={ toggleDropDown }
+                  onKeyDown={ toggleDropDown }
                 >
                     <span>
                         ⌗
