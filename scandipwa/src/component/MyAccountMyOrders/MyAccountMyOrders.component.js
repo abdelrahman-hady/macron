@@ -1,4 +1,3 @@
-
 /* eslint-disable react/forbid-prop-types */
 /*
  * @category  Macron
@@ -15,11 +14,11 @@ import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
 import Pagination from 'Component/Pagination';
+import SearchIcon from 'Component/SearchIcon';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
 import { getListViewAllowedOptions } from 'Util/Config';
-import SearchIcon from 'Component/SearchIcon';
 
 import './MyAccountMyOrders.override.style';
 
@@ -49,16 +48,16 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
         return (
             <Field
-                type={ FIELD_TYPE.select }
-                label={ __('Sort by status') }
-                mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-                options={ statusOptions }
-                value={ orderStatus }
-                events={ {
-                    onChange: (val) => {
-                        updateOptions({ orderStatus: val });
-                    }
-                } }
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+              options={ statusOptions }
+              value={ orderStatus }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ orderStatus: val });
+                  }
+              } }
             />
         );
     }
