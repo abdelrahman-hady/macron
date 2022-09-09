@@ -48,7 +48,7 @@ export class OrderQuery extends SourceOrderQuery {
     _getOrdersField(options) {
         const {
             // eslint-disable-next-line no-unused-vars
-            orderId, page = 1, pageSize = ORDERS_PER_PAGE, sortOptions
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions
         } = options || {};
         const ordersField = new Field('orders');
 
@@ -58,7 +58,7 @@ export class OrderQuery extends SourceOrderQuery {
                 .addFieldList(this._getOrdersFields(true));
         }
 
-        const { status, user_customer_name } = sortOptions;
+        const { status, user_customer_name } = filterOptions;
 
         if (status) {
             ordersField.addArgument('filter', 'CustomerOrdersFilterInput', { status: { eq: status } });

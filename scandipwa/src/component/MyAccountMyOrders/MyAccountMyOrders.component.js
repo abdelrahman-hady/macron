@@ -24,7 +24,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         ...super.propTypes,
         ordersPerPageList: PropTypes.string.isRequired,
         ordersPerPage: PropTypes.number.isRequired,
-        sortOptions: PropTypes.object.isRequired,
+        filterOptions: PropTypes.object.isRequired,
         updateOptions: PropTypes.func.isRequired
     };
 
@@ -76,7 +76,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
     renderSortByCustomerName() {
         const {
-            sortOptions: { user_customer_name }, getAvailableSortOptions, formatToFieldOptions, updateOptions
+            filterOptions: { user_customer_name }, getAvailablefilterOptions, formatToFieldOptions, updateOptions
         } = this.props;
 
         return (
@@ -84,12 +84,13 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
               type={ FIELD_TYPE.select }
               label={ __('Sort by customer') }
               mix={ { block: 'MyAccountMyOrders', elem: 'SortByCustomer' } }
-              options={ formatToFieldOptions(getAvailableSortOptions().user_customer_name) }
+              options={ formatToFieldOptions(getAvailablefilterOptions().user_customer_name) }
               value={ user_customer_name }
               events={ {
                   onChange: (val) => {
                       updateOptions({
-                          user_customer_name: +val === 0 ? null : getAvailableSortOptions().user_customer_name[+val - 1]
+                          // eslint-disable-next-line max-len
+                          user_customer_name: +val === 0 ? null : getAvailablefilterOptions().user_customer_name[+val - 1]
                       });
                   }
               } }
@@ -99,7 +100,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
     renderSortByOrderStatus() {
         const {
-            sortOptions: { status }, getAvailableSortOptions, formatToFieldOptions, updateOptions
+            filterOptions: { status }, getAvailablefilterOptions, formatToFieldOptions, updateOptions
         } = this.props;
 
         return (
@@ -107,11 +108,11 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
               type={ FIELD_TYPE.select }
               label={ __('Sort by status') }
               mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-              options={ formatToFieldOptions(getAvailableSortOptions().status) }
+              options={ formatToFieldOptions(getAvailablefilterOptions().status) }
               value={ status }
               events={ {
                   onChange: (val) => {
-                      updateOptions({ status: +val === 0 ? null : getAvailableSortOptions().status[+val - 1] });
+                      updateOptions({ status: +val === 0 ? null : getAvailablefilterOptions().status[+val - 1] });
                   }
               } }
             />

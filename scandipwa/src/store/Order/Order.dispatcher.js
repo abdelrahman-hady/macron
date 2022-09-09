@@ -16,8 +16,8 @@ import { fetchQuery, getErrorMessage } from 'Util/Request';
 
 /** @namespace Scandipwa/Store/Order/Dispatcher */
 export class OrderDispatcher extends SourceOrderDispatcher {
-    requestOrders(dispatch, page = 1, pageSize = ORDERS_PER_PAGE, sortOptions) {
-        const query = OrderQuery.getOrderListQuery({ page, pageSize, sortOptions });
+    requestOrders(dispatch, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions) {
+        const query = OrderQuery.getOrderListQuery({ page, pageSize, filterOptions });
         dispatch(setLoadingStatus(true));
 
         return fetchQuery(query).then(

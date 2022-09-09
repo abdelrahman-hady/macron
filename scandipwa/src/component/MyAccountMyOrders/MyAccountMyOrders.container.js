@@ -35,8 +35,8 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    getOrderList: (page, pageSize, sortOptions) => OrderDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize, sortOptions)
+    getOrderList: (page, pageSize, filterOptions) => OrderDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize, filterOptions)
     )
 });
 
@@ -49,7 +49,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     state = {
         ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
-        sortOptions: {
+        filterOptions: {
             status: null,
             user_customer_name: null
         }
@@ -58,27 +58,27 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     containerFunctions = {
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
         updateOptions: this.updateOptions.bind(this),
-        getAvailableSortOptions: this.getAvailableSortOptions.bind(this),
+        getAvailablefilterOptions: this.getAvailablefilterOptions.bind(this),
         formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList } = this.props;
-        const { ordersPerPage, sortOptions } = this.state;
+        const { ordersPerPage, filterOptions } = this.state;
 
         return {
-            ...super.containerProps(), ordersPerPageList, ordersPerPage, sortOptions
+            ...super.containerProps(), ordersPerPageList, ordersPerPage, filterOptions
         };
     }
 
     componentDidMount() {
         const { getOrderList } = this.props;
-        const { ordersPerPage, sortOptions } = this.state;
+        const { ordersPerPage, filterOptions } = this.state;
 
-        getOrderList(this._getPageFromUrl(), ordersPerPage, sortOptions);
+        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
     }
 
-    getAvailableSortOptions() {
+    getAvailablefilterOptions() {
         const { orderList: { items = [] } } = this.props;
 
         const uniqueLists = {
@@ -115,24 +115,24 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     componentDidUpdate(prevProps, prevState) {
         const { getOrderList } = this.props;
         const { location: prevLocation } = prevProps;
-        const { ordersPerPage, sortOptions } = this.state;
+        const { ordersPerPage, filterOptions } = this.state;
         const {
             ordersPerPage: prevOrdersPerPage,
-            sortOptions: prevSortOptions
+            filterOptions: prevfilterOptions
         } = prevState;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        const sortOptionsChanged = () => !(JSON.stringify(sortOptions) === JSON.stringify(prevSortOptions));
-        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage || sortOptionsChanged()) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage, sortOptions);
+        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevfilterOptions));
+        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage || filterOptionsChanged()) {
+            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
             scrollToTop();
         }
     }
 
     updateOptions(option) {
-        this.setState(({ sortOptions }) => ({ sortOptions: { ...sortOptions, ...option } }));
+        this.setState(({ filterOptions }) => ({ filterOptions: { ...filterOptions, ...option } }));
     }
 
     onOrderPerPageChange(ordersPerPage) {
