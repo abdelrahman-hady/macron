@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
-import MyAccountOrderTableRow from 'Component/MyAccountOrderTableRow';
+import Pagination from 'Component/Pagination';
 import SearchIcon from 'Component/SearchIcon';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
@@ -26,6 +26,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         ordersPerPageList: PropTypes.string.isRequired,
         ordersPerPage: PropTypes.number.isRequired,
         onInputChange: PropTypes.func.isRequired,
+        onDateSelectorChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
         orderListSearchResult: PropTypes.arrayOf.isRequired
     };
@@ -114,8 +115,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
     renderFilters() {
         const {
-            onDateFromSelectorChange,
-            onDateToSelectorChange,
+            onDateSelectorChange,
             dateFrom,
             dateTo
         } = this.props;
@@ -127,12 +127,12 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                     <Field
                       type={ FIELD_TYPE.date }
                       attr={ {
-                          id: 'date-from-selector',
-                          name: 'date-from-selector',
+                          id: 'dateFrom',
+                          name: 'dateFrom',
                           value: dateFrom
                       } }
                       events={ {
-                          onChange: onDateFromSelectorChange
+                          onChange: onDateSelectorChange
                       } }
                     />
                 </div>
@@ -141,12 +141,12 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                     <Field
                       type={ FIELD_TYPE.date }
                       attr={ {
-                          id: 'date-to-selector',
-                          name: 'date-to-selector',
+                          id: 'dateTo',
+                          name: 'dateTo',
                           value: dateTo
                       } }
                       events={ {
-                          onChange: onDateToSelectorChange
+                          onChange: onDateSelectorChange
                       } }
                     />
                 </div>
@@ -154,45 +154,52 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
-    renderOrderRow(order) {
-        const { id, order_date, base_order_info: { id: defaultId } = {} } = order;
-        const { dateFrom, dateTo } = this.props;
-        const adjustedOrderDate = order_date !== undefined ? order_date.split(' ')[0] : null;
-        const orderDate = new Date(adjustedOrderDate).getDate();
-        const fromDate = new Date(dateFrom).getDate();
-        const toDate = new Date(dateTo).getDate();
-
-        if (orderDate < fromDate) {
-            return null;
-        } if (orderDate > toDate) {
-            return null;
-        }
-
-        return (
-            <MyAccountOrderTableRow
-              key={ id || defaultId }
-              order={ order }
-            />
-        );
-    }
-
     renderOrderRows() {
         const {
-            orderList: { items = [] }, isLoading, searchInput, orderListSearchResult
+            orderList: { items = [] }, isLoading,
+            orderListSearchResult: { items: searchedItems = [] },
+            searchInput
         } = this.props;
 
-        if (!isLoading && !items.length && !orderListSearchResult.length) {
+        const orderItems = searchInput !== '' ? searchedItems : items;
+        if (!isLoading && !orderItems.length) {
             return this.renderNoOrders();
         }
 
-        const ordersItems = searchInput !== '' ? orderListSearchResult : items;
-        const orders = ordersItems.length
-            ? ordersItems
+        const orders = orderItems.length
+            ? orderItems
             : Array.from({ length: 10 }, (_, id) => ({ base_order_info: { id } }));
 
         return orders.reduceRight(
             (acc, e) => [...acc, this.renderOrderRow(e)],
             []
+        );
+    }
+
+    renderPagination() {
+        const {
+            isLoading,
+            orderList: {
+                pageInfo: {
+                    total_pages = 0
+                } = {}
+            },
+            orderListSearchResult: {
+                pageInfo: {
+                    total_pages_searched = 0
+                } = {}
+            },
+            searchInput
+        } = this.props;
+
+        const pages = searchInput !== '' ? total_pages_searched : total_pages;
+
+        return (
+            <Pagination
+              isLoading={ isLoading }
+              totalPages={ pages }
+              mix={ { block: 'MyAccountMyOrders', elem: 'Pagination' } }
+            />
         );
     }
 

@@ -41,8 +41,8 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    getOrderList: (page, pageSize) => OrderDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize)
+    getOrderList: (page, pageSize, filterOptions) => OrderDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize, filterOptions)
     ),
     setLoadingStatus: (status) => dispatch(setLoadingStatus(status))
 });
@@ -60,16 +60,17 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     state = {
         ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
-        dateFrom: '',
-        dateTo: '',
+        filterOptions: {
+            dateFrom: '',
+            dateTo: ''
+        },
         searchInput: '',
         orderListSearchResult: []
     };
 
     containerFunctions = {
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
-        onDateFromSelectorChange: this.onDateFromSelectorChange.bind(this),
-        onDateToSelectorChange: this.onDateToSelectorChange.bind(this),
+        onDateSelectorChange: this.onDateSelectorChange.bind(this),
         onInputChange: this.onInputChange.bind(this)
     };
 
@@ -93,25 +94,25 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     componentDidMount() {
         const { getOrderList } = this.props;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage, filterOptions } = this.state;
 
-        getOrderList(this._getPageFromUrl(), ordersPerPage);
+        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
     }
 
     componentDidUpdate(prevProps, prevState) {
         const { getOrderList } = this.props;
         const { location: prevLocation } = prevProps;
-        const { ordersPerPage, dateFrom, dateTo } = this.state;
-        const { ordersPerPage: prevOrdersPerPage } = prevState;
-        const { dateFrom: prevDateFrom } = prevState;
-        const { dateTo: prevDateTo } = prevState;
+        const {
+            ordersPerPage, filterOptions
+        } = this.state;
+        const { ordersPerPage: prevOrdersPerPage, filterOptions: prevFilterOptions } = prevState;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
         if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage
-            || dateFrom !== prevDateFrom || dateTo !== prevDateTo) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage);
+            || filterOptions !== prevFilterOptions) {
+            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
             scrollToTop();
         }
     }
@@ -122,19 +123,18 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         this.setState({ ordersPerPage });
     }
 
-    onDateFromSelectorChange(e) {
-        this.setState({ dateFrom: e.target.value });
-    }
-
-    onDateToSelectorChange(e) {
-        this.setState({ dateTo: e.target.value });
+    onDateSelectorChange(e) {
+        const { name, value } = e.target;
+        const { filterOptions } = this.state;
+        this.setState({ filterOptions: { ...filterOptions, [name]: value } });
     }
 
     onInputChange(e) {
         const { setLoadingStatus } = this.props;
         const { value } = e.target;
+        const { ordersPerPage } = this.state;
         this.setState({ searchInput: value });
-        const query = OrderQuery.getOrdersByKeywordQuery(value);
+        const query = OrderQuery.getOrdersByKeywordQuery(this._getPageFromUrl(), ordersPerPage, value);
         this.debounce(
             () => {
                 setLoadingStatus(true);
@@ -142,8 +142,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                     fetchQuery(query).then(
                     /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/debounce/fetchQuery/then */
                         ({ OrdersByKeyword }) => {
+                            const { items = [], page_info } = OrdersByKeyword;
+                            const formattedOrders = formatOrders(items);
                             setLoadingStatus(false);
-                            this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+                            this.setState({ orderListSearchResult: { items: formattedOrders, pageInfo: page_info } });
                         }
                     );
                 } catch (error) {
