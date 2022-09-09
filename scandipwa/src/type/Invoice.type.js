@@ -9,10 +9,10 @@ import PropTypes from 'prop-types';
 
 export const InvoiceType = PropTypes.shape({
     id: PropTypes.number,
-    invoice_number: PropTypes.number,
+    invoice_number: PropTypes.string,
     date: PropTypes.string,
     customer: PropTypes.string,
     address: PropTypes.string,
-    total: PropTypes.number,
+    total: PropTypes.string,
     status: PropTypes.string
 });

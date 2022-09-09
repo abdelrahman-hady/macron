@@ -76,6 +76,12 @@ type InvoiceType {
     grand_total: String
     status: String
     download_link: String
-    customer:String
-    address:String
+    firstname:String
+    lastname:String
+    address_city:String
+    address_street:String
+    address_postcode:String
+    address_country_id:String
+    address_telephone:String
 }
+
