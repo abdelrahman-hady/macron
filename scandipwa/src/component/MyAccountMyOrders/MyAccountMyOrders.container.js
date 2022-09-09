@@ -47,11 +47,13 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     };
 
     state = {
-        ordersPerPage: +BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE,
+        ordersPerPage: +(BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE),
         sortOptions: {
             orderStatus: 0 // Filters orders list by status
         },
-        statusOptions: []
+        statusOptions: [],
+        searchInput: '',
+        orderListSearchResult: []
     };
 
     containerFunctions = {
@@ -77,15 +79,16 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { clientsPerPage } = this.state;
-        const { clientsPerPage: prevClientsPerPage } = prevState;
+        const { getOrderList } = this.props;
+        const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
+        const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        if (currentPage !== prevPage || clientsPerPage !== prevClientsPerPage) {
-            this.requestClients(currentPage, clientsPerPage);
+        if (orderStatus !== prevOrderStatus || currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
+            getOrderList(currentPage, ordersPerPage);
             scrollToTop();
         }
     }
