@@ -13,6 +13,8 @@ import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { InvoiceType } from 'Type/Invoice.type';
 
+import './InvoicesTable.style';
+
 /** @namespace Scandipwa/Route/InvoicesPage/Component */
 export class InvoicesPageComponent extends PureComponent {
     static propTypes = {
@@ -58,8 +60,16 @@ export class InvoicesPageComponent extends PureComponent {
 
     renderTableRow(data) {
         const {
-            id, invoice_number, date, customer, address, grand_total, status
+            id, invoice_number, date, firstname, lastname, grand_total, status,
+            address_city,
+            address_street,
+            address_postcode,
+            address_country_id,
+            address_telephone
         } = data;
+        const address = `${address_city} ${address_street} ${address_country_id} 
+        ${address_postcode} T:${address_telephone}`;
+        const customer = `${firstname} ${lastname}`;
 
         return (
             <tr key={ id }>

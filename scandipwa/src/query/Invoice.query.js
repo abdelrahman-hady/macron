@@ -19,10 +19,15 @@ export class InvoiceQuery {
             'id',
             'invoice_number',
             'date',
-            'customer',
-            'address',
+            'firstname',
+            'lastname',
             'grand_total',
-            'status'
+            'status',
+            'address_city',
+            'address_street',
+            'address_postcode',
+            'address_country_id',
+            'address_telephone'
         ];
     }
 }

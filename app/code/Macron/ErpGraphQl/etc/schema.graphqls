@@ -1,38 +1,29 @@
 type Query {
     clients: [ClientType]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
-    @doc(description: "Get list of clients")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
+        @doc(description: "Get list of clients")
 
-    client (
-        client_id: Int!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
-    @doc(description: "Get client by id")
+    client(client_id: Int!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
+        @doc(description: "Get client by id")
 
     invoices: [InvoiceType]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
-    @doc(description: "Get list of invoices")
-
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+        @doc(description: "Get list of invoices")
 }
 
 type Mutation {
-    deleteClient(
-        client_id: Int!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
-    @doc(description: "Delete client by id")
+    deleteClient(client_id: Int!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
+        @doc(description: "Delete client by id")
 
-    createClient(
-        client: CreateClientInput!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
-    @doc(description: "Create a new client")
+    createClient(client: CreateClientInput!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
+        @doc(description: "Create a new client")
 
-    updateClient(
-        client: UpdateClientInput!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
-    @doc(description: "Update client")
+    updateClient(client: UpdateClientInput!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
+        @doc(description: "Update client")
 }
 
 type Clients {
@@ -62,11 +53,11 @@ type ClientType {
 
 type Shipment {
     entity_id: Int
-    shipment_number: String,
-    status: String,
-    tracking_number: String,
-    date: String,
-    customer_name: String,
+    shipment_number: String
+    status: String
+    tracking_number: String
+    date: String
+    customer_name: String
     address: String
 }
 
@@ -97,6 +88,11 @@ type InvoiceType {
     grand_total: String
     status: String
     download_link: String
-    customer:String
-    address:String
+    firstname: String
+    lastname: String
+    address_city: String
+    address_street: String
+    address_postcode: String
+    address_country_id: String
+    address_telephone: String
 }
