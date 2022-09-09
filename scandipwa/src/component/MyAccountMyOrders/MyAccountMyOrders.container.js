@@ -1,7 +1,7 @@
 /*
  * @category  Macron
- * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
- * @author    Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
+ * @authors   Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ *            Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -35,8 +35,8 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    getOrderList: (page, pageSize) => OrderDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize)
+    getOrderList: (page, pageSize, sortOptions) => OrderDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize, sortOptions)
     )
 });
 
@@ -73,10 +73,9 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     componentDidMount() {
         const { getOrderList } = this.props;
-        // eslint-disable-next-line no-unused-vars
         const { ordersPerPage, sortOptions } = this.state;
-        // TODO : Pass Sort Options To this
-        getOrderList(this._getPageFromUrl(), ordersPerPage);
+
+        getOrderList(this._getPageFromUrl(), ordersPerPage, sortOptions);
     }
 
     getAvailableSortOptions() {
@@ -127,7 +126,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
         const sortOptionsChanged = () => !(JSON.stringify(sortOptions) === JSON.stringify(prevSortOptions));
         if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage || sortOptionsChanged()) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage);
+            getOrderList(this._getPageFromUrl(), ordersPerPage, sortOptions);
             scrollToTop();
         }
     }

@@ -32,6 +32,11 @@ export class OrderQuery extends SourceOrderQuery {
         return basicFields;
     }
 
+    _getOrderItemsField(isSingleOrder) {
+        return new Field('items')
+            .addFieldList(this._getOrderItemsFields(isSingleOrder));
+    }
+
     _getDownloadableFields() {
         return [
             ...super._getDownloadableFields(),
@@ -41,13 +46,27 @@ export class OrderQuery extends SourceOrderQuery {
     }
 
     _getOrdersField(options) {
-        const { orderId, page = 1, pageSize = ORDERS_PER_PAGE } = options || {};
+        const {
+            // eslint-disable-next-line no-unused-vars
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, sortOptions
+        } = options || {};
         const ordersField = new Field('orders');
 
         if (orderId) {
             return ordersField
                 .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
                 .addFieldList(this._getOrdersFields(true));
+        }
+
+        const { status, user_customer_name } = sortOptions;
+
+        if (status) {
+            ordersField.addArgument('filter', 'CustomerOrdersFilterInput', { status: { eq: status } });
+        }
+
+        if (user_customer_name) {
+            // eslint-disable-next-line max-len
+            ordersField.addArgument('filter', 'CustomerOrdersFilterInput', { user_customer_name: { eq: user_customer_name } });
         }
 
         return ordersField

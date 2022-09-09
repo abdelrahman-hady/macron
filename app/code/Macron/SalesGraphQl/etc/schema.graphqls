@@ -1,5 +1,5 @@
-type CustomerOrder  {
-    internal_note: String
-    reference_note: String
-    user_customer_name: String,
+input CustomerOrdersFilterInput @doc(description: "Identifies the filter to use for filtering orders.") {
+    entity_id: FilterStringTypeInput @doc(description: "Filters by order entity id.")
+    user_customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
+    status: FilterStringTypeInput @doc(description: "Filters by order status.")
 }
