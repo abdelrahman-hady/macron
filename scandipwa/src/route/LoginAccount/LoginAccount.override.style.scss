@@ -11,7 +11,6 @@
     &-InnerWrapper {
         @include desktop() {
             display: block;
-            max-width: 451px;
             margin: auto auto;
         }
 

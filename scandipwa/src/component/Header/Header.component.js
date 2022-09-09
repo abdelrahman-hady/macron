@@ -11,6 +11,8 @@ import {
     MyAccountOverlay
 } from 'SourceComponent/Header/Header.component';
 import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
+import { appendWithStoreCode } from 'Util/Url';
 
 export {
     CartOverlay,
@@ -24,6 +26,7 @@ export class HeaderComponent extends SourceHeader {
             return super.render();
         }
 
+        history.replace(appendWithStoreCode('/'));
         return null;
     }
 }
