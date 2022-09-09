@@ -24,24 +24,20 @@ export {
 
 /** @namespace Scandipwa/Component/ProductActions/Container */
 export class ProductActionsContainer extends SourceProductActionsContainer {
-    __construct(props) {
-        super.__construct(props, 'ProductActionsContainer');
-
-        this.state = {
-            ...this.state,
-            isAddPatchDropOpen: false,
-            patchData,
-            patchList: [{
-                id: nanoid(),
-                Sku: '-',
-                name: '-',
-                price: '-',
-                quantity: '0',
-                discount: '0',
-                line: '-'
-            }]
-        };
-    }
+    state = {
+        ...this.state,
+        isAddPatchDropOpen: false,
+        patchData,
+        patchList: [{
+            id: nanoid(),
+            Sku: '-',
+            name: '-',
+            price: '-',
+            quantity: '0',
+            discount: '0',
+            line: '-'
+        }]
+    };
 
     static propTypes = {
         ...SourceProductActionsContainer.propTypes,
@@ -51,6 +47,16 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         patchInputOnChange: PropTypes.func.isRequired,
         deletePatchRow: PropTypes.func.isRequired,
         updatePatchQuantityButton: PropTypes.func.isRequired
+    };
+
+    containerFunctions = {
+        ...this.containerFunctions,
+        toggleDropDown: this.toggleDropDown.bind(this),
+        addAnotherPatch: this.addAnotherPatch.bind(this),
+        patchSelectionChange: this.patchSelectionChange.bind(this),
+        deletePatchRow: this.deletePatchRow.bind(this),
+        updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
+        patchInputOnChange: this.patchInputOnChange.bind(this)
     };
 
     containerProps() {
@@ -179,16 +185,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { isAddPatchDropOpen } = this.state;
         this.setState({ isAddPatchDropOpen: !isAddPatchDropOpen });
     }
-
-    containerFunctions = {
-        ...this.containerFunctions,
-        toggleDropDown: this.toggleDropDown.bind(this),
-        addAnotherPatch: this.addAnotherPatch.bind(this),
-        patchSelectionChange: this.patchSelectionChange.bind(this),
-        deletePatchRow: this.deletePatchRow.bind(this),
-        updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
-        patchInputOnChange: this.patchInputOnChange.bind(this)
-    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductActionsContainer);
