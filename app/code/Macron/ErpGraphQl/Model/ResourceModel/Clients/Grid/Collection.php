@@ -36,10 +36,10 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * @param LoggerInterface $logger
      * @param FetchStrategyInterface $fetchStrategy
      * @param ManagerInterface $eventManager
-     * @param $mainTable
-     * @param $eventPrefix
-     * @param $eventObject
-     * @param $resourceModel
+     * @param string $mainTable
+     * @param string $eventPrefix
+     * @param string $eventObject
+     * @param string $resourceModel
      * @param string $model
      * @param AdapterInterface $connection
      * @param AbstractDb|null $resource
@@ -49,10 +49,10 @@ class Collection extends ClientsCollection implements SearchResultInterface
         LoggerInterface $logger,
         FetchStrategyInterface $fetchStrategy,
         ManagerInterface $eventManager,
-        $mainTable,
-        $eventPrefix,
-        $eventObject,
-        $resourceModel,
+        string $mainTable,
+        string $eventPrefix,
+        string $eventObject,
+        string $resourceModel,
         string $model = Document::class,
         AdapterInterface $connection = null,
         AbstractDb $resource = null
@@ -78,11 +78,12 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * Init aggregations
      *
      * @param AggregationInterface $aggregations
-     * @return void
+     * @return $this
      */
-    public function setAggregations($aggregations)
+    public function setAggregations($aggregations): static
     {
         $this->aggregations = $aggregations;
+        return $this;
     }
 
     /**
