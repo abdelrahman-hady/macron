@@ -12,6 +12,7 @@ import Loader from 'Component/Loader';
 import { MyAccountSignIn as SourceMyAccountSignInComponent } from
 'SourceComponent/MyAccountSignIn/MyAccountSignIn.component';
 import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
+
 import VisibilityIcon from '../VisibilityIcon/VisibilityIcon.component';
 
 import './MyAccountSignIn.override.style';
