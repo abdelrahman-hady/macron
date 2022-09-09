@@ -51,9 +51,12 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
      }
 
      onPasswordVisibilityClick(e) {
-         e.stopPropagation();
          e.preventDefault();
-         this.setState({ ...this.state, isPasswordVisible: !this.state.isPasswordVisible });
+         e.stopPropagation();
+         // check is made to prevent action trigger on Enter press
+         if (e.target.type !== 'button') {
+             this.setState({ ...this.state, isPasswordVisible: !this.state.isPasswordVisible });
+         }
      }
 }
 
