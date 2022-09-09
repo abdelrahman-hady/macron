@@ -48,16 +48,16 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
         return (
             <Field
-                type={ FIELD_TYPE.select }
-                label={ __('Sort by status') }
-                mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-                options={ statusOptions }
-                value={ orderStatus }
-                events={ {
-                    onChange: (val) => {
-                        updateOptions({ orderStatus: val });
-                    }
-                } }
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+              options={ statusOptions }
+              value={ orderStatus }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ orderStatus: val });
+                  }
+              } }
             />
         );
     }
