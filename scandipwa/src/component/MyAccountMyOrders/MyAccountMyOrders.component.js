@@ -1,8 +1,10 @@
+
 /* eslint-disable react/forbid-prop-types */
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @author    Mohammed Komsany <mohammed.komsany@scandiweb.com | info@scandiweb.com>
+ * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -16,6 +18,7 @@ import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
 import { getListViewAllowedOptions } from 'Util/Config';
+import SearchIcon from 'Component/SearchIcon';
 
 import './MyAccountMyOrders.override.style';
 
@@ -27,7 +30,10 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         ordersPerPage: PropTypes.number.isRequired,
         sortOptions: PropTypes.object.isRequired,
         statusOptions: PropTypes.array.isRequired,
-        updateOptions: PropTypes.func.isRequired
+        updateOptions: PropTypes.func.isRequired,
+        onInputChange: PropTypes.func.isRequired,
+        searchInput: PropTypes.string.isRequired,
+        orderListSearchResult: PropTypes.arrayOf.isRequired
     };
 
     renderToolbar() {
@@ -42,31 +48,87 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
         return (
             <Field
-              type={ FIELD_TYPE.select }
-              label={ __('Sort by status') }
-              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-              options={ statusOptions }
-              value={ orderStatus }
-              events={ {
-                  onChange: (val) => {
-                      updateOptions({ orderStatus: val });
-                  }
-              } }
+                type={ FIELD_TYPE.select }
+                label={ __('Sort by status') }
+                mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+                options={ statusOptions }
+                value={ orderStatus }
+                events={ {
+                    onChange: (val) => {
+                        updateOptions({ orderStatus: val });
+                    }
+                } }
             />
+        );
+    }
+
+    // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
+    shouldComponentUpdate(nextProps) {
+        const {
+            device, orderList, isLoading, orderListSearchResult
+        } = this.props;
+        const {
+            device: nextDevice,
+            orderList: nextOrderList,
+            isLoading: nextIsLoading,
+            orderListSearchResult: nextOrderListSearchResult
+        } = nextProps;
+
+        return device !== nextDevice
+        || orderList !== nextOrderList
+        || isLoading !== nextIsLoading
+        || orderListSearchResult !== nextOrderListSearchResult;
+    }
+
+    renderSearchBar() {
+        const { onInputChange } = this.props;
+        return (
+            <div
+              block="SearchOrder"
+              elem="SearchInnerWrapper"
+            >
+                <div
+                  block="SearchOrder"
+                  elem="SearchIcon"
+                >
+                    <SearchIcon />
+                </div>
+                <Field
+                  id="SearchOrder"
+                  type={ FIELD_TYPE.text }
+                  attr={ {
+                      block: 'SearchOrder',
+                      elem: 'SearchInput',
+                      name: 'SearchOrder',
+                      placeholder: __('Search by keyword')
+                  } }
+                  events={ {
+                      onChange: onInputChange
+                  } }
+                />
+            </div>
         );
     }
 
     renderOrderRows() {
         const {
-            orderList: { items = [] }, isLoading, sortOptions: { orderStatus }, statusOptions
+            orderList: { items = [] },
+            isLoading,
+            sortOptions: { orderStatus },
+            statusOptions,
+            searchInput,
+            orderListSearchResult
         } = this.props;
 
-        if (!isLoading && !items.length) {
+        if (!isLoading && !items.length && !orderListSearchResult.length) {
             return this.renderNoOrders();
         }
-        if (+orderStatus === 0) {
+
+        const ordersItems = searchInput !== '' ? orderListSearchResult : items;
+
+        if (orderStatus === 0) {
             // no filters selected -> render all orders
-            return items.reduceRight(
+            return ordersItems.reduceRight(
                 (acc, order) => [...acc, this.renderOrderRow(order)],
                 []
             );
@@ -74,7 +136,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
         // Filter Orders By Status
         const [filterOption = {}] = statusOptions.filter((option) => option.id === orderStatus);
-        return items.reduceRight(
+        return ordersItems.reduceRight(
             (acc, order) => {
                 if (filterOption.label?.value === order.status) {
                     return [...acc, this.renderOrderRow(order)];
@@ -117,6 +179,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
+                { this.renderSearchBar() }
                 { this.renderPerPageDropdown() }
                 { this.renderTable() }
                 { this.renderPagination() }

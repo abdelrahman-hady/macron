@@ -16,3 +16,18 @@
         }
     }
 }
+
+.SearchOrder {
+    position: relative;
+
+    &-SearchIcon {
+        position: absolute;
+        inset-block-start: calc((100% - 24px) - 20%);
+        inset-inline-start: 10px;
+        z-index: 10;
+    }
+
+    &-SearchInput {
+        padding-inline-start: 40px;
+    }
+}
