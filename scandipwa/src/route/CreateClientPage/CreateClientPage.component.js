@@ -13,6 +13,7 @@ import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
+import { ClientType } from 'Type/Client.type';
 import transformToNameValuePair from 'Util/Form/Transform';
 
 import { CONTACTS_FIELDS, DETAILS_FIELDS } from './CreateClientPage.config';
@@ -23,24 +24,34 @@ import './CreateClientPage.style.scss';
 /** @namespace Scandipwa/Route/CreateClientPage/Component */
 export class CreateClientPageComponent extends PureComponent {
     static propTypes = {
-        selectItems: PropTypes.arrayOf(PropTypes.string).isRequired,
+        selectItems: PropTypes.arrayOf(PropTypes.objectOf({ name: PropTypes.string, id: PropTypes.number })).isRequired,
         onSave: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        isEdit: PropTypes.bool.isRequired,
+        client: ClientType
+    };
+
+    static defaultProps = {
+        client: {}
     };
 
     onSubmit = this.onSubmit.bind(this);
 
     // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
     get fieldMap() {
-        const { selectItems } = this.props;
+        const { selectItems, client } = this.props;
 
-        return createClientForm({ selectItems });
+        return createClientForm({ selectItems, client });
     }
 
     renderHeading() {
+        const { client: { company_name: companyName }, isEdit } = this.props;
+
+        const title = isEdit ? companyName : __('Create new client');
+
         return (
             <h1>
-                { __('Create new client') }
+                { title }
             </h1>
         );
     }
@@ -69,6 +80,23 @@ export class CreateClientPageComponent extends PureComponent {
         onSave(newClient);
     }
 
+    renderSubmit() {
+        const { isEdit } = this.props;
+
+        const title = isEdit ? __('Save client') : __('Create client');
+
+        return (
+            <button
+              type={ FIELD_TYPE.submit }
+              block="Button"
+              mix={ { block: 'CreateClientPage', elem: 'Button' } }
+              mods={ { isHollow: true } }
+            >
+                { title }
+            </button>
+        );
+    }
+
     renderForm() {
         return (
             <Form onSubmit={ this.onSubmit }>
@@ -76,14 +104,7 @@ export class CreateClientPageComponent extends PureComponent {
                   { this.renderFields(DETAILS_FIELDS) }
                   { this.renderFields(CONTACTS_FIELDS) }
                 </div>
-                <button
-                  type={ FIELD_TYPE.submit }
-                  block="Button"
-                  mix={ { block: 'MyAccount', elem: 'Button' } }
-                  mods={ { isHollow: true } }
-                >
-                    { __('Create client') }
-                </button>
+                { this.renderSubmit() }
             </Form>
         );
     }

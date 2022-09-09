@@ -9,15 +9,18 @@ declare(strict_types=1);
 
 namespace Macron\ErpGraphQl\Model\Resolver;
 
+use Macron\ErpGraphQl\Model\ResourceModel\Clients\ClientsModel;
 use Macron\ErpGraphQl\Model\ResourceModel\Clients\CollectionFactory;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
+use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\GraphQl\Model\Query\ContextInterface;
 
-class Clients implements ResolverInterface
+class UpdateClient implements ResolverInterface
 {
     /**
      * @var CollectionFactory
@@ -33,7 +36,7 @@ class Clients implements ResolverInterface
     }
 
     /**
-     * Get all customer clients resolver
+     * Update client resolver
      *
      * @param Field $field
      * @param ContextInterface $context
@@ -41,7 +44,7 @@ class Clients implements ResolverInterface
      * @param array|null $value
      * @param array|null $args
      * @return array|Value|mixed|null
-     * @throws GraphQlAuthorizationException
+     * @throws GraphQlInputException|GraphQlAuthorizationException
      */
     public function resolve(
         Field $field,
@@ -55,13 +58,19 @@ class Clients implements ResolverInterface
         }
 
         $customerId = $context->getUserId();
-        $pageSize = $args['pageSize'];
-        $currentPage = $args['currentPage'];
+        $client = $args['client'];
+        $clientId = $client['entity_id'];
 
-        return $this->clientsCollection
+        $collection = $this->clientsCollection
             ->create($customerId)
-            ->setPageSize($pageSize)
-            ->setCurPage($currentPage)
-            ->getData();
+            ->addFieldToFilter('entity_id', $clientId);
+
+        if (count($collection->getData()) === 0) {
+            throw new GraphQlInputException(__("Client doesn't exists"));
+        }
+
+        $collection->setDataToAll($client)->save();
+
+        return $collection->getData()[0];
     }
 }

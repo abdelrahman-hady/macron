@@ -5,7 +5,7 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-import { fetchMutation, getErrorMessage } from '@scandipwa/scandipwa/src/util/Request';
+import { fetchMutation, fetchQuery, getErrorMessage } from '@scandipwa/scandipwa/src/util/Request';
 import { appendWithStoreCode } from '@scandipwa/scandipwa/src/util/Url';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -15,6 +15,7 @@ import ClientQuery from 'Query/Client.query';
 import { MY_CLIENTS_URL } from 'Route/MyClientsPage/MyClientsPage.config';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { MatchType } from 'Type/Router.type';
 import { scrollToTop } from 'Util/Browser';
 import history from 'Util/History';
 
@@ -45,12 +46,19 @@ export class CreateClientPageContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
-        showErrorNotification: PropTypes.func.isRequired
+        showErrorNotification: PropTypes.func.isRequired,
+        isEdit: PropTypes.bool,
+        match: MatchType.isRequired
+    };
+
+    static defaultProps = {
+        isEdit: false
     };
 
     state = {
         selectItems: [],
-        isLoading: false
+        isLoading: false,
+        client: {}
     };
 
     containerFunctions = {
@@ -58,53 +66,107 @@ export class CreateClientPageContainer extends PureComponent {
     };
 
     componentDidMount() {
-        this.updateMeta();
-        this.updateBreadcrumbs();
-        this.fetchSelectItems();
+        const { isEdit } = this.props;
+
+        if (!isEdit) {
+            this.updateMeta();
+            this.updateBreadcrumbs();
+        }
+
+        this.requestSelectItems();
+
+        if (isEdit) {
+            this.requestClient();
+        }
     }
 
     containerProps = () => {
-        const { selectItems, isLoading } = this.state;
+        const { isEdit } = this.props;
+        const { selectItems, isLoading, client } = this.state;
 
-        return { selectItems, isLoading };
+        return {
+            selectItems, isLoading, isEdit, client
+        };
     };
 
-    updateMeta() {
-        const { updateMeta } = this.props;
-        updateMeta({ title: __('Create new client') });
+    updateMeta(companyName = '') {
+        const { updateMeta, isEdit } = this.props;
+
+        updateMeta({ title: isEdit ? companyName : __('Create new client') });
     }
 
-    updateBreadcrumbs() {
-        const { updateBreadcrumbs } = this.props;
+    updateBreadcrumbs(clientId, companyName = '') {
+        const { updateBreadcrumbs, isEdit } = this.props;
         const breadcrumbs = [
-            {
-                url: '/create-client',
-                name: __('Create new client')
-            },
             {
                 url: MY_CLIENTS_URL,
                 name: __('My clients')
             }
         ];
 
+        if (isEdit) {
+            const subBreadcrumbs = [
+                {
+                    url: `${MY_CLIENTS_URL}/edit/${clientId}/`,
+                    name: __('Edit')
+                },
+                {
+                    url: `${MY_CLIENTS_URL}/${clientId}`,
+                    name: companyName
+                }
+            ];
+
+            breadcrumbs.unshift(...subBreadcrumbs);
+        } else {
+            breadcrumbs.unshift({
+                url: '/create-client',
+                name: __('Create new client')
+            });
+        }
+
         updateBreadcrumbs(breadcrumbs);
     }
 
-    async fetchSelectItems() {
-        this.setState({ selectItems: ['item1', 'item2'] });
+    async requestSelectItems() {
+        this.setState({ selectItems: [{ name: 'item1', id: 1 }, { name: 'item2', id: 2 }] });
+    }
+
+    async requestClient() {
+        const { showErrorNotification, match: { params: { clientId } } } = this.props;
+
+        this.setState({ isLoading: true });
+
+        try {
+            const { client } = await fetchQuery(ClientQuery.getClientQuery(clientId));
+            const { company_name: companyName } = client;
+
+            this.updateMeta(companyName);
+            this.updateBreadcrumbs(clientId, companyName);
+
+            this.setState({ client, isLoading: false });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+            this.setState({ isLoading: false });
+        }
     }
 
     async onSave(newClient) {
-        const { showErrorNotification } = this.props;
+        const { showErrorNotification, isEdit } = this.props;
+        const { client: { entity_id: clientId } } = this.state;
 
         const trimmedClient = Object.fromEntries(Object.entries(newClient).filter(([_, value]) => value !== ''));
 
         this.setState({ isLoading: true });
 
         try {
-            await fetchMutation(ClientQuery.getCreateClientMutation(trimmedClient));
+            const mutation = isEdit
+                ? ClientQuery.getUpdateClientMutation({ ...trimmedClient, entity_id: clientId })
+                : ClientQuery.getCreateClientMutation(trimmedClient);
 
-            history.replace(appendWithStoreCode(`${MY_CLIENTS_URL}`));
+            await fetchMutation(mutation);
+
+            const url = isEdit ? `${MY_CLIENTS_URL}/${clientId}` : MY_CLIENTS_URL;
+            history.replace(appendWithStoreCode(url));
             scrollToTop();
         } catch (e) {
             showErrorNotification(getErrorMessage(e));

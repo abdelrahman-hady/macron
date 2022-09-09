@@ -57,7 +57,7 @@ export const CLIENT = 'CLIENT';
 export const STATS_PAGE = 'STATS_PAGE';
 export const MY_PROFILE = 'MY_PROFILE';
 
-const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
+const SWITCH_ITEMS_TYPE = (originalMembers) => {
     const newMembers = originalMembers.filter((CurrentUrls) => {
         if (URL_REMOVAL_LIST.includes(CurrentUrls.name)) {
             return false;
@@ -112,6 +112,11 @@ const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
             position: 27,
             name: MY_PROFILE
         },
+        {
+            component: <Route path={ withStoreRegex('/my-clients/edit/:clientId') } render={ (props) => <CreateClientPage { ...props } isEdit /> } />,
+            position: 28,
+            name: CREATE_CLIENT
+        },
         ...newMembers
     ];
 };
@@ -119,7 +124,7 @@ const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
 export default {
     'Component/Router/Component': {
         'member-property': {
-            SWITCH_ITEMS_TYPE: AROUND_SWITCH_ITEMS_TYPE
+            SWITCH_ITEMS_TYPE
         }
     }
 };
