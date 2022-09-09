@@ -13,8 +13,8 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
-import SearchIcon from 'Component/SearchIcon';
 import Pagination from 'Component/Pagination';
+import SearchIcon from 'Component/SearchIcon';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';

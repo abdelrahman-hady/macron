@@ -65,7 +65,7 @@ const BEFORE_ITEMS_TYPE = (originalMember) => [
     }
 ];
 
-const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
+const SWITCH_ITEMS_TYPE = (originalMembers) => {
     const newMembers = originalMembers.filter((CurrentUrls) => {
         if (URL_REMOVAL_LIST.includes(CurrentUrls.name)) {
             return false;
@@ -132,7 +132,7 @@ const AROUND_SWITCH_ITEMS_TYPE = (originalMembers) => {
 export default {
     'Component/Router/Component': {
         'member-property': {
-            SWITCH_ITEMS_TYPE: AROUND_SWITCH_ITEMS_TYPE,
+            SWITCH_ITEMS_TYPE,
             BEFORE_ITEMS_TYPE
         }
     }
