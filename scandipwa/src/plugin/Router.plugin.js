@@ -56,6 +56,7 @@ export const CREATE_CLIENT = 'CREATE_CLIENT';
 export const CLIENT = 'CLIENT';
 export const STATS_PAGE = 'STATS_PAGE';
 export const MY_PROFILE = 'MY_PROFILE';
+export const EDIT_CLIENT = 'EDIT_CLIENT';
 
 const SWITCH_ITEMS_TYPE = (originalMembers) => {
     const newMembers = originalMembers.filter((CurrentUrls) => {
@@ -115,7 +116,7 @@ const SWITCH_ITEMS_TYPE = (originalMembers) => {
         {
             component: <Route path={ withStoreRegex('/my-clients/edit/:clientId') } render={ (props) => <CreateClientPage { ...props } isEdit /> } />,
             position: 28,
-            name: CREATE_CLIENT
+            name: EDIT_CLIENT
         },
         ...newMembers
     ];
