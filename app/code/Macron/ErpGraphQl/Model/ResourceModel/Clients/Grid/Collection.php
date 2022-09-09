@@ -20,6 +20,7 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 
 class Collection extends ClientsCollection implements SearchResultInterface
 {
@@ -35,12 +36,12 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * @param LoggerInterface $logger
      * @param FetchStrategyInterface $fetchStrategy
      * @param ManagerInterface $eventManager
-     * @param $mainTable
-     * @param $eventPrefix
-     * @param $eventObject
-     * @param $resourceModel
+     * @param string $mainTable
+     * @param string $eventPrefix
+     * @param string $eventObject
+     * @param string $resourceModel
      * @param string $model
-     * @param $connection
+     * @param AdapterInterface $connection
      * @param AbstractDb|null $resource
      */
     public function __construct(
@@ -48,12 +49,12 @@ class Collection extends ClientsCollection implements SearchResultInterface
         LoggerInterface $logger,
         FetchStrategyInterface $fetchStrategy,
         ManagerInterface $eventManager,
-        $mainTable,
-        $eventPrefix,
-        $eventObject,
-        $resourceModel,
+        string $mainTable,
+        string $eventPrefix,
+        string $eventObject,
+        string $resourceModel,
         string $model = Document::class,
-        $connection = null,
+        AdapterInterface $connection = null,
         AbstractDb $resource = null
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
@@ -77,11 +78,12 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * Init aggregations
      *
      * @param AggregationInterface $aggregations
-     * @return void
+     * @return $this
      */
-    public function setAggregations($aggregations)
+    public function setAggregations($aggregations): static
     {
         $this->aggregations = $aggregations;
+        return $this;
     }
 
     /**
