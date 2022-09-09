@@ -19,6 +19,28 @@ class CreateProductAttributes implements DataPatchInterface
 {
     protected EavSetupFactory $eavSetupFactory;
 
+    protected const ATTRIBUTES = [
+        'block_for_countries' => 'Block For Countries,multiselect,varchar',
+        'mcr_age' => 'Età,select,int',
+        'mcr_brand' => 'Brand,text,varchar',
+        'mcr_cat_level1' => 'Macro Category,text,varchar',
+        'mcr_cat_level2' => 'Category,text,varchar',
+        'mcr_colors' => 'Colors,multiselect,varchar',
+        'mcr_life_cycle' => 'Life cycle,text,int',
+        'mcr_default_color' => 'Default Color,select,int',
+        'mcr_fabric' => 'Fabric,select,int',
+        'mcr_fit' => 'Fit,select,int',
+        'mcr_gender' => 'Gender,select,int',
+        'mcr_product_line' => 'Product line,select,int',
+        'mcr_product_type' => 'MCR Product Type,select,int',
+        'mcr_season' => 'Mcr Season,text,varchar',
+        'mcr_sport' => 'Macron Sport,text,varchar',
+        'mcr_team' => 'Team,text,varchar',
+        'mcr_technical_informations' => 'Technical Informations,multiselect,varchar',
+        'mcr_total_look' => 'Total Look,text,varchar',
+        'mcr_castelletto' => 'Castelletto,text,varchar'
+    ];
+
     /**
      * @param EavSetupFactory $eavSetupFactory
      */
@@ -33,368 +55,31 @@ class CreateProductAttributes implements DataPatchInterface
     public function apply()
     {
         $eavSetup = $this->eavSetupFactory->create();
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'block_for_countries',
-            [
-                'label' => 'Block For Countries',
-                'group' => 'Product Details',
-                'input' => 'multiselect',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
 
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_age',
-            [
-                'label' => 'Età',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_brand',
-            [
-                'label' => 'Brand',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_castelletto',
-            [
-                'label' => 'Castelletto',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_cat_level1',
-            [
-                'label' => 'Macro Category',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_cat_level2',
-            [
-                'label' => 'Category',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_colors',
-            [
-                'label' => 'Colors',
-                'group' => 'Product Details',
-                'input' => 'multiselect',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_GLOBAL,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_life_cycle',
-            [
-                'label' => 'Life cycle',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_default_color',
-            [
-                'label' => 'Default Color',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_fabric',
-            [
-                'label' => 'Fabric',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_fit',
-            [
-                'label' => 'Fit',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_gender',
-            [
-                'label' => 'Gender',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_product_line',
-            [
-                'label' => 'Product line',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_product_type',
-            [
-                'label' => 'MCR Product Type',
-                'group' => 'Product Details',
-                'input' => 'select',
-                'type' => 'int',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_season',
-            [
-                'label' => 'Mcr Season',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_sport',
-            [
-                'label' => 'Macron Sport',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_team',
-            [
-                'label' => 'Team',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_technical_informations',
-            [
-                'label' => 'Technical Informations',
-                'group' => 'Product Details',
-                'input' => 'multiselect',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
-
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'mcr_total_look',
-            [
-                'label' => 'Total Look',
-                'group' => 'Product Details',
-                'input' => 'text',
-                'type' => 'varchar',
-                'default' => null,
-                'global' => ScopedAttributeInterface::SCOPE_STORE,
-                'required' => false,
-                'user_defined' => false,
-                'is_visible_in_grid' => true,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-            ]
-        );
+        foreach (self::ATTRIBUTES as $attribute => $data) {
+            $scope = $attribute === 'mcr_colors' ?  ScopedAttributeInterface::SCOPE_GLOBAL :  ScopedAttributeInterface::SCOPE_STORE;
+            $data = explode(",", $data);
+            $eavSetup->addAttribute(
+                Product::ENTITY,
+                $attribute,
+                [
+                    'label' => $data[0],
+                    'group' => 'Product Details',
+                    'input' => $data[1],
+                    'type' => $data[2],
+                    'default' => null,
+                    'global' => $scope,
+                    'required' => false,
+                    'user_defined' => false,
+                    'is_visible_in_grid' => true,
+                    'visible' => true,
+                    'visible_on_front' => true,
+                    'used_in_product_listing' => true,
+                ]
+            );
+        }
     }
+
      /**
      * {@inheritDoc}
      */
