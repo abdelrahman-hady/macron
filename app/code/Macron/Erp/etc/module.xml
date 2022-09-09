@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @category  Macron
+ * @category    Macron
+ * @author      Deniss Dubinins <denissd@scandiweb.com | info@scandiweb.com>
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
- * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
- * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
 -->
 
@@ -14,6 +16,9 @@
     <module name="Macron_Erp">
         <sequence>
             <module name="Magento_Catalog"/>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Customer"/>
+            <module name="Macron_ErpGraphQl"/>
         </sequence>
     </module>
 </config>

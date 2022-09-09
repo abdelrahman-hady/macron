@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category    Macron
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
+ * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">macron_erp_clients_listing.macron_erp_clients_data_source</item>
+            <item name="deps" xsi:type="string">macron_erp_clients_listing.macron_erp_clients_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">macron_erp_clients_columns</item>
+    </argument>
+    <dataSource name="macron_erp_clients_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">MacronErpClientsGridDataProvider</argument>
+            <argument name="name" xsi:type="string">macron_erp_clients_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">entity_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="macron_erp_clients_columns">
+        <selectionsColumn name="ids" sortOrder="10">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="entity_id" sortOrder="20">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="customer_id" sortOrder="25">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer ID</label>
+            </settings>
+        </column>
+        <column name="company_name" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Company Name</label>
+            </settings>
+        </column>
+        <column name="address" sortOrder="40">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Address</label>
+            </settings>
+        </column>
+        <column name="vat_number" sortOrder="50">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">VAT number</label>
+            </settings>
+        </column>
+        <column name="contract_expiracy_date" class="Magento\Ui\Component\Listing\Columns\Date"
+                component="Magento_Ui/js/grid/columns/date" sortOrder="170">
+            <settings>
+                <timezone>false</timezone>
+                <dateFormat>y-MMM-d</dateFormat>
+                <skipTimeZoneConversion>true</skipTimeZoneConversion>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Contract Expiracy Date</label>
+            </settings>
+        </column>
+        <column name="affiliation" sortOrder="70">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Affiliation</label>
+            </settings>
+        </column>
+        <column name="sport" sortOrder="80">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Sport</label>
+            </settings>
+        </column>
+        <column name="category" sortOrder="90">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Category</label>
+            </settings>
+        </column>
+        <column name="primary_color" sortOrder="100">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Primary color</label>
+            </settings>
+        </column>
+        <column name="secondary_color" sortOrder="110">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Secondary color</label>
+            </settings>
+        </column>
+        <column name="current_brand" sortOrder="120">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Current brand</label>
+            </settings>
+        </column>
+        <column name="coni_id" sortOrder="130">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">CONI ID</label>
+            </settings>
+        </column>
+        <column name="distance" sortOrder="140">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Distance from MS</label>
+            </settings>
+        </column>
+        <column name="contact_person" sortOrder="140">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Contact person</label>
+            </settings>
+        </column>
+        <column name="mobile" sortOrder="150">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Mobile</label>
+            </settings>
+        </column>
+        <column name="email" sortOrder="160">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Email</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

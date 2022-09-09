@@ -48,6 +48,17 @@
         <constraint xsi:type="foreign" referenceId="CUSTOMER_ENTITY_ID" table="erp_client" column="customer_id"
                     referenceTable="customer_entity"
                     referenceColumn="entity_id"/>
+        <index referenceId="MACRON_ERP_CLIENT_INDEX" indexType="fulltext">
+            <column name="company_name"/>
+            <column name="address"/>
+            <column name="contract_expiracy_date"/>
+            <column name="affiliation"/>
+            <column name="current_brand"/>
+            <column name="contact_person"/>
+            <column name="mobile"/>
+            <column name="contact_person"/>
+            <column name="email"/>
+        </index>
     </table>
 
     <table name="erp_invoice" resource="default" comment="To store Invoices data requests coming from ERP system">
