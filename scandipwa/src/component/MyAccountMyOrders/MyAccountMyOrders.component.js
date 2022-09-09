@@ -14,6 +14,7 @@ import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
 import SearchIcon from 'Component/SearchIcon';
+import Pagination from 'Component/Pagination';
 import {
     MyAccountMyOrders as SourceMyAccountMyOrders
 } from 'SourceComponent/MyAccountMyOrders/MyAccountMyOrders.component';
@@ -168,6 +169,15 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderPagination() {
+        const { isLoading, orderList: { pageInfo = { total_pages: 1 } } } = this.props;
+        const { total_pages } = pageInfo;
+
+        return (
+             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
@@ -177,9 +187,10 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 { this.renderSearchBar() }
                 { this.renderPerPageDropdown() }
                 { this.renderToolbar() }
-                { this.renderTable() }
                 { this.renderPagination() }
+                { this.renderTable() }
                 { this.renderPerPageDropdown() }
+                { this.renderPagination() }
             </div>
         );
     }
