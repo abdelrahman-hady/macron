@@ -34,6 +34,6 @@ export const PageInfoType = PropTypes.shape({
 });
 
 export const ClientListType = PropTypes.shape({
-    items: [ClientType],
+    items: PropTypes.arrayOf(ClientType),
     page_info: PageInfoType
 });
