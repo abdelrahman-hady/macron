@@ -21,7 +21,6 @@ import {
 import { getListViewAllowedOptions } from 'Util/Config';
 
 import './MyAccountMyOrders.override.style';
-import './MyAccountMyOrders.override.style.scss';
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Component */
 export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
@@ -49,16 +48,16 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
         return (
             <Field
-              type={ FIELD_TYPE.select }
-              label={ __('Sort by status') }
-              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-              options={ statusOptions }
-              value={ orderStatus }
-              events={ {
-                  onChange: (val) => {
-                      updateOptions({ orderStatus: val });
-                  }
-              } }
+                type={ FIELD_TYPE.select }
+                label={ __('Sort by status') }
+                mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+                options={ statusOptions }
+                value={ orderStatus }
+                events={ {
+                    onChange: (val) => {
+                        updateOptions({ orderStatus: val });
+                    }
+                } }
             />
         );
     }
@@ -113,16 +112,21 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
     renderOrderRows() {
         const {
-            orderList: { items = [] }, isLoading, sortOptions: { orderStatus }, statusOptions,
-            searchInput, orderListSearchResult
+            orderList: { items = [] },
+            isLoading,
+            sortOptions: { orderStatus },
+            statusOptions,
+            searchInput,
+            orderListSearchResult
         } = this.props;
+
+        if (!isLoading && !items.length && !orderListSearchResult.length) {
+            return this.renderNoOrders();
+        }
 
         const ordersItems = searchInput !== '' ? orderListSearchResult : items;
 
-        if (!isLoading && !ordersItems.length) {
-            return this.renderNoOrders();
-        }
-        if (+orderStatus === 0) {
+        if (orderStatus === 0) {
             // no filters selected -> render all orders
             return ordersItems.reduceRight(
                 (acc, order) => [...acc, this.renderOrderRow(order)],
@@ -189,8 +193,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 { this.renderToolbar() }
                 { this.renderPagination() }
                 { this.renderTable() }
-                { this.renderPerPageDropdown() }
                 { this.renderPagination() }
+                { this.renderPerPageDropdown() }
             </div>
         );
     }

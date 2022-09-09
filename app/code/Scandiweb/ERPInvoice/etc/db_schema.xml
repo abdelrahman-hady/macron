@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+@category Macron
+@author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+@copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="scandiweb_erp_invoice_request" resource="default" comment="To store Invoices data requests coming from ERP system">
+        <column xsi:type="int" name="id" identity="true" comment="Invoice Auto Increment" />
+        <column xsi:type="text" name="user_sap_id" nullable="false" comment="User SAP ID"/>
+        <column xsi:type="text" name="invoice_number" nullable="false" comment="Invoice number" />
+        <column xsi:type="text" name="date" nullable="false" comment="Invoice date" />
+        <column xsi:type="text" name="grand_total" nullable="false" comment="Invoice Grand total" />
+        <column xsi:type="text" name="status" nullable="false" comment="status"/>
+        <column xsi:type="text" name="download_link" nullable="false" comment="Invoice Download link, TBD from SAP" />
+        <column xsi:type="text" name="connected_order_ids" nullable="false" comment="Invoice Connected Order IDs, Usefull to link invoice to related orders" />
+        <column xsi:type="text" name="connected_shipment_ids" nullable="false" comment="Connected Shipment IDs, Usefull to link invoice to related shipments" />
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id" />
+        </constraint>
+    </table>
+
+    <table name="scandiweb_erp_invoice_response" resource="default" comment="To store Invoices data response coming from ERP system">
+        <column xsi:type="int" name="id" identity="true" comment="Invoice Response Auto Increment" />
+        <column xsi:type="text" name="status" nullable="false" comment="status, OK/KO"/>
+        <column xsi:type="text" name="invoice_number" nullable="false" comment="Error IDS, Array of invoice number not created" />
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id" />
+        </constraint>
+    </table>
+
+</schema>

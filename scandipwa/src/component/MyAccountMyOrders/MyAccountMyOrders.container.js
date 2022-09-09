@@ -53,8 +53,9 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     static propTypes = {
         ...super.propTypes,
         ordersPerPageList: PropTypes.string.isRequired,
-        device: DeviceType.isRequired,
-        setLoadingStatus: PropTypes.func.isRequired
+        getOrderList: PropTypes.func.isRequired,
+        setLoadingStatus: PropTypes.func.isRequired,
+        device: DeviceType.isRequired
     };
 
     timer = null;
@@ -69,6 +70,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         orderListSearchResult: []
     };
 
+    timer = null;
+
     containerFunctions = {
         updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
@@ -78,18 +81,22 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     containerProps() {
         const { ordersPerPageList, device } = this.props;
         const {
-            ordersPerPage, sortOptions, statusOptions, searchInput, orderListSearchResult
+            ordersPerPage,
+            sortOptions,
+            statusOptions,
+            searchInput,
+            orderListSearchResult
         } = this.state;
 
         return {
-            ...super.containerProps(),
+            device,
+            searchInput,
+            orderListSearchResult,
             ordersPerPageList,
             ordersPerPage,
             sortOptions,
             statusOptions,
-            device,
-            searchInput,
-            orderListSearchResult
+            ...super.containerProps()
         };
     }
 
@@ -127,13 +134,13 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     _getStatusOptions() {
-    // Get Available Order Statuses Here
+        // Get Available Order Statuses Here
         const { orderList: { items = [] } } = this.props;
         const uniqueList = {};
         if (items) {
-        // list available status
+            // list available status
             items.forEach((order) => {
-            // add to a hash map to avoid duplicates
+                // add to a hash map to avoid duplicates
                 uniqueList[order.status] = 1;
             });
 
