@@ -16,7 +16,8 @@ export class ClientQuery {
         return new Field('clients')
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
-            .addFieldList(this._getClientFields());
+            .addField(this._getClientsField())
+            .addField(this._getSearchResultPageInfoField());
     }
 
     getCreateClientMutation(client) {
@@ -62,6 +63,24 @@ export class ClientQuery {
             'secondary_color',
             'sport',
             'vat_number'
+        ];
+    }
+
+    _getClientsField() {
+        return new Field('items')
+            .addFieldList(this._getClientFields());
+    }
+
+    _getSearchResultPageInfoField() {
+        return new Field('page_info')
+            .addFieldList(this._getSearchResultPageInfoFields());
+    }
+
+    _getSearchResultPageInfoFields() {
+        return [
+            'current_page',
+            'page_size',
+            'total_pages'
         ];
     }
 }

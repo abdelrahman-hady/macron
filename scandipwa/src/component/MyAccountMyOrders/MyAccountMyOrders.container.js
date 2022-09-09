@@ -77,14 +77,15 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        super.componentDidUpdate(prevProps, prevState);
+        const { clientsPerPage } = this.state;
+        const { clientsPerPage: prevClientsPerPage } = prevState;
+        const { location: prevLocation } = prevProps;
 
-        const { getOrderList } = this.props;
-        const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
-        const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
+        const prevPage = this._getPageFromUrl(prevLocation);
+        const currentPage = this._getPageFromUrl();
 
-        if (orderStatus !== prevOrderStatus || ordersPerPage !== prevOrdersPerPage) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage);
+        if (currentPage !== prevPage || clientsPerPage !== prevClientsPerPage) {
+            this.requestClients(currentPage, clientsPerPage);
             scrollToTop();
         }
     }
