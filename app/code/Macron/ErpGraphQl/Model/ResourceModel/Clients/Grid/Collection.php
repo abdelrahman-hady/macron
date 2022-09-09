@@ -20,6 +20,7 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 
 class Collection extends ClientsCollection implements SearchResultInterface
 {
@@ -40,7 +41,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
      * @param $eventObject
      * @param $resourceModel
      * @param string $model
-     * @param $connection
+     * @param AdapterInterface $connection
      * @param AbstractDb|null $resource
      */
     public function __construct(
@@ -53,7 +54,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
         $eventObject,
         $resourceModel,
         string $model = Document::class,
-        $connection = null,
+        AdapterInterface $connection = null,
         AbstractDb $resource = null
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
