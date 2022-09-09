@@ -6,29 +6,18 @@
  */
 
 import {
-    CartOverlay,
-    Header as SourceHeader,
-    MyAccountOverlay
-} from 'SourceComponent/Header/Header.component';
+    NavigationTabs as SourceNavigationTabs
+} from 'SourceComponent/NavigationTabs/NavigationTabs.component';
 import { isSignedIn } from 'Util/Auth';
-import history from 'Util/History';
-import { appendWithStoreCode } from 'Util/Url';
-
-export {
-    CartOverlay,
-    MyAccountOverlay
-};
-
-/** @namespace Scandipwa/Component/Header/Component */
-export class HeaderComponent extends SourceHeader {
+/** @namespace Scandipwa/Component/NavigationTabs/Component */
+export class NavigationTabsComponent extends SourceNavigationTabs {
     render() {
         if (isSignedIn()) {
             return super.render();
         }
 
-        history.replace(appendWithStoreCode('/'));
         return null;
     }
 }
 
-export default HeaderComponent;
+export default NavigationTabsComponent;

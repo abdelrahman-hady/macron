@@ -1,8 +1,31 @@
 .LoginAccount {
+    .ContentWrapper {
+        display: flex;
+
+        @include mobile() {
+            display: flex;
+            align-items: center;
+        }
+    }
+
     &-InnerWrapper {
         @include desktop() {
             display: block;
-            max-width: 451px;
+            margin: auto auto;
+        }
+
+        @include mobile() {
+            min-width: 100%;
+        }
+    }
+
+    &-SignInWrapper {
+        @include desktop() {
+            min-width: 451px;
+        }
+
+        h2 {
+            text-align: center;
         }
     }
 }

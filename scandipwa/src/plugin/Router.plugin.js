@@ -13,13 +13,7 @@
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
 
 import { lazy } from 'react';
-import { Route } from 'react-router-dom';
-import {
-    ACCOUNT_FORGOT_PASSWORD,
-    CHANGE_PASSWORD,
-    CONFIRM_ACCOUNT,
-    CREATE_ACCOUNT
-} from 'scandipwa/node_modules/@scandipwa/scandipwa/src/component/Router/Router.config.js';
+import { Redirect, Route } from 'react-router-dom';
 
 import {
     HomePage,
@@ -27,6 +21,10 @@ import {
     withStoreRegex
 } from 'Component/Router/Router.component';
 import {
+    ACCOUNT_FORGOT_PASSWORD,
+    CHANGE_PASSWORD,
+    CONFIRM_ACCOUNT,
+    CREATE_ACCOUNT,
     HOME,
     LOGIN
 } from 'Component/Router/Router.config';
@@ -57,6 +55,15 @@ export const CLIENT = 'CLIENT';
 export const STATS_PAGE = 'STATS_PAGE';
 export const MY_PROFILE = 'MY_PROFILE';
 export const EDIT_CLIENT = 'EDIT_CLIENT';
+
+const BEFORE_ITEMS_TYPE = (originalMember) => [
+    ...originalMember,
+    !isSignedIn() && {
+        component: <Redirect to={ appendWithStoreCode('/') } />,
+        position: 1,
+        name: 'redirect'
+    }
+];
 
 const SWITCH_ITEMS_TYPE = (originalMembers) => {
     const newMembers = originalMembers.filter((CurrentUrls) => {
@@ -125,6 +132,7 @@ const SWITCH_ITEMS_TYPE = (originalMembers) => {
 export default {
     'Component/Router/Component': {
         'member-property': {
+            BEFORE_ITEMS_TYPE,
             SWITCH_ITEMS_TYPE
         }
     }
