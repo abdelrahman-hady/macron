@@ -11,6 +11,12 @@ type Query {
     ): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
+
+    clientsByKeyword(
+        keyword: String!
+    ): [ClientType]
+    @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
+    @doc(description: "Get clients by keyword")
 }
 
 type Mutation {

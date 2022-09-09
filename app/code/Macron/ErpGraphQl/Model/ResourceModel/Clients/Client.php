@@ -9,15 +9,17 @@ declare(strict_types=1);
 
 namespace Macron\ErpGraphQl\Model\ResourceModel\Clients;
 
-use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Api\ExtensibleDataInterface;
+use Macron\ErpGraphQl\Api\Data\ClientInterface;
+use Magento\Framework\Model\AbstractExtensibleModel;
 
-class ClientsModel extends AbstractModel
+class Client extends AbstractExtensibleModel implements ClientInterface
 {
+    public const NAME = 'client';
+
     /**
      * @return void
      */
-    protected function _construct(): void
+    protected function _construct()
     {
         $this->_init(ClientsCollection::class);
     }
