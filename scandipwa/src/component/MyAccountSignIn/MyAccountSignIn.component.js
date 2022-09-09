@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Lena Sinichenkova <lena.sinichenkova@scandiweb.com | info@scandiweb.com>
+ * @author    Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -13,8 +14,32 @@ import { MyAccountSignIn as SourceMyAccountSignInComponent } from
 'SourceComponent/MyAccountSignIn/MyAccountSignIn.component';
 import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
 
+import './MyAccountSignIn.extension.style.scss';
+
 /** @namespace Scandipwa/Component/MyAccountSignIn/Component */
 export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
+    renderProfileOverlay() {
+        const {
+            myProfileAction,
+            getHelpAction,
+            logoutAction
+        } = this.props;
+
+        return (
+            <div
+              block="MyAccountOverlay"
+              elem="ProfileOverlay"
+            >
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
+                <span onClick={ myProfileAction }>My Profile</span>
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
+                <span onClick={ getHelpAction }>Help</span>
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
+                <span onClick={ logoutAction }>Logout</span>
+            </div>
+        );
+    }
+
     renderSignInForm() {
         const {
             onSignInSuccess,
@@ -80,6 +105,24 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
                 </div>
                 <Loader isLoading={ isLoading } />
             </Form>
+        );
+    }
+
+    render() {
+        const { profileOverlay } = this.props;
+        if (profileOverlay) {
+            return (
+                <>
+                    { this.renderProfileOverlay() }
+                </>
+            );
+        }
+
+        return (
+            <>
+                { this.renderSignInForm() }
+                { this.renderAdditionalField() }
+            </>
         );
     }
 }
