@@ -64,9 +64,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         sortOptions: {
             orderStatus: 0 // Filters orders list by status
         },
-        statusOptions: [],
-        searchInput: '',
-        orderListSearchResult: []
+        statusOptions: []
     };
 
     containerFunctions = {
@@ -102,8 +100,6 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        super.componentDidUpdate(prevProps, prevState);
-
         const { getOrderList } = this.props;
         const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
         const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
