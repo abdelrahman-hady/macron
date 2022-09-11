@@ -16,6 +16,7 @@ import {
     mapStateToProps
 } from 'SourceComponent/Header/Header.container';
 import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
 import { appendWithStoreCode } from 'Util/Url';
 
 import { CHECKOUT_ACCOUNT } from './Header.config';
@@ -50,6 +51,10 @@ export class HeaderContainer extends SourceHeaderContainer {
                 onCloseClick: this.closeOverlay
             });
         });
+    }
+
+    onMinicartButtonClick() {
+        history.push('/cart');
     }
 }
 
