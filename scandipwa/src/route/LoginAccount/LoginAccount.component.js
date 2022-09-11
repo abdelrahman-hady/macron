@@ -36,7 +36,7 @@ export class LoginAccountComponent extends SourceLoginAccountComponent {
     renderStoreSwitcher() {
         return (
             <div block="LoginAccount" elem="Switcher">
-                    <StoreSwitcher />
+                <StoreSwitcher />
             </div>
         );
     }
