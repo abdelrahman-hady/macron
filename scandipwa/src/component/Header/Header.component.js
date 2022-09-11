@@ -5,6 +5,7 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import CartIcon from 'Component/CartIcon';
 import {
     CartOverlay,
     Header as SourceHeader,
@@ -20,6 +21,24 @@ export {
 
 /** @namespace Scandipwa/Component/Header/Component */
 export class HeaderComponent extends SourceHeader {
+    renderMinicartButton() {
+        const {
+            onMinicartButtonClick
+        } = this.props;
+
+        return (
+            <button
+              block="Header"
+              elem="MinicartButtonWrapper"
+              tabIndex="0"
+              onClick={ onMinicartButtonClick }
+              aria-label={ __('Cart') }
+            >
+                <CartIcon />
+            </button>
+        );
+    }
+
     render() {
         if (!isSignedIn() && location.pathname !== '/') {
             history.replace('/');
