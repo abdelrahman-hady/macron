@@ -1,32 +1,25 @@
 type Query {
     clients: [ClientType]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
-    @doc(description: "Get list of clients")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
+        @doc(description: "Get list of clients")
 
-    client (
-        client_id: Int!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
-    @doc(description: "Get client by id")
+    client(client_id: Int!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
+        @doc(description: "Get client by id")
 
     invoices: [InvoiceType]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
-    @doc(description: "Get list of invoices")
-
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+        @doc(description: "Get list of invoices")
 }
 
 type Mutation {
-    deleteClient(
-        client_id: Int!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
-    @doc(description: "Delete client by id")
+    deleteClient(client_id: Int!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
+        @doc(description: "Delete client by id")
 
-    createClient(
-        client: CreateClientInput!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
-    @doc(description: "Create a new client")
+    createClient(client: CreateClientInput!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
+        @doc(description: "Create a new client")
 }
 
 type ClientType {
@@ -73,15 +66,15 @@ type InvoiceType {
     invoice_number: String
     user_sap_id: String
     date: String
+    currency: String
     grand_total: String
     status: String
     download_link: String
-    firstname:String
-    lastname:String
-    address_city:String
-    address_street:String
-    address_postcode:String
-    address_country_id:String
-    address_telephone:String
+    firstname: String
+    lastname: String
+    address_city: String
+    address_street: String
+    address_postcode: String
+    address_country_id: String
+    address_telephone: String
 }
-

@@ -13,7 +13,7 @@ import {
     mapDispatchToProps
 } from 'SourceComponent/Product/Product.container';
 import { mapStateToProps, ProductActionsContainer as SourceProductActionsContainer }
-from 'SourceComponent/ProductActions/ProductActions.container';
+    from 'SourceComponent/ProductActions/ProductActions.container';
 
 import { data as patchData } from './patch_sample_data';
 

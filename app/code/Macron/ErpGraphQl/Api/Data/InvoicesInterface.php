@@ -61,6 +61,28 @@ interface InvoicesInterface extends ExtensibleDataInterface
     /**
      * @return String
      */
+    public function getDueDate();
+
+    /**
+     * @param String $date
+     * @return void
+     */
+    public function setDueDate(string $date);
+
+      /**
+     * @return String
+     */
+    public function getCurrency();
+
+    /**
+     * @param String $currency
+     * @return void
+     */
+    public function setCurrency(string $currency);
+
+    /**
+     * @return String
+     */
     public function getGrandTotal();
 
     /**

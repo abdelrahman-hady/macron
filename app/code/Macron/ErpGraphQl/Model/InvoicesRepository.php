@@ -36,7 +36,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     public function getList()
     {
         $collection = $this->invoicesCollectionFactory;
-        $erp_invoice_cols = ['id', 'invoice_number', 'user_sap_id', 'date', 'grand_total', 'status', 'download_link'];
+        $erp_invoice_cols = ['id', 'invoice_number', 'user_sap_id', 'date', 'currency','grand_total', 'status', 'download_link'];
         $customer_entity_cols = [
             'entity_id',
             'email',

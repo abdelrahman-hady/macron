@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @category  Macron
  * @author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
@@ -12,14 +13,16 @@ namespace Macron\ErpGraphQl\Model;
 
 use Macron\ErpGraphQl\Api\Data\InvoicesInterface;
 use Macron\ErpGraphQl\Model\ResourceModel\InvoicesCollection;
-use Magento\Framework\Model\AbstractExtensibleModel;
-
+use Magento\Framework\Model\AbstractExtensibleModel; 
+ 
 class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
 {
     public const ID = 'id';
     public const USER_SAP_ID = 'user_sap_id';
     public const INVOICE_NUMBER = 'invoice_number';
     public const DATE = 'date';
+    public const DUE_DATE = 'due_date';
+    public const CURRENCY = 'currency';
     public const GRAND_TOTAL = 'grand_total';
     public const STATUS = 'status';
     public const DOWNLOAD_LINK = 'download_link';
@@ -173,5 +176,36 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     public function setConnectedShipmentIds(string $connected_shipment_ids)
     {
         $this->setData(self::CONNECTED_SHIPMENT_IDS);
+    }
+    /**
+     * @inheritDoc
+     */
+    function getDueDate()
+    {
+        return $this->_getData(self::DUE_DATE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function setDueDate(string $date)
+    {
+        $this->setData(self::DUE_DATE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getCurrency()
+    {
+        return $this->_getData(self::CURRENCY);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function setCurrency(string $currency)
+    {
+        $this->setData(self::CURRENCY);
     }
 }

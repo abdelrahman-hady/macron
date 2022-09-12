@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
 import { LoginAccountComponent as SourceLoginAccountComponent } from
-'SourceRoute/LoginAccount/LoginAccount.component';
+    'SourceRoute/LoginAccount/LoginAccount.component';
 
 import './LoginAccount.override.style';
 
