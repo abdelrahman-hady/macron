@@ -38,6 +38,9 @@
         "constraint": {
             "PRIMARY": true,
             "ERP_CLIENT_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+        },
+        "index": {
+            "FTI_59490360024370E13366C2BFFADB1EF5": true
         }
     },
     "erp_invoice": {
