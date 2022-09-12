@@ -110,7 +110,13 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { getOrderList, ordersPerPageList, orderList: { pageInfo: { total_pages = 0 } } } = this.props;
+        const {
+            getOrderList, ordersPerPageList, orderList: {
+                pageInfo: {
+                    total_pages = 0
+                } = {}
+            }
+        } = this.props;
         const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
         const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
         const { location: prevLocation } = prevProps;
