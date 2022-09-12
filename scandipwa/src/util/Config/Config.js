@@ -10,7 +10,7 @@ export const getListViewAllowedOptions = (list, defaultValue) => {
     const ordersPerPageOptions = [];
 
     if (list) {
-        list.split(',').forEach((value) => {
+        list.forEach((value) => {
             const perPage = +value;
             ordersPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
         });
@@ -19,4 +19,13 @@ export const getListViewAllowedOptions = (list, defaultValue) => {
     }
 
     return ordersPerPageOptions;
+};
+
+/** @namespace Scandipwa/Util/Config/transformListViewAllowedValues */
+export const transformListViewAllowedValues = (list) => {
+    if (!list) {
+        return [];
+    }
+
+    return list.split(',').map((val) => Number(val));
 };

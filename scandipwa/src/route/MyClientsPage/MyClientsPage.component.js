@@ -29,7 +29,7 @@ export class MyClientsPageComponent extends PureComponent {
         isLoading: PropTypes.bool,
         onCreateClientHandler: PropTypes.func.isRequired,
         clientList: ClientListType.isRequired,
-        clientsPerPageList: PropTypes.string.isRequired,
+        clientsPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         clientsPerPage: PropTypes.number.isRequired,
         onClientsPerPageChange: PropTypes.func.isRequired
     };
