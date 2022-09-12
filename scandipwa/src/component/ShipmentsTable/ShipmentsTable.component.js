@@ -10,6 +10,7 @@ import { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
+import Pagination from 'Component/Pagination';
 import { ShipmentType } from 'Type/Shipment.type';
 
 import './ShipmentsTable.style';
@@ -48,6 +49,7 @@ export class ShipmentsTableComponent extends PureComponent {
 
     renderTableRow(data) {
         const {
+            entity_id,
             shipment_number,
             status,
             tracking_number,
@@ -57,7 +59,7 @@ export class ShipmentsTableComponent extends PureComponent {
         } = data;
 
         return (
-            <tr key={ tracking_number }>
+            <tr key={ entity_id }>
                 <td>{ shipment_number }</td>
                 <td>{ date }</td>
                 <td>{ customer_name }</td>
@@ -87,13 +89,24 @@ export class ShipmentsTableComponent extends PureComponent {
         );
     }
 
+    renderPagination() {
+        const { isLoading, shipments: { pageInfo = { total_pages: 1 } } } = this.props;
+        const { total_pages } = pageInfo;
+
+        return (
+             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
         return (
             <div block="ShipmentsTable">
                 <Loader isLoading={ isLoading } />
+                { this.renderPagination() }
                 { this.renderTable() }
+                { this.renderPagination() }
             </div>
         );
     }
