@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Macron\ErpGraphQl\Api;
 
-use Macron\ErpGraphQl\Api\Data\ClientSearchResultsInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
 
 interface ClientRepositoryInterface
 {
@@ -19,7 +19,7 @@ interface ClientRepositoryInterface
      *
      * @param SearchCriteriaInterface $searchCriteria
      * @param int $customerId
-     * @return ClientSearchResultsInterface
+     * @return SearchResultsInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria, int $customerId);
+    public function getList(SearchCriteriaInterface $searchCriteria, int $customerId): SearchResultsInterface;
 }

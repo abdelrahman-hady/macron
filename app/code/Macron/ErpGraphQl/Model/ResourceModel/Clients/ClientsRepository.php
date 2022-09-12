@@ -10,11 +10,11 @@ declare(strict_types=1);
 namespace Macron\ErpGraphQl\Model\ResourceModel\Clients;
 
 use Macron\ErpGraphQl\Api\ClientRepositoryInterface;
-use Macron\ErpGraphQl\Api\Data\ClientInterface;
 use Macron\ErpGraphQl\Api\Data\ClientSearchResultsInterface;
 use Macron\ErpGraphQl\Api\Data\ClientSearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
 
 class ClientsRepository implements ClientRepositoryInterface
 {
@@ -53,9 +53,9 @@ class ClientsRepository implements ClientRepositoryInterface
      *
      * @param SearchCriteriaInterface $searchCriteria
      * @param int $customerId
-     * @return ClientSearchResultsInterface
+     * @return SearchResultsInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria, int $customerId)
+    public function getList(SearchCriteriaInterface $searchCriteria, int $customerId): SearchResultsInterface
     {
         $collection = $this->collectionFactory->create($customerId);
         $this->collectionProcessor->process($searchCriteria, $collection);

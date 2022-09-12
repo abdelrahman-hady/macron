@@ -60,12 +60,17 @@ export class MyClientsPageContainer extends PureComponent {
     state = {
         clientsPerPage: +(BrowserDatabase.getItem(CLIENTS_PER_PAGE_ITEM) ?? CLIENTS_PER_PAGE),
         clientList: [],
-        isLoading: false
+        isLoading: false,
+        searchInput: '',
+        clientListSearchResult: []
     };
+
+    timer = null;
 
     containerFunctions = {
         onCreateClientHandler: this.onCreateClientHandler.bind(this),
-        onClientsPerPageChange: this.onClientsPerPageChange.bind(this)
+        onClientsPerPageChange: this.onClientsPerPageChange.bind(this),
+        onInputChange: this.onInputChange.bind(this)
     };
 
     componentDidMount() {
@@ -98,10 +103,17 @@ export class MyClientsPageContainer extends PureComponent {
 
     containerProps = () => {
         const { clientsPerPageList } = this.props;
-        const { clientList, isLoading, clientsPerPage } = this.state;
+        const {
+            clientList, isLoading, clientsPerPage, searchInput, clientListSearchResult
+        } = this.state;
 
         return {
-            clientList, isLoading, clientsPerPageList, clientsPerPage
+            clientList,
+            isLoading,
+            clientsPerPageList,
+            clientsPerPage,
+            searchInput,
+            clientListSearchResult
         };
     };
 
@@ -152,6 +164,37 @@ export class MyClientsPageContainer extends PureComponent {
         const location = url || currentLocation;
 
         return +(getQueryParam('page', location) || 1);
+    }
+
+    onInputChange(e) {
+        const { value } = e.target;
+        this.setState({ searchInput: value });
+        const query = ClientsQuery.getClientsByKeywordQuery(value);
+
+        this.debounce(
+            () => {
+                this.setState({ isLoading: true });
+
+                try {
+                    fetchQuery(query).then(
+                    /** @namespace Scandipwa/Route/MyClientsPage/Container/MyClientsPageContainer/onInputChange/debounce/fetchQuery/then */
+                        ({ clientsByKeyword }) => {
+                            this.setState({ isLoading: false, clientListSearchResult: clientsByKeyword });
+                        }
+                    );
+                } catch (error) {
+                    this.setState({ isLoading: false });
+                }
+            }
+        );
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    debounce(func, timeout = 500) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            func();
+        }, timeout);
     }
 
     render() {

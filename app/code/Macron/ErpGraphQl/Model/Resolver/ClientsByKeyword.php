@@ -97,7 +97,8 @@ class ClientsByKeyword implements ResolverInterface
             'distance',
             'contact_person',
             'mobile',
-            'email'
+            'email',
+            'current_brand'
         ];
 
         $filterCondition = [];
