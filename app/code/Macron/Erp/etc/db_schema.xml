@@ -10,17 +10,25 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="erp_shipment" engine="innodb" comment="Shipment">
+        <column xsi:type="int" name="entity_id" identity="true" nullable="false" comment="Shipment Id"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Client Id"/>
         <column xsi:type="text" name="user_sap_id" comment="User SAP ID"/>
         <column xsi:type="text" name="shipment_number" comment="Shipment Number"/>
         <column xsi:type="text" name="packing_list_link" comment="Packing list link"/>
         <column xsi:type="text" name="status" comment="Status"/>
         <column xsi:type="text" name="tracking_number" comment="Tracking number"/>
-        <column xsi:type="text" name="date" comment="Date"/>
+        <column xsi:type="date" name="date" comment="Date"/>
         <column xsi:type="text" name="business_partner_id" comment="Business partner ID"/>
         <column xsi:type="text" name="customer_name" comment="Customer name"/>
         <column xsi:type="text" name="address" comment="Address"/>
         <column xsi:type="text" name="connected_order_id" comment="Connected Order ID"/>
         <column xsi:type="text" name="connected_invoice_id" comment="Connected Invoice ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="CUSTOMER_ENTITY_ID" table="erp_shipment" column="customer_id"
+                    referenceTable="customer_entity"
+                    referenceColumn="entity_id"/>
     </table>
 
     <table name="erp_client" resource="default" engine="innodb" comment="Table to store my clients">
