@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import { appendWithStoreCode } from '@scandipwa/scandipwa/src/util/Url';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -23,6 +24,7 @@ import { DeviceType } from 'Type/Device.type';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { transformListViewAllowedValues } from 'Util/Config';
+import history from 'Util/History';
 import { formatOrders } from 'Util/Orders';
 import { fetchQuery } from 'Util/Request';
 
@@ -116,7 +118,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { getOrderList, ordersPerPageList } = this.props;
+        const { getOrderList, ordersPerPageList, orderList: { pageInfo: { total_pages = 0 } } } = this.props;
         const { sortOptions: { orderStatus }, ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
         const {
             sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage,
@@ -126,6 +128,11 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
+            const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
+            history.replace(appendWithStoreCode(`/sales/order/history${pageParam}`));
+        }
 
         if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
             this.setState({ ordersPerPage: ordersPerPageList[0] });
