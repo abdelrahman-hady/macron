@@ -39,7 +39,7 @@ export class HeaderContainer extends SourceHeaderContainer {
                 showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
                 setNavigationState({
                     name: CUSTOMER_ACCOUNT,
-                    title: 'Logged in',
+                    title: __('Logged in'),
                     onCloseClick: this.closeOverlay
                 });
             });

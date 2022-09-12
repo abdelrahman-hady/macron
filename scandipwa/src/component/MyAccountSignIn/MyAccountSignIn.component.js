@@ -6,6 +6,8 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import PropTypes from 'prop-types';
+
 import Field from 'Component/Field';
 import FIELD_TYPE from 'Component/Field/Field.config';
 import Form from 'Component/Form';
@@ -18,6 +20,14 @@ import './MyAccountSignIn.extension.style.scss';
 
 /** @namespace Scandipwa/Component/MyAccountSignIn/Component */
 export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
+    static propTypes = {
+        ...SourceMyAccountSignInComponent.propTypes,
+        profileOverlay: PropTypes.bool,
+        myProfileAction: PropTypes.func,
+        getHelpAction: PropTypes.func,
+        logoutAction: PropTypes.func
+    };
+
     renderProfileOverlay() {
         const {
             myProfileAction,
@@ -31,11 +41,11 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
               elem="ProfileOverlay"
             >
                 { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
-                <span onClick={ myProfileAction }>My Profile</span>
+                <span onClick={ myProfileAction }>{ __('My Profile') }</span>
                 { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
-                <span onClick={ getHelpAction }>Help</span>
+                <span onClick={ getHelpAction }>{ __('Help') }</span>
                 { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
-                <span onClick={ logoutAction }>Logout</span>
+                <span onClick={ logoutAction }>{ __('Logout') }</span>
             </div>
         );
     }
@@ -111,11 +121,7 @@ export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {
     render() {
         const { profileOverlay } = this.props;
         if (profileOverlay) {
-            return (
-                <>
-                    { this.renderProfileOverlay() }
-                </>
-            );
+            return this.renderProfileOverlay();
         }
 
         return (
