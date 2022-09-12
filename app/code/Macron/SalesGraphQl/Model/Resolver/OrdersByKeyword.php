@@ -96,8 +96,6 @@ class OrdersByKeyword implements ResolverInterface
             'user_customer_name',
             'sales_business_pool_id',
             'sales_business_pool_name',
-            'date',
-            'status',
             'internal_note',
             'reference_note',
             'grand_total'
@@ -109,13 +107,24 @@ class OrdersByKeyword implements ResolverInterface
         }
         $filterGroups = $this->orderFilter->createFilterGroups($filterCondition, $userId, (int)$store->getId());
         $this->searchCriteriaBuilder->setFilterGroups($filterGroups);
+        $this->searchCriteriaBuilder->setCurrentPage($args['currentPage']);
+        $this->searchCriteriaBuilder->setPageSize($args['pageSize']);
 
         $searchResult = $this->orderRepository->getList($this->searchCriteriaBuilder->create());
+        $maxPages = (int)ceil($searchResult->getTotalCount() / $searchResult->getPageSize());
         $ordersArray = [];
         foreach ($searchResult->getItems() as $orderModel) {
             $ordersArray[] = $this->orderFormatter->format($orderModel);
         }
 
-        return $ordersArray;
+        return [
+            'total_count' => $searchResult->getTotalCount(),
+            'items' => $ordersArray,
+            'page_info' => [
+                'page_size' => $searchResult->getPageSize(),
+                'current_page' => $searchResult->getCurPage(),
+                'total_pages' => $maxPages,
+            ]
+        ];
     }
 }

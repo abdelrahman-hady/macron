@@ -43,8 +43,8 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    getOrderList: (page, pageSize) => OrderDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize)
+    getOrderList: (page, pageSize, filterOptions) => OrderDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.requestOrders(dispatch, page, pageSize, filterOptions)
     ),
     setLoadingStatus: (status) => dispatch(setLoadingStatus(status))
 });
@@ -66,6 +66,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         sortOptions: {
             orderStatus: 0 // Filters orders list by status
         },
+        filterOptions: {
+            dateFrom: '',
+            dateTo: ''
+        },
         statusOptions: [],
         searchInput: '',
         orderListSearchResult: []
@@ -76,6 +80,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     containerFunctions = {
         updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
+        onDateSelectorChange: this.onDateSelectorChange.bind(this),
         onInputChange: this.onInputChange.bind(this)
     };
 
@@ -86,7 +91,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             sortOptions,
             statusOptions,
             searchInput,
-            orderListSearchResult
+            orderListSearchResult,
+            dateFrom, dateTo
         } = this.state;
 
         return {
@@ -95,6 +101,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             orderListSearchResult,
             ordersPerPageList,
             ordersPerPage,
+            dateFrom,
+            dateTo,
             sortOptions,
             statusOptions,
             ...super.containerProps()
@@ -103,20 +111,28 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     componentDidMount() {
         const { getOrderList } = this.props;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
 
-        getOrderList(this._getPageFromUrl(), ordersPerPage);
+        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
         this.setState({ statusOptions: this._getStatusOptions() });
     }
 
     componentDidUpdate(prevProps, prevState) {
         const { getOrderList, ordersPerPageList } = this.props;
-        const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
-        const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
+        const { sortOptions: { orderStatus }, ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
+        const {
+            sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage,
+            filterOptions: prevFilterOptions
+        } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (filterOptions !== prevFilterOptions) {
+            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
+            scrollToTop();
+        }
 
         if (!ordersPerPageList.includes(ordersPerPage)) {
             this.setState({ ordersPerPage: ordersPerPageList[0] });
@@ -124,7 +140,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         }
 
         if (orderStatus !== prevOrderStatus || currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
-            getOrderList(currentPage, ordersPerPage);
+            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
             scrollToTop();
         }
     }
@@ -164,11 +180,18 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         return [];
     }
 
+    onDateSelectorChange(e) {
+        const { name, value } = e.target;
+        const { filterOptions } = this.state;
+        this.setState({ filterOptions: { ...filterOptions, [name]: value } });
+    }
+
     onInputChange(e) {
         const { setLoadingStatus } = this.props;
         const { value } = e.target;
+        const { ordersPerPage = ORDERS_PER_PAGE } = this.state;
         this.setState({ searchInput: value });
-        const query = OrderQuery.getOrdersByKeywordQuery(value);
+        const query = OrderQuery.getOrdersByKeywordQuery(this._getPageFromUrl(), ordersPerPage, value);
         this.debounce(
             () => {
                 setLoadingStatus(true);
@@ -176,8 +199,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                     fetchQuery(query).then(
                     /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/debounce/fetchQuery/then */
                         ({ OrdersByKeyword }) => {
+                            const { items = [], page_info } = OrdersByKeyword;
+                            const formattedOrders = formatOrders(items);
                             setLoadingStatus(false);
-                            this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+                            this.setState({ orderListSearchResult: { items: formattedOrders, pageInfo: page_info } });
                         }
                     );
                 } catch (error) {

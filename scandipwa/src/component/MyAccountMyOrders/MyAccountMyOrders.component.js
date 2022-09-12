@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable react/forbid-prop-types */
 /*
  * @category  Macron
@@ -32,6 +33,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         statusOptions: PropTypes.array.isRequired,
         updateOptions: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
+        onDateSelectorChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
         orderListSearchResult: PropTypes.arrayOf.isRequired
     };
@@ -80,6 +82,40 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         || orderListSearchResult !== nextOrderListSearchResult;
     }
 
+    renderOrdersPerPage() {
+        const { ordersPerPageList, ordersPerPage, onOrderPerPageChange } = this.props;
+
+        const ordersPerPageOptions = [];
+
+        if (ordersPerPageList) {
+            ordersPerPageList.split(',').forEach((value) => {
+                const perPage = +value;
+                ordersPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
+            });
+        } else {
+            ordersPerPageOptions.push({ label: ordersPerPage, value: ordersPerPage });
+        }
+
+        return (
+            <div block="MyAccountMyOrders" elem="PerPageDropdown">
+                <Field
+                  type={ FIELD_TYPE.select }
+                  attr={ {
+                      id: 'orders-per-page-dropdown',
+                      name: 'orders-per-page-dropdown',
+                      value: ordersPerPage,
+                      noPlaceholder: true
+                  } }
+                  events={ {
+                      onChange: onOrderPerPageChange
+                  } }
+                  options={ ordersPerPageOptions }
+                />
+                <span>{ __('per page') }</span>
+            </div>
+        );
+    }
+
     renderSearchBar() {
         const { onInputChange } = this.props;
         return (
@@ -110,6 +146,47 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderFilters() {
+        const {
+            onDateSelectorChange,
+            dateFrom,
+            dateTo
+        } = this.props;
+
+        return (
+            <div block="MyAccountMyOrders" elem="Filters">
+                <div block="MyAccountMyOrders" elem="DateFilter">
+                    <p>{ __('Data from:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateFrom',
+                          name: 'dateFrom',
+                          value: dateFrom
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+                <div block="MyAccountMyOrders" elem="DateFilter">
+                    <p>{ __('Data to:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateTo',
+                          name: 'dateTo',
+                          value: dateTo
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+            </div>
+        );
+    }
+
     renderOrderRows() {
         const {
             orderList: { items = [] },
@@ -117,18 +194,18 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             sortOptions: { orderStatus },
             statusOptions,
             searchInput,
-            orderListSearchResult
+            orderListSearchResult: { items: searchedItems = [] }
+
         } = this.props;
 
-        if (!isLoading && !items.length && !orderListSearchResult.length) {
+        const orderItems = searchInput !== '' ? searchedItems : items;
+        if (!isLoading && !orderItems.length) {
             return this.renderNoOrders();
         }
 
-        const ordersItems = searchInput !== '' ? orderListSearchResult : items;
-
         if (orderStatus === 0) {
             // no filters selected -> render all orders
-            return ordersItems.reduceRight(
+            return orderItems.reduceRight(
                 (acc, order) => [...acc, this.renderOrderRow(order)],
                 []
             );
@@ -136,7 +213,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
         // Filter Orders By Status
         const [filterOption = {}] = statusOptions.filter((option) => option.id === orderStatus);
-        return ordersItems.reduceRight(
+        return orderItems.reduceRight(
             (acc, order) => {
                 if (filterOption.label?.value === order.status) {
                     return [...acc, this.renderOrderRow(order)];
@@ -174,11 +251,29 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     }
 
     renderPagination() {
-        const { isLoading, orderList: { pageInfo = { total_pages: 1 } } } = this.props;
-        const { total_pages } = pageInfo;
+        const {
+            isLoading,
+            orderList: {
+                pageInfo: {
+                    total_pages = 0
+                } = {}
+            },
+            orderListSearchResult: {
+                pageInfo: {
+                    total_pages_searched = 0
+                } = {}
+            },
+            searchInput
+        } = this.props;
+
+        const pages = searchInput !== '' ? total_pages_searched : total_pages;
 
         return (
-             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
+            <Pagination
+              isLoading={ isLoading }
+              totalPages={ pages }
+              mix={ { block: 'MyAccountMyOrders', elem: 'Pagination' } }
+            />
         );
     }
 
@@ -188,6 +283,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
+                { this.renderFilters() }
                 { this.renderSearchBar() }
                 { this.renderPerPageDropdown() }
                 { this.renderToolbar() }

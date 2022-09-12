@@ -17,10 +17,12 @@ import { Field } from 'Util/Query';
  * @class OrderQuery
  * @namespace Scandipwa/Query/Order/Query */
 export class OrderQuery extends SourceOrderQuery {
-    getOrdersByKeywordQuery(keyword) {
+    getOrdersByKeywordQuery(page, pageSize, keyword) {
         return new Field('OrdersByKeyword')
+            .addArgument('currentPage', 'String!', page)
+            .addArgument('pageSize', 'String!', pageSize)
             .addArgument('keyword', 'String!', keyword)
-            .addFieldList(this._getOrderItemsFields(false));
+            .addFieldList(this._getOrdersFields(true));
     }
 
     _getOrderItemsFields(isSingleOrder) {
@@ -47,26 +49,40 @@ export class OrderQuery extends SourceOrderQuery {
     }
 
     _getOrdersField(options) {
-        const { orderId, page = 1, pageSize = ORDERS_PER_PAGE } = options || {};
+        const {
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions: { dateFrom, dateTo } = {}
+        } = options || {};
         const ordersField = new Field('orders');
 
         if (orderId !== undefined ? orderId.includes('sap') : null) {
         // 'sap' might have to be replaced with something else when real sap_order_id format will be known.
-            return ordersField
+            ordersField
                 .addArgument('filter', 'CustomerOrdersFilterInput', { sap_order_id: { eq: orderId } })
                 .addFieldList(this._getOrdersFields(true));
         }
 
         if (orderId) {
-            return ordersField
+            ordersField
                 .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
                 .addFieldList(this._getOrdersFields(true));
+        }
+
+        if (dateFrom) {
+            ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { created_at: { gteq: dateFrom } })
+                .addFieldList(this._getOrdersFields(false));
+        }
+
+        if (dateTo) {
+            ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { created_at: { lteq: dateTo } })
+                .addFieldList(this._getOrdersFields(false));
         }
 
         return ordersField
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
-            .addFieldList(this._getOrdersFields());
+            .addFieldList(this._getOrdersFields(false));
     }
 }
 
