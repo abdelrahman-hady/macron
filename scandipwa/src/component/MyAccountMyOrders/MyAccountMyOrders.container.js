@@ -75,8 +75,6 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         orderListSearchResult: []
     };
 
-    timer = null;
-
     containerFunctions = {
         updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
@@ -129,17 +127,16 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        if (filterOptions !== prevFilterOptions) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
-            scrollToTop();
-        }
-
-        if (!ordersPerPageList.includes(ordersPerPage)) {
+        if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
             this.setState({ ordersPerPage: ordersPerPageList[0] });
             return;
         }
 
-        if (orderStatus !== prevOrderStatus || currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
+        if (orderStatus !== prevOrderStatus
+            || currentPage !== prevPage
+            || ordersPerPage !== prevOrdersPerPage
+            || filterOptions !== prevFilterOptions
+        ) {
             getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
             scrollToTop();
         }

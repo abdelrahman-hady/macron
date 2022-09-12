@@ -7,18 +7,18 @@
 
 /** @namespace Scandipwa/Util/Config/getListViewAllowedOptions */
 export const getListViewAllowedOptions = (list, defaultValue) => {
-    const ordersPerPageOptions = [];
+    const perPageOptions = [];
 
-    if (list) {
+    if (list.length > 0) {
         list.forEach((value) => {
             const perPage = +value;
-            ordersPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
+            perPageOptions.push({ id: perPage, label: perPage, value: perPage });
         });
     } else {
-        ordersPerPageOptions.push({ label: defaultValue, value: defaultValue });
+        perPageOptions.push({ label: defaultValue, value: defaultValue });
     }
 
-    return ordersPerPageOptions;
+    return perPageOptions;
 };
 
 /** @namespace Scandipwa/Util/Config/transformListViewAllowedValues */
@@ -27,5 +27,7 @@ export const transformListViewAllowedValues = (list) => {
         return [];
     }
 
-    return list.split(',').map((val) => Number(val));
+    const transformedList = list.split(',').map((val) => Number(val));
+
+    return Array.from(new Set(transformedList));
 };

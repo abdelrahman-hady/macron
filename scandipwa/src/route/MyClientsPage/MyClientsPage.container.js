@@ -102,7 +102,7 @@ export class MyClientsPageContainer extends PureComponent {
             history.replace(`${MY_CLIENTS_URL}${pageParam}`);
         }
 
-        if (!clientsPerPageList.includes(clientsPerPage)) {
+        if (clientsPerPageList.length > 0 && !clientsPerPageList.includes(clientsPerPage)) {
             this.setState({ clientsPerPage: clientsPerPageList[0] });
             return;
         }
