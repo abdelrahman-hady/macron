@@ -86,7 +86,7 @@ export class MyClientsPageContainer extends PureComponent {
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        if (!clientsPerPageList.includes(clientsPerPage)) {
+        if (clientsPerPageList.length > 0 && !clientsPerPageList.includes(clientsPerPage)) {
             this.setState({ clientsPerPage: clientsPerPageList[0] });
             return;
         }
