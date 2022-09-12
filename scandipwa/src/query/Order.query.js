@@ -47,7 +47,6 @@ export class OrderQuery extends SourceOrderQuery {
 
     _getOrdersField(options) {
         const {
-            // eslint-disable-next-line no-unused-vars
             orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions
         } = options || {};
         const ordersField = new Field('orders');
@@ -60,13 +59,17 @@ export class OrderQuery extends SourceOrderQuery {
 
         const { status, user_customer_name } = filterOptions;
 
+        const filter = { };
         if (status) {
-            ordersField.addArgument('filter', 'CustomerOrdersFilterInput', { status: { eq: status } });
+            filter.status = { eq: status };
         }
 
         if (user_customer_name) {
-            // eslint-disable-next-line max-len
-            ordersField.addArgument('filter', 'CustomerOrdersFilterInput', { user_customer_name: { eq: user_customer_name } });
+            filter.user_customer_name = { eq: user_customer_name };
+        }
+
+        if (Object.keys(filter).length) {
+            ordersField.addArgument('filter', 'CustomerOrdersFilterInput', filter);
         }
 
         return ordersField
