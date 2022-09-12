@@ -20,15 +20,6 @@ type Mutation {
     createClient(client: CreateClientInput!): ClientType
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
         @doc(description: "Create a new client")
-
-    updateClient(client: UpdateClientInput!): ClientType
-        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
-        @doc(description: "Update client")
-}
-
-type Clients {
-    items: [ClientType]
-    page_info: SearchResultPageInfo
 }
 
 type ClientType {
@@ -85,6 +76,7 @@ type InvoiceType {
     invoice_number: String
     user_sap_id: String
     date: String
+    currency: String
     grand_total: String
     status: String
     download_link: String

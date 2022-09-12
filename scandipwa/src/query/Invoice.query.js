@@ -21,6 +21,7 @@ export class InvoiceQuery {
             'date',
             'firstname',
             'lastname',
+            'currency',
             'grand_total',
             'status',
             'address_city',
