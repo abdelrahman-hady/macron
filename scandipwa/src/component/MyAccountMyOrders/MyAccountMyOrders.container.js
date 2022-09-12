@@ -52,22 +52,25 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         filterOptions: {
             status: null,
             user_customer_name: null
+        },
+        availableFilters: {
+            status: [],
+            user_customer_name: []
         }
     };
 
     containerFunctions = {
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
         updateOptions: this.updateOptions.bind(this),
-        getAvailablefilterOptions: this.getAvailablefilterOptions.bind(this),
         formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList } = this.props;
-        const { ordersPerPage, filterOptions } = this.state;
+        const { ordersPerPage, filterOptions, availableFilters } = this.state;
 
         return {
-            ...super.containerProps(), ordersPerPageList, ordersPerPage, filterOptions
+            ...super.containerProps(), ordersPerPageList, ordersPerPage, filterOptions, availableFilters
         };
     }
 
@@ -75,7 +78,13 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { getOrderList } = this.props;
         const { ordersPerPage, filterOptions } = this.state;
 
-        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
+        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions).then(
+            /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/componentDidMount/getOrderList/then */
+            () => {
+                // Get Available Filter Options on First Orders
+                this.setState({ availableFilters: this.getAvailablefilterOptions() });
+            }
+        );
     }
 
     getAvailablefilterOptions() {
@@ -115,18 +124,29 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     componentDidUpdate(prevProps, prevState) {
         const { getOrderList } = this.props;
         const { location: prevLocation } = prevProps;
-        const { ordersPerPage, filterOptions } = this.state;
+        const { ordersPerPage, filterOptions, availableFilters } = this.state;
         const {
             ordersPerPage: prevOrdersPerPage,
-            filterOptions: prevfilterOptions
+            filterOptions: prevfilterOptions,
+            availableFilters: prevAvailableFilters
         } = prevState;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
         const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevfilterOptions));
-        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage || filterOptionsChanged()) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
+        const availFiltersChanged = () => !(JSON.stringify(availableFilters) === JSON.stringify(prevAvailableFilters));
+        // eslint-disable-next-line max-len
+        if (currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage || filterOptionsChanged() || availFiltersChanged()) {
+            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions).then(
+                /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/componentDidUpdate/getOrderList/then */
+                () => {
+                    // Should update available filters when page number is changed
+                    if (currentPage !== prevPage) {
+                        this.setState({ availableFilters: this.getAvailablefilterOptions() });
+                    }
+                }
+            );
             scrollToTop();
         }
     }

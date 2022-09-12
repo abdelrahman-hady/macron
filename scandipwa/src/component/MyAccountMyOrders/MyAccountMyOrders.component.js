@@ -76,7 +76,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
     renderSortByCustomerName() {
         const {
-            filterOptions: { user_customer_name }, getAvailablefilterOptions, formatToFieldOptions, updateOptions
+            filterOptions: { user_customer_name }, availableFilters, formatToFieldOptions, updateOptions
         } = this.props;
 
         return (
@@ -84,13 +84,13 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
               type={ FIELD_TYPE.select }
               label={ __('Sort by customer') }
               mix={ { block: 'MyAccountMyOrders', elem: 'SortByCustomer' } }
-              options={ formatToFieldOptions(getAvailablefilterOptions().user_customer_name) }
+              options={ formatToFieldOptions(availableFilters.user_customer_name) }
               value={ user_customer_name }
               events={ {
                   onChange: (val) => {
                       updateOptions({
                           // eslint-disable-next-line max-len
-                          user_customer_name: +val === 0 ? null : getAvailablefilterOptions().user_customer_name[+val - 1]
+                          user_customer_name: +val === 0 ? null : availableFilters.user_customer_name[+val - 1]
                       });
                   }
               } }
@@ -100,7 +100,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
     renderSortByOrderStatus() {
         const {
-            filterOptions: { status }, getAvailablefilterOptions, formatToFieldOptions, updateOptions
+            filterOptions: { status }, availableFilters, formatToFieldOptions, updateOptions
         } = this.props;
 
         return (
@@ -108,11 +108,11 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
               type={ FIELD_TYPE.select }
               label={ __('Sort by status') }
               mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-              options={ formatToFieldOptions(getAvailablefilterOptions().status) }
+              options={ formatToFieldOptions(availableFilters.status) }
               value={ status }
               events={ {
                   onChange: (val) => {
-                      updateOptions({ status: +val === 0 ? null : getAvailablefilterOptions().status[+val - 1] });
+                      updateOptions({ status: +val === 0 ? null : availableFilters.status[+val - 1] });
                   }
               } }
             />
