@@ -52,6 +52,7 @@
 
     <table name="erp_invoice" resource="default" comment="To store Invoices data requests coming from ERP system">
         <column xsi:type="int" name="id" identity="true" comment="Invoice Auto Increment"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Customer Id"/>
         <column xsi:type="text" name="user_sap_id" comment="User SAP ID"/>
         <column xsi:type="text" name="invoice_number" comment="Invoice number"/>
         <column xsi:type="text" name="date" comment="Invoice date"/>
@@ -68,6 +69,9 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
+        <constraint xsi:type="foreign" referenceId="CUSTOMER_ENTITY_ID" table="erp_invoice" column="customer_id"
+                    referenceTable="customer_entity"
+                    referenceColumn="entity_id"/>
     </table>
 
     <table name="erp_price_wholesale" resource="default" engine="innodb" comment="ERP price wholesale table">

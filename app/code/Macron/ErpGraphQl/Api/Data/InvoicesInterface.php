@@ -31,10 +31,10 @@ interface InvoicesInterface extends ExtensibleDataInterface
     public function getUserSapId();
 
     /**
-     * @param String $user_sap_id
+     * @param String $userSapId
      * @return void
      */
-    public function setUserSapId(string $user_sap_id);
+    public function setUserSapId(string $userSapId);
 
     /**
      * @return String
@@ -42,10 +42,10 @@ interface InvoicesInterface extends ExtensibleDataInterface
     public function getInvoiceNumber();
 
     /**
-     * @param String $invoice_number
+     * @param String $invoiceNumber
      * @return void
      */
-    public function setInvoiceNumber(string $invoice_number);
+    public function setInvoiceNumber(string $invoiceNumber);
 
     /**
      * @return String
@@ -69,7 +69,7 @@ interface InvoicesInterface extends ExtensibleDataInterface
      */
     public function setDueDate(string $date);
 
-      /**
+    /**
      * @return String
      */
     public function getCurrency();
@@ -86,10 +86,10 @@ interface InvoicesInterface extends ExtensibleDataInterface
     public function getGrandTotal();
 
     /**
-     * @param String $grand_total
+     * @param String $grandTotal
      * @return void
      */
-    public function setGrandTotal(string $grand_total);
+    public function setGrandTotal(string $grandTotal);
 
     /**
      * @return String
@@ -108,10 +108,10 @@ interface InvoicesInterface extends ExtensibleDataInterface
     public function getDownloadLink();
 
     /**
-     * @param String $download_link
+     * @param String $downloadLink
      * @return void
      */
-    public function setDownloadLink(string $download_link);
+    public function setDownloadLink(string $downloadLink);
 
     /**
      * @return String
@@ -119,10 +119,10 @@ interface InvoicesInterface extends ExtensibleDataInterface
     public function getConnectedOrderIds();
 
     /**
-     * @param String $connected_order_ids
+     * @param String $connectedOrderIds
      * @return void
      */
-    public function setConnectedOrderIds(string $connected_order_ids);
+    public function setConnectedOrderIds(string $connectedOrderIds);
 
     /**
      * @return String

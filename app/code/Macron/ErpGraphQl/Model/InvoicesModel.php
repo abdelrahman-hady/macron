@@ -13,8 +13,8 @@ namespace Macron\ErpGraphQl\Model;
 
 use Macron\ErpGraphQl\Api\Data\InvoicesInterface;
 use Macron\ErpGraphQl\Model\ResourceModel\InvoicesCollection;
-use Magento\Framework\Model\AbstractExtensibleModel; 
- 
+use Magento\Framework\Model\AbstractExtensibleModel;
+
 class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
 {
     public const ID = 'id';
@@ -61,7 +61,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    public function setUserSapId(string $user_sap_id)
+    public function setUserSapId(string $userSapId)
     {
         $this->setData(self::USER_SAP_ID);
     }
@@ -77,7 +77,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    public function setInvoiceNumber(string $invoice_number)
+    public function setInvoiceNumber(string $invoiceNumber)
     {
         $this->setData(self::INVOICE_NUMBER);
     }
@@ -109,7 +109,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    public function setGrandTotal(string $grand_total)
+    public function setGrandTotal(string $grandTotal)
     {
         $this->setData(self::GRAND_TOTAL);
     }
@@ -141,7 +141,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    public function setDownloadLink(string $download_link)
+    public function setDownloadLink(string $downloadLink)
     {
         $this->setData(self::DOWNLOAD_LINK);
     }
@@ -157,7 +157,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    public function setConnectedOrderIds(string $connected_order_ids)
+    public function setConnectedOrderIds(string $connectedOrderIds)
     {
         $this->setData(self::CONNECTED_ORDER_IDS);
     }
@@ -173,14 +173,15 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    public function setConnectedShipmentIds(string $connected_shipment_ids)
+    public function setConnectedShipmentIds(string $connectedShipmentIds)
     {
         $this->setData(self::CONNECTED_SHIPMENT_IDS);
     }
+
     /**
      * @inheritDoc
      */
-    function getDueDate()
+    public function getDueDate()
     {
         return $this->_getData(self::DUE_DATE);
     }
@@ -188,7 +189,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    function setDueDate(string $date)
+    public function setDueDate(string $date)
     {
         $this->setData(self::DUE_DATE);
     }
@@ -196,7 +197,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    function getCurrency()
+    public function getCurrency()
     {
         return $this->_getData(self::CURRENCY);
     }
@@ -204,7 +205,7 @@ class InvoicesModel extends AbstractExtensibleModel implements InvoicesInterface
     /**
      * @inheritDoc
      */
-    function setCurrency(string $currency)
+    public function setCurrency(string $currency)
     {
         $this->setData(self::CURRENCY);
     }

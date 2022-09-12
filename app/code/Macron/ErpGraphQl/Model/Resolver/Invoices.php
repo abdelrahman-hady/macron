@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Macron\ErpGraphQl\Model\Resolver;
 
 use Macron\ErpGraphQl\Model\InvoicesRepository;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer as CustomerModel;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
@@ -21,13 +22,15 @@ use Magento\GraphQl\Model\Query\ContextInterface;
 class Invoices implements ResolverInterface
 {
     protected InvoicesRepository $erpInvoiceRepository;
+    protected CustomerModel $customerModel;
 
     /**
      * @param InvoicesRepository $erpInvoiceRepository
      */
-    public function __construct(InvoicesRepository $erpInvoiceRepository)
+    public function __construct(InvoicesRepository $erpInvoiceRepository, CustomerModel $customerModel)
     {
         $this->erpInvoiceRepository = $erpInvoiceRepository;
+        $this->customerModel = $customerModel;
     }
 
     /**
@@ -51,6 +54,8 @@ class Invoices implements ResolverInterface
         if (!$context->getExtensionAttributes()->getIsCustomer()) {
             throw new GraphQlAuthorizationException(__('The current customer is not authorized.'));
         }
-        return $this->erpInvoiceRepository->getList();
+        $customer = $this->customerModel->execute($context);
+        $customerId = $customer->getId();
+        return $this->erpInvoiceRepository->getList($customerId);
     }
 }
