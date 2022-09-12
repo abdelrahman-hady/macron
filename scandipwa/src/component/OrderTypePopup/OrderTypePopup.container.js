@@ -17,11 +17,13 @@ import { fetchQuery } from 'Util/Request';
 
 import OrderTypePopup from './OrderTypePopup.component';
 import {
+    CUSTOMER_CHANGE_CONFIRMATION_POPUP,
     ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT
 } from './OrderTypePopup.config';
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapStateToProps */
-export const mapStateToProps = (_state) => ({
+export const mapStateToProps = (state) => ({
+    selectedCustomer: state.CustomCartDataReducer.selectedCustomer
 });
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapDispatchToProps */
@@ -37,7 +39,8 @@ export class OrderTypePopupContainer extends PureComponent {
         updateTypeAndCustomerSelect: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         addProductToCart: PropTypes.func,
-        showPopup: PropTypes.func.isRequired
+        showPopup: PropTypes.func.isRequired,
+        selectedCustomer: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -45,14 +48,16 @@ export class OrderTypePopupContainer extends PureComponent {
     };
 
     state = {
-        companies: {}
+        companies: {},
+        fieldValue: ''
     };
 
     containerFunctions = {
         handleCustomerClick: this.handleCustomerClick.bind(this),
         handleReplenishmentClick: this.handleReplenishmentClick.bind(this),
         onGoBack: this.onGoBack.bind(this),
-        onSubmit: this.onSubmit.bind(this)
+        onSubmit: this.onSubmit.bind(this),
+        onConfirm: this.onConfirm.bind(this)
     };
 
     componentDidMount() {
@@ -67,9 +72,10 @@ export class OrderTypePopupContainer extends PureComponent {
 
     containerProps = () => {
         const { companies } = this.state;
+        const { hideActiveOverlay } = this.props;
 
         return {
-            companies
+            companies, hideActiveOverlay
         };
     };
 
@@ -84,13 +90,29 @@ export class OrderTypePopupContainer extends PureComponent {
     }
 
     onSubmit(_form, fields) {
-        const { updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart } = this.props;
+        const {
+            updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart, selectedCustomer, showPopup
+        } = this.props;
+
+        if (selectedCustomer !== '' && selectedCustomer !== fields[0].value) {
+            this.setState({ fieldValue: fields[0].value });
+            showPopup(CUSTOMER_CHANGE_CONFIRMATION_POPUP);
+            return;
+        }
+
         updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fields[0].value });
         hideActiveOverlay();
 
         if (addProductToCart) {
             addProductToCart();
         }
+    }
+
+    onConfirm() {
+        const { fieldValue } = this.state;
+        const { updateTypeAndCustomerSelect, hideActiveOverlay } = this.props;
+        updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fieldValue });
+        hideActiveOverlay();
     }
 
     handleReplenishmentClick() {
