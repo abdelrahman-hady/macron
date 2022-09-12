@@ -50,7 +50,9 @@
             "status": true,
             "download_link": true,
             "connected_order_ids": true,
-            "connected_shipment_ids": true
+            "connected_shipment_ids": true,
+            "currency": true,
+            "due_date": true
         },
         "constraint": {
             "PRIMARY": true

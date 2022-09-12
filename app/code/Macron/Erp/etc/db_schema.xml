@@ -55,6 +55,8 @@
         <column xsi:type="text" name="user_sap_id" comment="User SAP ID"/>
         <column xsi:type="text" name="invoice_number" comment="Invoice number"/>
         <column xsi:type="text" name="date" comment="Invoice date"/>
+        <column xsi:type="text" name="currency" comment="Invoice currency"/>
+        <column xsi:type="date" name="due_date" comment="Invoice due date"/>
         <column xsi:type="text" name="grand_total" comment="Invoice Grand total"/>
         <column xsi:type="text" name="status" comment="status"/>
         <column xsi:type="text" name="download_link" comment="Invoice Download link, TBD from SAP"/>
