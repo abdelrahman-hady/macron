@@ -62,17 +62,18 @@ class PartnerCompanyNames implements ResolverInterface
         $partnerCompanies = [];
         $businessId = '';
         if ($currentCustomer) {
-            $businessId = $currentCustomer->getData('business_partner_id');
+            $businessId = $currentCustomer->getBusinessPartnerId();
             $businessPartners = $this->customerCollection->create()
                 ->addAttributeToSelect('*')
+                ->addFieldToFilter('parent_business_partner_id', $businessId)
                 ->getItems();
+
             foreach ($businessPartners as $partner) {
-                if ($partner->getData('parent_business_partner_id') === $businessId) {
-                    $partnerCompanies[] = [
-                        'companyName' => $partner->getData('company_name'),
-                        'companyId' => $partner->getData('business_partner_id')
-                    ];
-                }
+                $partner->getFieldName();
+                $partnerCompanies[] = [
+                    'companyName' => $partner->getCompanyName(),
+                    'companyId' => $partner->getBusinessPartnerId()
+                ];
             }
         }
 
