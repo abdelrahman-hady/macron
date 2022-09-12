@@ -13,7 +13,7 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps
 } from 'SourceComponent/CheckoutBilling/CheckoutBilling.container';
-import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
+import { updateTypeAndCustomerSelect } from 'Store/CustomCartData/CustomCartData.action';
 import transformToNameValuePair from 'Util/Form/Transform';
 
 export {
@@ -23,18 +23,18 @@ export {
 /** @namespace Scandipwa/Component/CheckoutBilling/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    updateOrderType: (notes) => dispatch(updateOrderType(notes))
+    updateTypeAndCustomerSelect: (notes) => dispatch(updateTypeAndCustomerSelect(notes))
 });
 
 /** @namespace Scandipwa/Component/CheckoutBilling/Container */
 export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     static propTypes = {
         ...super.propTypes,
-        updateOrderType: PropTypes.func.isRequired
+        updateTypeAndCustomerSelect: PropTypes.func.isRequired
     };
 
     onBillingSuccess(form, fields, asyncData) {
-        const { savePaymentInformation, updateOrderType } = this.props;
+        const { savePaymentInformation, updateTypeAndCustomerSelect } = this.props;
         const { isSameAsShipping } = this.state;
 
         const extractedFields = transformToNameValuePair(fields);
@@ -46,7 +46,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             paymentMethod,
             same_as_shipping: isSameAsShipping
         });
-        updateOrderType('');
+        updateTypeAndCustomerSelect({ orderType: '', selectedCustomer: '' });
     }
 }
 

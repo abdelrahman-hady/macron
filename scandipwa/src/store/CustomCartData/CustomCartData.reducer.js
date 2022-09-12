@@ -11,7 +11,8 @@ import { UPDATE_NOTES, UPDATE_ORDER_TYPE } from './CustomCartData.action';
 export const getInitialState = () => ({
     note: '',
     internalNote: '',
-    orderType: ''
+    orderType: '',
+    selectedCustomer: ''
 });
 
 /** @namespace Scandipwa/Store/CustomCartData/Reducer/CustomCartDataReducer */
@@ -26,11 +27,12 @@ export const CustomCartDataReducer = (state = getInitialState(), action) => {
             internalNote
         };
     case UPDATE_ORDER_TYPE:
-        const { orderType } = action;
+        const { payload: { orderType, selectedCustomer } } = action;
 
         return {
             ...state,
-            orderType
+            orderType,
+            selectedCustomer
         };
     default:
         return state;

@@ -19,7 +19,7 @@ import { ACCOUNT_URL } from 'SourceRoute/MyAccount/MyAccount.config';
 import { isSignedIn } from 'SourceUtil/Auth';
 import { scrollToTop } from 'SourceUtil/Browser';
 import { appendWithStoreCode } from 'SourceUtil/Url';
-import { updateOrderType } from 'Store/CustomCartData/CustomCartData.action';
+import { updateTypeAndCustomerSelect } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActivePopup } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
@@ -42,7 +42,7 @@ export const mapDispatchToProps = (dispatch) => ({
     clearCart: () => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.clearCart(dispatch)
     ),
-    updateOrderType: (type) => dispatch(updateOrderType(type)),
+    updateTypeAndCustomerSelect: (payload) => dispatch(updateTypeAndCustomerSelect(payload)),
     hideActivePopup: () => dispatch(hideActivePopup())
 });
 
@@ -52,7 +52,7 @@ export class CartPageContainer extends SourceCartPageContainer {
         ...super.propTypes,
         clearCart: PropTypes.func.isRequired,
         showDeleteOrderPopup: PropTypes.func.isRequired,
-        updateOrderType: PropTypes.func.isRequired,
+        updateTypeAndCustomerSelect: PropTypes.func.isRequired,
         hideActivePopup: PropTypes.func.isRequired
     };
 
@@ -73,12 +73,12 @@ export class CartPageContainer extends SourceCartPageContainer {
     }
 
     async handleDeleteOrder() {
-        const { clearCart, updateOrderType, hideActivePopup } = this.props;
+        const { clearCart, updateTypeAndCustomerSelect, hideActivePopup } = this.props;
         try {
             hideActivePopup();
             await clearCart();
         } finally {
-            updateOrderType('');
+            updateTypeAndCustomerSelect({ orderType: '', selectedCustomer: '' });
         }
     }
 

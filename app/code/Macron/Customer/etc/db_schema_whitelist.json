@@ -2,7 +2,6 @@
     "customer_entity": {
         "column": {
             "business_partner_id": true,
-            "parent_business_partner_id": true,
             "phone_number": true,
             "type": true,
             "status": true,
