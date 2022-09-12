@@ -69,7 +69,6 @@ class PartnerCompanyNames implements ResolverInterface
                 ->getItems();
 
             foreach ($businessPartners as $partner) {
-                $partner->getFieldName();
                 $partnerCompanies[] = [
                     'companyName' => $partner->getCompanyName(),
                     'companyId' => $partner->getBusinessPartnerId()
