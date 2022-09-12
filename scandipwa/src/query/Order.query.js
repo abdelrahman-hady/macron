@@ -53,22 +53,23 @@ export class OrderQuery extends SourceOrderQuery {
         } = options || {};
         const ordersField = new Field('orders');
 
+        const filter = {};
+
         if (orderId) {
-            return ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
-                .addFieldList(this._getOrdersFields(true));
+            filter.entity_id = { eq: orderId };
         }
 
         if (dateFrom) {
-            return ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { created_at: { gteq: dateFrom } })
-                .addFieldList(this._getOrdersFields(false));
+            filter.created_at = { ...filter.created_at, gteq: dateFrom };
         }
 
         if (dateTo) {
-            return ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { created_at: { lteq: dateTo } })
-                .addFieldList(this._getOrdersFields(false));
+            filter.created_at = { ...filter.created_at, lteq: dateTo };
+        }
+
+        if (Object.keys(filter).length) {
+            ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', filter);
         }
 
         return ordersField
