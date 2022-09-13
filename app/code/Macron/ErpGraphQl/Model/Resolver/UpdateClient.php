@@ -63,6 +63,7 @@ class UpdateClient implements ResolverInterface
 
         $collection = $this->clientsCollection
             ->create($customerId)
+            ->joinTables()
             ->addFieldToFilter('entity_id', $clientId);
 
         if (count($collection->getData()) === 0) {

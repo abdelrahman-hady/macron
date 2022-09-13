@@ -8,7 +8,7 @@ type Query {
 
     client (
         client_id: Int!
-    ): ClientType
+    ): Client
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
 
@@ -23,43 +23,50 @@ type Query {
 type Mutation {
     deleteClient(
         client_id: Int!
-    ): ClientType
+    ): Client
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
     @doc(description: "Delete client by id")
 
     createClient(
         client: CreateClientInput!
-    ): ClientType
+    ): Client
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
     @doc(description: "Create a new client")
 
     updateClient(
         client: UpdateClientInput!
-    ): ClientType
+    ): Client
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
     @doc(description: "Update client")
 }
 
 type Clients {
-    items: [ClientType]
+    items: [Client]
     page_info: SearchResultPageInfo
 }
 
-type ClientType {
+type Client {
     entity_id: Int
     company_name: String
     address: String
     vat_number: Int
-    contract_expiracy_date: String
+    date_id: Int
+    date: String
+    affiliation_id: Int
     affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
+    sport_id: Int
+    sport: String
+    category: String
+    primary_color_id: Int
+    primary_color: String
+    secondary_color_id: Int
+    secondary_color: String
+    current_brand_id: Int
     current_brand: String
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
+    distance: String
     contact_person: String
     mobile: String
     email: String
@@ -79,16 +86,16 @@ input CreateClientInput {
     company_name: String!
     address: String
     vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
+    date_id: Int
+    affiliation_id: Int
+    sport_id: Int
+    category: String
+    primary_color_id: Int
+    secondary_color_id: Int
+    current_brand_id: Int
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
     contact_person: String
     mobile: String
     email: String
@@ -99,16 +106,17 @@ input UpdateClientInput {
     company_name: String!
     address: String
     vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
+    date_id: Int
+    date: String
+    affiliation_id: Int
+    sport_id: Int
+    category: String
+    primary_color_id: Int
+    secondary_color_id: Int
+    current_brand_id: Int
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
     contact_person: String
     mobile: String
     email: String
