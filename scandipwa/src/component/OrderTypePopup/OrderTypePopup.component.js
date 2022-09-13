@@ -64,7 +64,7 @@ export class OrderTypePopupComponent extends PureComponent {
         if (companies.partnerCompanies) {
             options = companies.partnerCompanies.map((company) => (
                 {
-                    value: company.companyId,
+                    value: company.companyName ? company.companyName : '',
                     label: company.companyName
                 }
             ));
