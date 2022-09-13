@@ -129,7 +129,7 @@ class CreateClientOptions implements DataPatchInterface
         ];
         $affiliationCollection = $this->affiliationFactory->create();
         foreach ($affiliations as $data) {
-            $affiliationCollection->getNewEmptyItem()->setData(['affiliation' => $data, 'store_id' => $store_id])->save();
+            $affiliationCollection->getNewEmptyItem()->setData(['label' => $data, 'store_id' => $store_id])->save();
         }
 
         $dates = [
@@ -150,7 +150,7 @@ class CreateClientOptions implements DataPatchInterface
         ];
         $dateCollection = $this->dateFactory->create();
         foreach ($dates as $data) {
-            $dateCollection->getNewEmptyItem()->setData(['date' => $data, 'store_id' => $store_id])->save();
+            $dateCollection->getNewEmptyItem()->setData(['label' => $data, 'store_id' => $store_id])->save();
         }
 
         $currentBrands = [
@@ -240,7 +240,7 @@ class CreateClientOptions implements DataPatchInterface
         ];
         $currentBrandCollection = $this->currentBrandFactory->create();
         foreach ($currentBrands as $data) {
-            $currentBrandCollection->getNewEmptyItem()->setData(['current_brand' => $data, 'store_id' => $store_id])->save();
+            $currentBrandCollection->getNewEmptyItem()->setData(['label' => $data, 'store_id' => $store_id])->save();
         }
 
         $sports = [
@@ -290,7 +290,7 @@ class CreateClientOptions implements DataPatchInterface
         ];
         $sportCollection = $this->sportFactory->create();
         foreach ($sports as $data) {
-            $sportCollection->getNewEmptyItem()->setData(['sport' => $data, 'store_id' => $store_id])->save();
+            $sportCollection->getNewEmptyItem()->setData(['label' => $data, 'store_id' => $store_id])->save();
         }
 
         $colors = [
@@ -321,13 +321,13 @@ class CreateClientOptions implements DataPatchInterface
         ];
         $colorCollection = $this->colorFactory->create();
         foreach ($colors as $data) {
-            $colorCollection->getNewEmptyItem()->setData(['color' => $data, 'store_id' => $store_id])->save();
+            $colorCollection->getNewEmptyItem()->setData(['label' => $data, 'store_id' => $store_id])->save();
         }
 
         $distances = ['VICINO', 'LONTANO'];
         $distanceCollection = $this->distanceFactory->create();
         foreach ($distances as $data) {
-            $distanceCollection->getNewEmptyItem()->setData(['distance' => $data, 'store_id' => $store_id])->save();
+            $distanceCollection->getNewEmptyItem()->setData(['label' => $data, 'store_id' => $store_id])->save();
         }
     }
 

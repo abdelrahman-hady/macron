@@ -125,7 +125,7 @@
 
     <table name="erp_affiliation" resource="default" engine="innodb" comment="Affiliations">
         <column xsi:type="int" name="id" identity="true" nullable="false"/>
-        <column xsi:type="text" name="affiliation"/>
+        <column xsi:type="text" name="label"/>
         <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
@@ -136,7 +136,7 @@
 
     <table name="erp_contract_expiracy_date" resource="default" engine="innodb" comment="Contract Expiracy Dates">
         <column xsi:type="int" name="id" identity="true" nullable="false"/>
-        <column xsi:type="text" name="date"/>
+        <column xsi:type="text" name="label"/>
         <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
@@ -147,7 +147,7 @@
 
     <table name="erp_current_brand" resource="default" engine="innodb" comment="Current brands">
         <column xsi:type="int" name="id" identity="true" nullable="false"/>
-        <column xsi:type="text" name="current_brand"/>
+        <column xsi:type="text" name="label"/>
         <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
@@ -158,7 +158,7 @@
 
     <table name="erp_sport" resource="default" engine="innodb" comment="Sport types">
         <column xsi:type="int" name="id" identity="true" nullable="false"/>
-        <column xsi:type="text" name="sport"/>
+        <column xsi:type="text" name="label"/>
         <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
@@ -169,7 +169,7 @@
 
     <table name="erp_color" resource="default" engine="innodb" comment="Primary colors">
         <column xsi:type="int" name="id" identity="true" nullable="false"/>
-        <column xsi:type="text" name="color"/>
+        <column xsi:type="text" name="label"/>
         <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
@@ -180,7 +180,7 @@
 
     <table name="erp_distance" resource="default" engine="innodb" comment="Primary colors">
         <column xsi:type="int" name="id" identity="true" nullable="false"/>
-        <column xsi:type="text" name="distance"/>
+        <column xsi:type="text" name="label"/>
         <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>

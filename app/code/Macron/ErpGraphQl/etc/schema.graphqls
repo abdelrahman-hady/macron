@@ -18,6 +18,10 @@ type Query {
     ): [Shipment]
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
     @doc(description: "Get shipments list")
+
+    clientOptions: ClientOptions
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\ClientOptions")
+    @doc(description: "Get all client options")
 }
 
 type Mutation {
@@ -70,6 +74,7 @@ type Client {
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
 }
 
 type Shipment {
@@ -99,6 +104,7 @@ input CreateClientInput {
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
 }
 
 input UpdateClientInput {
@@ -120,4 +126,19 @@ input UpdateClientInput {
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
+}
+
+type ClientOptions {
+    affiliations: [Option]
+    current_brands: [Option]
+    dates: [Option]
+    sports: [Option]
+    colors: [Option]
+    distances: [Option]
+}
+
+type Option {
+    id: Int
+    label: String
 }

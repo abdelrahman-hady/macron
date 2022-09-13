@@ -44,25 +44,56 @@ export class ClientQuery {
             .addFieldList(this._getClientFields());
     }
 
+    getClientOptionsQuery() {
+        return new Field('clientOptions')
+            .addFieldList(this._getOptionsField());
+    }
+
+    _getOptionsField() {
+        return [
+            new Field('affiliations').addFieldList(this._getOptionField()),
+            new Field('current_brands').addFieldList(this._getOptionField()),
+            new Field('dates').addFieldList(this._getOptionField()),
+            new Field('sports').addFieldList(this._getOptionField()),
+            new Field('colors').addFieldList(this._getOptionField()),
+            new Field('distances').addFieldList(this._getOptionField())
+        ];
+    }
+
+    _getOptionField() {
+        return [
+            'id',
+            'label'
+        ];
+    }
+
     _getClientFields() {
         return [
             'entity_id',
-            'address',
-            'affiliation',
-            'category',
             'company_name',
-            'coni_id',
-            'contact_person',
-            'contract_expiracy_date',
-            'current_brand',
-            'distance',
-            'email',
-            'membership_no',
-            'mobile',
-            'primary_color',
-            'secondary_color',
+            'address',
+            'vat_number',
+            'date_id',
+            'date',
+            'affiliation_id',
+            'affiliation',
+            'sport_id',
             'sport',
-            'vat_number'
+            'category',
+            'primary_color_id',
+            'primary_color',
+            'secondary_color_id',
+            'secondary_color',
+            'current_brand_id',
+            'current_brand',
+            'coni_id',
+            'membership_no',
+            'distance_id',
+            'distance',
+            'contact_person',
+            'mobile',
+            'email',
+            'is_contract_signed'
         ];
     }
 
