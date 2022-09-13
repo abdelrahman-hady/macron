@@ -75,7 +75,7 @@
             <column name="address"/>
             <column name="contact_person"/>
             <column name="mobile"/>
-            <column name="email"/>
+            <column name="category"/>
         </index>
     </table>
 
@@ -132,6 +132,9 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="AFFILIATION_STORE_ID" table="erp_affiliation" column="store_id"
                     referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_AFFILIATION_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 
     <table name="erp_contract_expiracy_date" resource="default" engine="innodb" comment="Contract Expiracy Dates">
@@ -143,6 +146,9 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="DATE_STORE_ID" table="erp_contract_expiracy_date" column="store_id"
                     referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_DATE_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 
     <table name="erp_current_brand" resource="default" engine="innodb" comment="Current brands">
@@ -154,6 +160,9 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="CURRENT_BRAND_STORE_ID" table="erp_current_brand" column="store_id"
                     referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_CURRENT_BRAND_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 
     <table name="erp_sport" resource="default" engine="innodb" comment="Sport types">
@@ -165,6 +174,9 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="SPORT_STORE_ID" table="erp_sport" column="store_id"
                     referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_SPORT_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 
     <table name="erp_color" resource="default" engine="innodb" comment="Primary colors">
@@ -176,6 +188,9 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="COLOR_STORE_ID" table="erp_color" column="store_id"
                     referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_COLOR_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 
     <table name="erp_distance" resource="default" engine="innodb" comment="Primary colors">
@@ -187,5 +202,8 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="DISTANCE_STORE_ID" table="erp_distance" column="store_id"
                     referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_DISTANCE_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 </schema>

@@ -60,7 +60,6 @@ class Client implements ResolverInterface
 
         $clients = $this->clientsCollection
             ->create($customerId)
-            ->joinTables()
             ->addFieldToFilter('entity_id', $clientId)
             ->getData();
 

@@ -62,7 +62,6 @@ class DeleteClient implements ResolverInterface
 
         $collection = $this->clientsCollection
             ->create($customerId)
-            ->joinTables()
             ->addFieldToFilter('entity_id', $clientId);
         $clients = $collection->getData();
 

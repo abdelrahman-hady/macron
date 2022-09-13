@@ -60,7 +60,6 @@ class Clients implements ResolverInterface
 
         $collection = $this->clientsCollection
             ->create($customerId)
-            ->joinTables()
             ->setPageSize($pageSize)
             ->setCurPage($currentPage);
 

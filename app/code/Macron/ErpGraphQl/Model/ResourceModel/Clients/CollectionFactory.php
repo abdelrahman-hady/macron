@@ -55,6 +55,8 @@ class CollectionFactory implements CollectionFactoryInterface
             $collection->addFieldToFilter('customer_id', $customerId);
         }
 
+        $collection->joinTables();
+
         return $collection;
     }
 }
