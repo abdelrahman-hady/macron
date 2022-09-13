@@ -72,7 +72,8 @@ type Shipment {
     tracking_number: String,
     date: String,
     customer_name: String,
-    address: String
+    address: String,
+    packing_list_link: String
 }
 
 input CreateClientInput {

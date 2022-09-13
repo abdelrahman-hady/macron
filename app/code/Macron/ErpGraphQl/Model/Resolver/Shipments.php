@@ -62,6 +62,7 @@ class Shipments implements ResolverInterface
             ->create($customerId)
             ->setPageSize($pageSize)
             ->setCurPage($currentPage)
+            ->setOrder('entity_id', 'DESC')
             ->getData();
     }
 }

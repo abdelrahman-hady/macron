@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
+ * @author    Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -18,6 +19,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
 import MyAccountOrder from 'Component/MyAccountOrder';
+import ShipmentsTable from 'Component/ShipmentsTable';
 import NoMatch from 'Route/NoMatch';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
@@ -70,6 +72,10 @@ export class MyAccountComponent extends SourceMyAccount {
         [ACCOUNT_INFORMATION]: MyAccountInformation
     };
 
+    renderUpcomingShipmentsTable() {
+        return <ShipmentsTable isCompact />;
+    }
+
     renderContent() {
         const {
             activeTab,
@@ -98,12 +104,12 @@ export class MyAccountComponent extends SourceMyAccount {
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
-
                 <div
                   block="MyAccount"
                   elem="TabContent"
                   mods={ { activeTab } }
                 >
+                     { this.renderUpcomingShipmentsTable() }
                     <h2 block="MyAccount" elem="Heading">
                         { title || tabName }
                         { this.renderSubHeading() }
