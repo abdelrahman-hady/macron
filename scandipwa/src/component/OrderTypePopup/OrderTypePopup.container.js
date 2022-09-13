@@ -72,10 +72,10 @@ export class OrderTypePopupContainer extends PureComponent {
 
     containerProps = () => {
         const { companies } = this.state;
-        const { hideActiveOverlay } = this.props;
+        const { hideActiveOverlay, selectedCustomer } = this.props;
 
         return {
-            companies, hideActiveOverlay
+            companies, hideActiveOverlay, selectedCustomer
         };
     };
 

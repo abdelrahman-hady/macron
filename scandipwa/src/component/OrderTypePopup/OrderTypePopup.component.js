@@ -28,7 +28,8 @@ export class OrderTypePopupComponent extends PureComponent {
         onSubmit: PropTypes.func.isRequired,
         companies: PropTypes.objectOf.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        onConfirm: PropTypes.func.isRequired
+        onConfirm: PropTypes.func.isRequired,
+        selectedCustomer: PropTypes.string.isRequired
     };
 
     renderFirstStep() {
@@ -61,7 +62,9 @@ export class OrderTypePopupComponent extends PureComponent {
     }
 
     renderCustomerOrderStep() {
-        const { onGoBack, onSubmit, companies } = this.props;
+        const {
+            onGoBack, onSubmit, companies, selectedCustomer
+        } = this.props;
 
         // eslint-disable-next-line fp/no-let
         let options = [];
@@ -95,6 +98,7 @@ export class OrderTypePopupComponent extends PureComponent {
                           attr={ {
                               id: 'CompanyNames',
                               name: 'CompanyNames',
+                              defaultValue: selectedCustomer,
                               noPlaceholder: true
                           } }
                           label={ <b>{ __('Select the customer') }</b> }
