@@ -53,30 +53,24 @@ export class OrderQuery extends SourceOrderQuery {
             orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions: { dateFrom, dateTo } = {}
         } = options || {};
         const ordersField = new Field('orders');
+        const filter = {};
 
         if (orderId !== undefined ? orderId.includes('sap') : null) {
-        // 'sap' might have to be replaced with something else when real sap_order_id format will be known.
-            ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { sap_order_id: { eq: orderId } })
-                .addFieldList(this._getOrdersFields(true));
-        }
-
-        if (orderId) {
-            ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
-                .addFieldList(this._getOrdersFields(true));
+            // 'sap' might have to be replaced with something else when real sap_order_id format will be known.
+            filter.sap_order_id = { eq: orderId };
         }
 
         if (dateFrom) {
-            ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { created_at: { gteq: dateFrom } })
-                .addFieldList(this._getOrdersFields(false));
+            filter.created_at = { ...filter.created_at, gteq: dateFrom };
         }
 
         if (dateTo) {
+            filter.created_at = { ...filter.created_at, lteq: dateTo };
+        }
+
+        if (Object.keys(filter).length) {
             ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { created_at: { lteq: dateTo } })
-                .addFieldList(this._getOrdersFields(false));
+                .addArgument('filter', 'CustomerOrdersFilterInput', filter);
         }
 
         return ordersField
