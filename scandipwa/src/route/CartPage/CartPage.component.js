@@ -1,13 +1,16 @@
 /*
  * @category  Macron
  * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @author    Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
 import PropTypes from 'prop-types';
 
+import CartItem from 'Component/CartItem';
 import ClientDetails from 'Component/ClientDetails';
+import Loader from 'Component/Loader';
 import Popup from 'Component/Popup';
 import {
     CartPage as SourceCartPage
@@ -50,6 +53,54 @@ export class CartPageComponent extends SourceCartPage {
                     { __('Yes, start a new order') }
                 </button>
             </div>
+        );
+    }
+
+    renderCartItems() {
+        const {
+            totals: {
+                items,
+                quote_currency_code
+            },
+            onCartItemLoading,
+            isInitialLoad
+        } = this.props;
+
+        if (!items || isInitialLoad) {
+            return (
+                <div block="CartPage" elem="InitialLoaderContainer">
+                    <Loader isLoading />
+                </div>
+            );
+        }
+
+        if (!items.length) {
+            return (
+                <p block="CartPage" elem="Empty">{ __('Your cart is empty, select products to create an order.') }</p>
+            );
+        }
+
+        return (
+            <>
+                <p block="CartPage" elem="TableHead" aria-hidden>
+                    <span>{ __('item') }</span>
+                    <span>{ __('quantity') }</span>
+                    <span>{ __('subtotal') }</span>
+                </p>
+                <div block="CartPage" elem="Items" aria-label="List of items in cart">
+                    { items.map((item) => (
+                        <CartItem
+                          key={ item.item_id }
+                          item={ item }
+                          currency_code={ quote_currency_code }
+                          onCartItemLoading={ onCartItemLoading }
+                          showLoader
+                          isEditing
+                          updateCrossSellsOnRemove
+                        />
+                    )) }
+                </div>
+            </>
         );
     }
 
