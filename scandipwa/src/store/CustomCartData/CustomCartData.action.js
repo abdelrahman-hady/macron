@@ -14,8 +14,8 @@ export const updateNotes = (payload) => ({
     payload
 });
 
-/** @namespace Scandipwa/Store/CustomCartData/Action/updateOrderType */
-export const updateOrderType = (orderType) => ({
+/** @namespace Scandipwa/Store/CustomCartData/Action/updateTypeAndCustomerSelect */
+export const updateTypeAndCustomerSelect = (payload) => ({
     type: UPDATE_ORDER_TYPE,
-    orderType
+    payload
 });

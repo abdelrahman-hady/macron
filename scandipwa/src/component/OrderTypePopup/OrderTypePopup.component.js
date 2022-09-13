@@ -8,53 +8,112 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Field from 'Component/Field';
+import FIELD_TYPE from 'Component/Field/Field.config';
+import Form from 'Component/Form';
 import Popup from 'Component/Popup';
 
-import { ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT } from './OrderTypePopup.config';
+import { ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP } from './OrderTypePopup.config';
 
 import './OrderTypePopup.style';
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Component */
 export class OrderTypePopupComponent extends PureComponent {
     static propTypes = {
-        handleClick: PropTypes.func.isRequired
+        handleCustomerClick: PropTypes.func.isRequired,
+        handleReplenishmentClick: PropTypes.func.isRequired,
+        onGoBack: PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired,
+        companies: PropTypes.objectOf.isRequired
     };
 
-    renderContent() {
-        const { handleClick } = this.props;
+    renderFirstStep() {
+        const { handleCustomerClick, handleReplenishmentClick } = this.props;
         return (
-            <div block="Buttons">
-                <h3>{ __('Choose the order type') }</h3>
+            <Popup
+              id={ ORDER_TYPE_POPUP }
+              clickOutside={ false }
+              mix={ { block: 'OrderTypePopup' } }
+            >
+                <div block="Wrapper">
+                    <h3>{ __('Choose the order type') }</h3>
+                    <button
+                      block="Button"
+                      mods={ { isHollow: true } }
+                      onClick={ handleCustomerClick }
+                    >
+                        { __('Customer order') }
+                    </button>
+                    <button
+                      block="Button"
+                      mods={ { isHollow: true } }
+                      onClick={ handleReplenishmentClick }
+                    >
+                        { __('Replenishment order') }
+                    </button>
+                </div>
+            </Popup>
+        );
+    }
+
+    renderCustomerOrderStep() {
+        const { onGoBack, onSubmit, companies } = this.props;
+
+        // eslint-disable-next-line fp/no-let
+        let options = [];
+        if (companies.partnerCompanies) {
+            options = companies.partnerCompanies.map((company) => (
+                {
+                    value: company.companyId,
+                    label: company.companyName
+                }
+            ));
+        }
+
+        return (
+            <Popup
+              id={ ORDER_CHOOSE_CUSTOMER_POPUP }
+              clickOutside={ false }
+              mix={ { block: 'OrderChooseCustomerPopup' } }
+            >
                 <button
                   block="Button"
+                  elem="GoBack"
                   mods={ { isHollow: true } }
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onClick={ () => handleClick(TYPE_CUSTOMER) }
+                  onClick={ onGoBack }
                 >
-                    { __('Customer order') }
+                    { __('< Go back') }
                 </button>
-                <button
-                  block="Button"
-                  mods={ { isHollow: true } }
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onClick={ () => handleClick(TYPE_REPLENISHMENT) }
-                >
-                    { __('Replenishment order') }
-                </button>
-            </div>
+                <Form onSubmit={ onSubmit }>
+                    <div block="Wrapper">
+                        <Field
+                          type={ FIELD_TYPE.select }
+                          attr={ {
+                              id: 'CompanyNames',
+                              name: 'CompanyNames',
+                              noPlaceholder: true
+                          } }
+                          label={ <b>{ __('Select the customer') }</b> }
+                          mix={ { block: 'OrderChooseCustomerPopup', elem: 'SelectCustomer' } }
+                          options={ options }
+                        />
+                        <button
+                          block="Button"
+                          type={ FIELD_TYPE.submit }
+                        >
+                            { __('save') }
+                        </button>
+                    </div>
+                </Form>
+            </Popup>
         );
     }
 
     render() {
         return (
             <div block="OrderTypePopup">
-                <Popup
-                  id={ ORDER_TYPE_POPUP }
-                  clickOutside={ false }
-                  mix={ { block: 'OrderTypePopup' } }
-                >
-                { this.renderContent() }
-                </Popup>
+                { this.renderFirstStep() }
+                { this.renderCustomerOrderStep() }
             </div>
         );
     }

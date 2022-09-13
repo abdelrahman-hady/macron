@@ -10,7 +10,6 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="customer_entity">
         <column xsi:type="text" name="business_partner_id" comment="Business partner ID"/>
-        <column xsi:type="text" name="parent_business_partner_id" comment="Parent Business parner ID"/>
         <column xsi:type="text" name="phone_number" comment="Phone number"/>
         <column xsi:type="text" name="type" comment="Type"/>
         <column xsi:type="text" name="status" comment="Status"/>
