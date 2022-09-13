@@ -103,7 +103,12 @@ export class MyClientsPageContainer extends PureComponent {
         }
 
         if (clientsPerPageList.length > 0 && !clientsPerPageList.includes(clientsPerPage)) {
-            this.setState({ clientsPerPage: clientsPerPageList[0] });
+            if (clientsPerPageList.includes(CLIENTS_PER_PAGE)) {
+                this.setState({ clientsPerPage: CLIENTS_PER_PAGE });
+            } else {
+                this.setState({ clientsPerPage: clientsPerPageList[0] });
+            }
+
             return;
         }
 
