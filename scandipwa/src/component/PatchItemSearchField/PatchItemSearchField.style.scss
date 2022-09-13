@@ -1,0 +1,12 @@
+.SearchField {
+    background-color: aqua;
+
+    &_isActive {
+        .SearchOverlay {
+            &-Results {
+                width: 500px;
+            }
+        }
+    }
+}
+

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
   * @category    Macron
   * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
@@ -10,17 +11,34 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-    mapDispatchToProps
-} from 'SourceComponent/Product/Product.container';
-import { mapStateToProps, ProductActionsContainer as SourceProductActionsContainer }
-from 'SourceComponent/ProductActions/ProductActions.container';
+    mapDispatchToProps as sourceMapDispatchToProps
+} from 'Component/Product/Product.container';
+import { MENU, SEARCH } from 'SourceComponent/Header/Header.config';
+import {
+    mapStateToProps as sourceMapStateToProps,
+    ProductActionsContainer as SourceProductActionsContainer
+} from 'SourceComponent/ProductActions/ProductActions.container';
+import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
+import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { appendWithStoreCode } from 'Util/Url';
 
 import { data as patchData } from './patch_sample_data';
 
-export {
-    mapStateToProps,
-    mapDispatchToProps
-};
+/** @namespace Scandipwa/Component/ProductActions/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    navigationState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState
+});
+
+/** @namespace Scandipwa/Component/ProductActions/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
+    showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+    setNavigationState: (stateName) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, stateName)),
+    goToPreviousNavigationState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE))
+});
 
 /** @namespace Scandipwa/Component/ProductActions/Container */
 export class ProductActionsContainer extends SourceProductActionsContainer {
@@ -28,6 +46,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         ...this.state,
         isAddPatchDropOpen: false,
         patchData,
+        searchCriteria: '',
         patchList: [{
             id: nanoid(),
             Sku: '-',
@@ -46,7 +65,10 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         patchSelectionChange: PropTypes.func.isRequired,
         patchInputOnChange: PropTypes.func.isRequired,
         deletePatchRow: PropTypes.func.isRequired,
-        updatePatchQuantityButton: PropTypes.func.isRequired
+        updatePatchQuantityButton: PropTypes.func.isRequired,
+        goToPreviousNavigationState: PropTypes.func.isRequired,
+        showOverlay: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -56,21 +78,77 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         patchSelectionChange: this.patchSelectionChange.bind(this),
         deletePatchRow: this.deletePatchRow.bind(this),
         updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
-        patchInputOnChange: this.patchInputOnChange.bind(this)
+        patchInputOnChange: this.patchInputOnChange.bind(this),
+        onSearchBarChange: this.onSearchBarChange.bind(this),
+        onSearchBarFocus: this.onSearchBarFocus.bind(this),
+        onSearchOutsideClick: this.onSearchOutsideClick.bind(this)
     };
 
     containerProps() {
         const {
+            activeOverlay,
+            navigationState
+        } = this.props;
+
+        const {
             isAddPatchDropOpen,
-            patchList
+            patchList,
+            searchCriteria
         } = this.state;
 
         return {
             ...super.containerProps(),
             isAddPatchDropOpen,
             patchData,
-            patchList
+            patchList,
+            searchCriteria,
+            activeOverlay,
+            navigationState
         };
+    }
+
+    onSearchBarChange({ target: { value: searchCriteria } }) {
+        this.setState({ searchCriteria });
+        console.log('ccheck i got clicked', searchCriteria);
+    }
+
+    onSearchBarFocus() {
+        const {
+            setNavigationState,
+            goToPreviousNavigationState,
+            showOverlay,
+            navigationState: { name },
+            device
+        } = this.props;
+
+        if (
+            (!device.isMobile && name === SEARCH)
+            || (device.isMobile && name !== MENU)
+        ) {
+            return;
+        }
+
+        showOverlay(SEARCH);
+
+        setNavigationState({
+            name: SEARCH,
+            onBackClick: () => {
+                showOverlay(MENU);
+                goToPreviousNavigationState();
+            }
+        });
+    }
+
+    onSearchOutsideClick() {
+        const {
+            goToPreviousNavigationState,
+            navigationState: { name }
+        } = this.props;
+
+        if (name === SEARCH) {
+            this.hideSearchOverlay();
+            goToPreviousNavigationState();
+        }
     }
 
     addAnotherPatch() {
@@ -184,6 +262,29 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     toggleDropDown() {
         const { isAddPatchDropOpen } = this.state;
         this.setState({ isAddPatchDropOpen: !isAddPatchDropOpen });
+    }
+
+    getNavigationState() {
+        const { navigationState } = this.props;
+
+        const { pathname } = location;
+        const { state: historyState } = window.history || {};
+        const { state = {} } = historyState || {};
+
+        // TODO: something here breaks /<STORE CODE> from being opened, and / when, the url-based stores are enabled.
+
+        const activeRoute = Object.keys(this.routeMap)
+            .find((route) => (
+                route !== '/'
+                || pathname === appendWithStoreCode('/')
+                || pathname === '/'
+            ) && pathname.includes(route));
+
+        if (state.category || state.product || state.page || state.popupOpen) { // keep state if it category is in state
+            return navigationState;
+        }
+
+        return this.routeMap[activeRoute] || this.default_state;
     }
 }
 

@@ -12,8 +12,13 @@ import ChevronIcon from '@scandipwa/scandipwa/src/component/ChevronIcon';
 import CloseIcon from '@scandipwa/scandipwa/src/component/CloseIcon';
 
 import PRODUCT_TYPE from 'Component/Product/Product.config';
+import {
+    SEARCH
+} from 'SourceComponent/Header/Header.config';
 import { ProductActions as SourceProductActions } from 'SourceComponent/ProductActions/ProductActions.component';
 import { isCrawler, isSSR } from 'Util/Browser';
+
+import PatchItemSearchField from '../PatchItemSearchField/PatchItemSearchField.component';
 
 import './ProductActions.extension.style.scss';
 /** @namespace Scandipwa/Component/ProductActions/Component */
@@ -66,6 +71,40 @@ export class ProductActionsComponent extends SourceProductActions {
                     </option>
                 )
         )));
+    }
+
+    renderSearchField(isVisible = true) {
+        const {
+            searchCriteria,
+            onSearchOutsideClick,
+            onSearchBarFocus,
+            onSearchBarChange,
+            onClearSearchButtonClick,
+            navigationState: { name },
+            isCheckout,
+            hideActiveOverlay
+        } = this.props;
+
+        const isPatchSearch = true;
+
+        if (isCheckout) {
+            return null;
+        }
+
+        return (
+            <PatchItemSearchField
+              key="search"
+              searchCriteria={ searchCriteria }
+              onSearchOutsideClick={ onSearchOutsideClick }
+              onSearchBarFocus={ onSearchBarFocus }
+              onSearchBarChange={ onSearchBarChange }
+              onClearSearchButtonClick={ onClearSearchButtonClick }
+              isVisible={ isVisible }
+              isActive={ name === SEARCH }
+              hideActiveOverlay={ hideActiveOverlay }
+              isPatchSearch={ isPatchSearch }
+            />
+        );
     }
 
     renderPatchRow(patch) {
@@ -283,6 +322,7 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderProductAlerts() }
                 { this.renderPriceWithGlobalSchema() }
                 { this.renderAddToCartActionBlock() }
+                { this.renderSearchField() }
                 { this.renderAddPatchBlock() }
                 { this.renderAddToCartButton() }
             </>
