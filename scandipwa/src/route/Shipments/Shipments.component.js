@@ -2,7 +2,7 @@
  * @category  Macron
  * @author    Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
- * @copyright  Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
 /* eslint-disable react/jsx-no-bind */
@@ -14,15 +14,21 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import Field from 'Component/Field';
+import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
+import Pagination from 'Component/Pagination';
 import ShipmentsTable from 'Component/ShipmentsTable';
-
-import './Shipments.style';
+import { ShipmentType } from 'Type/Shipment.type';
 
 /** @namespace Scandipwa/Route/Shipments/Component */
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
-        isLoading: PropTypes.bool
+        isLoading: PropTypes.bool,
+        shipments: ShipmentType.isRequired,
+        shipmentsPerPageList: PropTypes.string.isRequired,
+        shipmentsPerPage: PropTypes.number.isRequired,
+        onShipmentPerPageChange: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -39,11 +45,56 @@ export class ShipmentsComponent extends PureComponent {
         );
     }
 
+    renderShipmentsPerPage() {
+        const { shipmentsPerPageList, shipmentsPerPage, onShipmentPerPageChange } = this.props;
+
+        const shipmentsPerPageOptions = [];
+
+        if (shipmentsPerPageList) {
+            shipmentsPerPageList.split(',').forEach((value) => {
+                const perPage = +value;
+                shipmentsPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
+            });
+        } else {
+            shipmentsPerPageOptions.push({ label: shipmentsPerPage, value: shipmentsPerPage });
+        }
+
+        return (
+            <div block="ShipmentsTable" elem="PerPageDropdown">
+                <Field
+                  type={ FIELD_TYPE.select }
+                  attr={ {
+                      id: 'shipments-per-page-dropdown',
+                      name: 'shipments-per-page-dropdown',
+                      value: shipmentsPerPage,
+                      noPlaceholder: true
+                  } }
+                  events={ {
+                      onChange: onShipmentPerPageChange
+                  } }
+                  options={ shipmentsPerPageOptions }
+                />
+                <span>{ __('per page') }</span>
+            </div>
+        );
+    }
+
+    renderPagination() {
+        const { isLoading, shipments: { pageInfo = { total_pages: 1 } } } = this.props;
+        const { total_pages } = pageInfo;
+
+        return (
+             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
+        );
+    }
+
     renderContent() {
+        const { isLoading, shipments } = this.props;
+
         return (
             <ContentWrapper label="Shipments">
                 { this.renderTitle() }
-                <ShipmentsTable />
+                <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
             </ContentWrapper>
         );
     }
@@ -54,7 +105,11 @@ export class ShipmentsComponent extends PureComponent {
         return (
             <main block="Shipments">
                 <Loader isLoading={ isLoading } />
+                { this.renderShipmentsPerPage() }
+                { this.renderPagination() }
                 { this.renderContent() }
+                { this.renderShipmentsPerPage() }
+                { this.renderPagination() }
             </main>
         );
     }

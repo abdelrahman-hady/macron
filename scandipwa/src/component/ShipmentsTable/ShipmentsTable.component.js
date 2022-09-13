@@ -12,8 +12,6 @@ import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { ShipmentType } from 'Type/Shipment.type';
 
-import './ShipmentsTable.style';
-
 /** @namespace Scandipwa/Component/ShipmentsTable/Component */
 export class ShipmentsTableComponent extends PureComponent {
     static propTypes = {
@@ -48,6 +46,7 @@ export class ShipmentsTableComponent extends PureComponent {
 
     renderTableRow(data) {
         const {
+            entity_id,
             shipment_number,
             status,
             tracking_number,
@@ -57,7 +56,7 @@ export class ShipmentsTableComponent extends PureComponent {
         } = data;
 
         return (
-            <tr key={ tracking_number }>
+            <tr key={ entity_id }>
                 <td>{ shipment_number }</td>
                 <td>{ date }</td>
                 <td>{ customer_name }</td>
