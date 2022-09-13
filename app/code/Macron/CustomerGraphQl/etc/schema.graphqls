@@ -11,3 +11,8 @@ type partnerCompany {
     companyName: String,
     companyId: String
 }
+
+type Customer {
+    company_name: String
+    phone_number: String
+}
