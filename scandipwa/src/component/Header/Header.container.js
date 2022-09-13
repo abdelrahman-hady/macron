@@ -53,8 +53,9 @@ export class HeaderContainer extends SourceHeaderContainer {
         });
     }
 
+    // overridden to direct the user to a cart page instead of to open minicart
     onMinicartButtonClick() {
-        history.push('/cart');
+        history.push({ pathname: appendWithStoreCode('/cart') });
     }
 }
 
