@@ -11,7 +11,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
 import StoreSwitcher from 'Component/StoreSwitcher';
 import { LoginAccountComponent as SourceLoginAccountComponent } from
-    'SourceRoute/LoginAccount/LoginAccount.component';
+'SourceRoute/LoginAccount/LoginAccount.component';
 
 import './LoginAccount.override.style';
 

@@ -10,7 +10,7 @@ import FIELD_TYPE from 'Component/Field/Field.config';
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
 import { MyAccountSignIn as SourceMyAccountSignInComponent } from
-    'SourceComponent/MyAccountSignIn/MyAccountSignIn.component';
+'SourceComponent/MyAccountSignIn/MyAccountSignIn.component';
 import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
 
 import VisibilityIcon from '../VisibilityIcon/VisibilityIcon.component';
