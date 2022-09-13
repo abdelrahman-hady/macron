@@ -1,0 +1,4 @@
+type PriceRange @doc(description: "Contains the price range for a product. If the product has a single price, the minimum and maximum price will be the same."){
+    wholesale_price: ProductPrice! @doc(description: "The lowest possible price for the product.")
+    retail_price: ProductPrice @doc(description: "The highest possible price for the product.")
+}

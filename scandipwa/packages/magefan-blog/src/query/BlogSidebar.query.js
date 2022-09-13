@@ -27,7 +27,7 @@ export class BlogSidebarQuery {
         } = getStore().getState().ConfigReducer;
         const recentPostsProps = { pageSize: recentPostsPostsPerPage };
         const featuredPostsProps = {
-            pageSize: featuredPostsPostsIds.length,
+            pageSize: featuredPostsPostsIds?.length,
             filter:
             { post_id: { in: featuredPostsPostsIds } }
         };
