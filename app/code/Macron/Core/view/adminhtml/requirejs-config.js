@@ -9,7 +9,7 @@ var config = {
     config: {
         mixins: {
             'mage/validation': {
-                'Macron_XperPage/js/system/config/validator-rules-mixin': true
+                'Macron_Core/js/system/config/validator-rules-mixin': true
             }
         }
     }
