@@ -28,14 +28,15 @@ export class OrderTypePopupComponent extends PureComponent {
         onSubmit: PropTypes.func.isRequired,
         companies: PropTypes.objectOf.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        onConfirm: PropTypes.func.isRequired
+        onConfirm: PropTypes.func.isRequired,
+        addProductToCart: PropTypes.func.isRequired
     };
 
     renderFirstStep() {
-        const { handleCustomerClick, handleReplenishmentClick } = this.props;
+        const { handleCustomerClick, handleReplenishmentClick, addProductToCart } = this.props;
         return (
             <Popup
-              id={ ORDER_TYPE_POPUP }
+              id={ addProductToCart ? `${ORDER_TYPE_POPUP }addProductToCart` : ORDER_TYPE_POPUP }
               clickOutside={ false }
               mix={ { block: 'OrderTypePopup' } }
             >
@@ -61,7 +62,9 @@ export class OrderTypePopupComponent extends PureComponent {
     }
 
     renderCustomerOrderStep() {
-        const { onGoBack, onSubmit, companies } = this.props;
+        const {
+            onGoBack, onSubmit, companies, addProductToCart
+        } = this.props;
 
         // eslint-disable-next-line fp/no-let
         let options = [];
@@ -76,7 +79,7 @@ export class OrderTypePopupComponent extends PureComponent {
 
         return (
             <Popup
-              id={ ORDER_CHOOSE_CUSTOMER_POPUP }
+              id={ addProductToCart ? `${ORDER_CHOOSE_CUSTOMER_POPUP }addProductToCart` : ORDER_CHOOSE_CUSTOMER_POPUP }
               clickOutside={ false }
               mix={ { block: 'OrderChooseCustomerPopup' } }
             >

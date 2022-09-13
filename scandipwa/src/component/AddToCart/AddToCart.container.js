@@ -25,7 +25,7 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/AddToCart/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    showOrderTypePopup: (payload) => dispatch(showPopup(ORDER_TYPE_POPUP, payload))
+    showOrderTypePopup: (payload) => dispatch(showPopup(`${ORDER_TYPE_POPUP }addProductToCart`, payload))
 });
 
 /** @namespace Scandipwa/Component/AddToCart/Container */

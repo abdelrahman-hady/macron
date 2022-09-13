@@ -8,36 +8,40 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { ORDER_TYPE_POPUP } from 'Component/OrderTypePopup/OrderTypePopup.config';
 import {
     mapDispatchToProps as sourceMapDispatchToProps,
-    mapStateToProps,
+    mapStateToProps as sourceMapStateToProps,
     MenuContainer as SourceMenuContainer
 } from 'SourceComponent/Menu/Menu.container';
 import { showPopup } from 'Store/Popup/Popup.action';
+import { TotalsType } from 'Type/MiniCart.type';
 
-export {
-    mapStateToProps
-};
+/** @namespace Scandipwa/Component/Menu/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    cartTotals: state.CartReducer.cartTotals
+});
 
 /** @namespace Scandipwa/Component/Menu/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    showOrderTypePopup: (payload) => dispatch(showPopup(ORDER_TYPE_POPUP, payload))
+    showPopup: (type, payload) => dispatch(showPopup(type, payload))
 });
 
 /** @namespace Scandipwa/Component/Menu/Container */
 export class MenuContainer extends SourceMenuContainer {
     static propTypes = {
         ...super.propTypes,
-        showOrderTypePopup: PropTypes.func.isRequired
+        showPopup: PropTypes.func.isRequired,
+        cartTotals: TotalsType.isRequired
     };
 
     containerProps() {
-        const { showOrderTypePopup } = this.props;
+        const { showPopup, cartTotals } = this.props;
         return {
             ...super.containerProps(),
-            showOrderTypePopup
+            showPopup,
+            cartTotals
         };
     }
 }

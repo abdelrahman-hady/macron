@@ -72,21 +72,23 @@ export class OrderTypePopupContainer extends PureComponent {
 
     containerProps = () => {
         const { companies } = this.state;
-        const { hideActiveOverlay } = this.props;
+        const { hideActiveOverlay, addProductToCart } = this.props;
 
         return {
-            companies, hideActiveOverlay
+            companies, hideActiveOverlay, addProductToCart
         };
     };
 
     handleCustomerClick() {
-        const { showPopup } = this.props;
-        showPopup(ORDER_CHOOSE_CUSTOMER_POPUP);
+        const { showPopup, addProductToCart } = this.props;
+        const type = addProductToCart ? `${ORDER_CHOOSE_CUSTOMER_POPUP }addProductToCart` : ORDER_CHOOSE_CUSTOMER_POPUP;
+        showPopup(type);
     }
 
     onGoBack() {
-        const { showPopup } = this.props;
-        showPopup(ORDER_TYPE_POPUP);
+        const { showPopup, addProductToCart } = this.props;
+        const type = addProductToCart ? `${ORDER_TYPE_POPUP }addProductToCart` : ORDER_TYPE_POPUP;
+        showPopup(type);
     }
 
     onSubmit(_form, fields) {
