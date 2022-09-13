@@ -10,10 +10,7 @@ import { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
-import Pagination from 'Component/Pagination';
 import { ShipmentType } from 'Type/Shipment.type';
-
-import './ShipmentsTable.style';
 
 /** @namespace Scandipwa/Component/ShipmentsTable/Component */
 export class ShipmentsTableComponent extends PureComponent {
@@ -89,24 +86,13 @@ export class ShipmentsTableComponent extends PureComponent {
         );
     }
 
-    renderPagination() {
-        const { isLoading, shipments: { pageInfo = { total_pages: 1 } } } = this.props;
-        const { total_pages } = pageInfo;
-
-        return (
-             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
-        );
-    }
-
     render() {
         const { isLoading } = this.props;
 
         return (
             <div block="ShipmentsTable">
                 <Loader isLoading={ isLoading } />
-                { this.renderPagination() }
                 { this.renderTable() }
-                { this.renderPagination() }
             </div>
         );
     }

@@ -9,12 +9,17 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import ShipmentsQuery from 'Query/Shipment.query';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { LocationType } from 'Type/Router.type';
+import { scrollToTop } from 'Util/Browser';
+import BrowserDatabase from 'Util/BrowserDatabase';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
 
 import Shipments from './Shipments.component';
-import { SHIPMENT_URL } from './Shipments.config';
+import { SHIPMENT_URL, SHIPMENTS_PER_PAGE, SHIPMENTS_PER_PAGE_ITEM } from './Shipments.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -22,7 +27,8 @@ export const BreadcrumbsDispatcher = import(
 );
 
 /** @namespace Scandipwa/Route/Shipments/Container/mapStateToProps */
-export const mapStateToProps = (_state) => ({
+export const mapStateToProps = (state) => ({
+    shipmentsPerPageList: state.ConfigReducer.xperpage
 });
 
 /** @namespace Scandipwa/Route/Shipments/Container/mapDispatchToProps */
@@ -39,19 +45,90 @@ export const mapDispatchToProps = (dispatch) => ({
 /** @namespace Scandipwa/Route/Shipments/Container */
 export class ShipmentsContainer extends PureComponent {
     static propTypes = {
+        shipmentsPerPageList: PropTypes.string.isRequired,
         updateMeta: PropTypes.func.isRequired,
-        updateBreadcrumbs: PropTypes.func.isRequired
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        location: LocationType.isRequired,
+        showErrorNotification: PropTypes.func.isRequired
+    };
+
+    state = {
+        shipmentsPerPage: +(BrowserDatabase.getItem(SHIPMENTS_PER_PAGE_ITEM) ?? SHIPMENTS_PER_PAGE),
+        shipments: [],
+        isLoading: false
+    };
+
+    containerFunctions = {
+        onShipmentsPerPageChange: this.onShipmentsPerPageChange.bind(this)
     };
 
     componentDidMount() {
+        const { shipmentsPerPage } = this.state;
+
         this.updateMeta();
         this.updateBreadcrumbs();
+        this.requestShipments(this._getPageFromUrl(), shipmentsPerPage);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const {
+            shipmentsPerPage, shipments: {
+                page_info: {
+                    total_pages = 0
+                } = {}
+            }
+        } = this.state;
+        const { shipmentsPerPage: prevShipmentsPerPage } = prevState;
+        const { location: prevLocation } = prevProps;
+
+        const prevPage = this._getPageFromUrl(prevLocation);
+        const currentPage = this._getPageFromUrl();
+
+        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
+            const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
+            history.replace(`${SHIPMENT_URL}${pageParam}`);
+        }
+
+        if (currentPage !== prevPage || shipmentsPerPage !== prevShipmentsPerPage) {
+            this.requestShipments(currentPage, shipmentsPerPage);
+            scrollToTop();
+        }
     }
 
     __construct(props) {
         super.__construct(props, 'ShipmentsContainer');
 
         this.updateBreadcrumbs();
+    }
+
+    async requestShipments(page, pageSize) {
+        const { showErrorNotification } = this.props;
+
+        this.setState({ isLoading: true });
+
+        try {
+            const { shipments } = await fetchQuery(ShipmentsQuery.getShipmentsQuery({ page, pageSize }));
+
+            this.setState({ shipments, isLoading: false });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+            this.setState({ isLoading: false });
+        }
+    }
+
+    containerProps = () => {
+        const { shipmentsPerPageList } = this.props;
+        const { shipments, isLoading, shipmentsPerPage } = this.state;
+
+        return {
+            shipments, isLoading, shipmentsPerPageList, shipmentsPerPage
+        };
+    };
+
+    onShipmentsPerPageChange(shipmentsPerPage) {
+        BrowserDatabase.setItem(shipmentsPerPage, SHIPMENTS_PER_PAGE_ITEM);
+
+        this.setState({ shipmentsPerPage });
     }
 
     updateMeta() {
@@ -73,7 +150,10 @@ export class ShipmentsContainer extends PureComponent {
 
     render() {
         return (
-            <Shipments />
+            <Shipments
+              { ...this.containerFunctions }
+              { ...this.containerProps() }
+            />
         );
     }
 }
