@@ -22,12 +22,9 @@ import { setLoadingStatus } from 'Store/Order/Order.action';
 import { DeviceType } from 'Type/Device.type';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
-<<<<<<< HEAD
+import { transformListViewAllowedValues } from 'Util/Config';
 import { formatOrders } from 'Util/Orders';
 import { fetchQuery } from 'Util/Request';
-=======
-import { transformListViewAllowedValues } from 'Util/Config';
->>>>>>> origin/MCRB-327
 
 import { ORDERS_PER_PAGE, ORDERS_PER_PAGE_ITEM } from './MyAccountMyOrders.config';
 
@@ -39,12 +36,8 @@ export const OrderDispatcher = import(
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-<<<<<<< HEAD
-    ordersPerPageList: state.ConfigReducer.xperpage,
+    ordersPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage),
     device: state.ConfigReducer.device
-=======
-    ordersPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage)
->>>>>>> origin/MCRB-327
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
