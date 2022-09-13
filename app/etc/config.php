@@ -59,6 +59,10 @@ return [
         'Magento_CatalogImportExport' => 1,
         'Magento_CatalogImportExportStaging' => 1,
         'Magento_StoreGraphQl' => 1,
+        'Magefan_Community' => 1,
+        'Magefan_Blog' => 1,
+        'Magefan_BlogGraphQl' => 1,
+        'Magefan_WysiwygAdvanced' => 1,
         'Magento_CatalogInventoryGraphQl' => 1,
         'Magento_CatalogSearch' => 1,
         'Magento_CatalogPageBuilderAnalytics' => 1,
@@ -479,6 +483,7 @@ return [
         'ScandiPWA_UrlrewriteGraphQl' => 1,
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
+        'Scandiweb_MagefanBlog' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
         'Temando_ShippingRemover' => 1
     ],
