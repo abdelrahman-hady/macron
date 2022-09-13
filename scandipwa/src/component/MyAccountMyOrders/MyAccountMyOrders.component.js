@@ -26,7 +26,7 @@ import './MyAccountMyOrders.override.style';
 export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     static propTypes = {
         ...super.propTypes,
-        ordersPerPageList: PropTypes.string.isRequired,
+        ordersPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         ordersPerPage: PropTypes.number.isRequired,
         sortOptions: PropTypes.object.isRequired,
         statusOptions: PropTypes.array.isRequired,

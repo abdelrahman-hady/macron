@@ -22,8 +22,12 @@ import { setLoadingStatus } from 'Store/Order/Order.action';
 import { DeviceType } from 'Type/Device.type';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
+<<<<<<< HEAD
 import { formatOrders } from 'Util/Orders';
 import { fetchQuery } from 'Util/Request';
+=======
+import { transformListViewAllowedValues } from 'Util/Config';
+>>>>>>> origin/MCRB-327
 
 import { ORDERS_PER_PAGE, ORDERS_PER_PAGE_ITEM } from './MyAccountMyOrders.config';
 
@@ -35,8 +39,12 @@ export const OrderDispatcher = import(
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
+<<<<<<< HEAD
     ordersPerPageList: state.ConfigReducer.xperpage,
     device: state.ConfigReducer.device
+=======
+    ordersPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage)
+>>>>>>> origin/MCRB-327
 });
 
 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/mapDispatchToProps */
@@ -107,13 +115,18 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { getOrderList } = this.props;
+        const { getOrderList, ordersPerPageList } = this.props;
         const { sortOptions: { orderStatus }, ordersPerPage } = this.state;
         const { sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
+            this.setState({ ordersPerPage: ordersPerPageList[0] });
+            return;
+        }
 
         if (orderStatus !== prevOrderStatus || currentPage !== prevPage || ordersPerPage !== prevOrdersPerPage) {
             getOrderList(currentPage, ordersPerPage);
