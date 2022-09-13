@@ -1,7 +1,8 @@
 /*
- * @category Macron
+ * @category  Macron
  * @author    Shehab Mohsen <shehab.mohsen@scandiweb.com | info@scandiweb.com>
  * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @author    Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -19,9 +20,8 @@ import {
 } from 'SourceComponent/Header/Header.container';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { isSignedIn } from 'Util/Auth';
-import { appendWithStoreCode } from 'Util/Url';
 
-import { CHECKOUT_ACCOUNT } from './Header.config';
+import { CHECKOUT_ACCOUNT, CUSTOMER_ACCOUNT } from './Header.config';
 
 export {
     DEFAULT_HEADER_STATE
@@ -60,16 +60,21 @@ export class HeaderContainer extends SourceHeaderContainer {
         };
     }
 
-    // overridden to change the Account Button Path to my profile page instead of  account
     onMyAccountButtonClick() {
         const {
             showOverlay,
-            setNavigationState,
-            history
+            setNavigationState
         } = this.props;
 
         if (isSignedIn()) {
-            history.push({ pathname: appendWithStoreCode('my-profile') });
+            this.setState({ showMyAccountLogin: true }, () => {
+                showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
+                setNavigationState({
+                    name: CUSTOMER_ACCOUNT,
+                    title: __('Logged in'),
+                    onCloseClick: this.closeOverlay
+                });
+            });
 
             return;
         }
