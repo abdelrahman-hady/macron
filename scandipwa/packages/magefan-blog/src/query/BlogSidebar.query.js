@@ -10,7 +10,7 @@ import BlogCategories from './BlogCategories.query';
 import BlogPosts from './BlogPosts.query';
 import BlogTags from './BlogTags.query';
 
-/** @namespace Scandiweb/MagefanBlog/Query/BlogSidebar/Query/BlogSidebarQuery */
+/** @namespace Scandiweb/MagefanBlog/Query/BlogSidebar/Query */
 export class BlogSidebarQuery {
     getSidebarData() {
         const {
