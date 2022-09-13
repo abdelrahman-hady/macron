@@ -22,6 +22,7 @@ type CustomerOrder {
     internal_note: String
     reference_note: String
     sap_order_id: String
+    user_customer_name: String,
 }
 
 type CustomerDownloadableProduct {

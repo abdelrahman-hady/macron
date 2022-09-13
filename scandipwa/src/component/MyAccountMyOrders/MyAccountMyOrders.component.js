@@ -29,40 +29,13 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         ...super.propTypes,
         ordersPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         ordersPerPage: PropTypes.number.isRequired,
-        sortOptions: PropTypes.object.isRequired,
-        statusOptions: PropTypes.array.isRequired,
         updateOptions: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
         onDateSelectorChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
-        orderListSearchResult: PropTypes.arrayOf.isRequired
+        orderListSearchResult: PropTypes.arrayOf.isRequired,
+        filterOptions: PropTypes.object.isRequired
     };
-
-    renderToolbar() {
-        return (
-            <div className="MyAccountMyOrders-Toolbar">
-                { this.renderSortByStatus() }
-            </div>
-        );
-    }
-
-    renderSortByStatus() {
-        const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
-        return (
-            <Field
-              type={ FIELD_TYPE.select }
-              label={ __('Sort by status') }
-              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-              options={ statusOptions }
-              value={ orderStatus }
-              events={ {
-                  onChange: (val) => {
-                      updateOptions({ orderStatus: val });
-                  }
-              } }
-            />
-        );
-    }
 
     // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
     shouldComponentUpdate(nextProps) {
@@ -191,8 +164,6 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const {
             orderList: { items = [] },
             isLoading,
-            sortOptions: { orderStatus },
-            statusOptions,
             searchInput,
             orderListSearchResult: { items: searchedItems = [] }
 
@@ -203,24 +174,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             return this.renderNoOrders();
         }
 
-        if (orderStatus === 0) {
-            // no filters selected -> render all orders
-            return orderItems.reduceRight(
-                (acc, order) => [...acc, this.renderOrderRow(order)],
-                []
-            );
-        }
-
-        // Filter Orders By Status
-        const [filterOption = {}] = statusOptions.filter((option) => option.id === orderStatus);
         return orderItems.reduceRight(
-            (acc, order) => {
-                if (filterOption.label?.value === order.status) {
-                    return [...acc, this.renderOrderRow(order)];
-                }
-
-                return Array.from(acc);
-            },
+            (acc, e) => [...acc, this.renderOrderRow(e)],
             []
         );
     }
@@ -277,6 +232,62 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderOrderHeadingRow() {
+        return (
+            <tr>
+                <th>{ __('Order') }</th>
+                <th>{ __('Customer') }</th>
+                <th>{ __('Date') }</th>
+                <th>{ __('Status') }</th>
+                <th block="hidden-mobile">{ __('Total') }</th>
+            </tr>
+        );
+    }
+
+    renderSortByCustomerName() {
+        const {
+            filterOptions: { user_customer_name }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by customer') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByCustomer' } }
+              options={ formatToFieldOptions(availableFilters.user_customer_name) }
+              value={ user_customer_name }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({
+                          user_customer_name: +val === 0 ? null : availableFilters.user_customer_name[+val - 1]
+                      });
+                  }
+              } }
+            />
+        );
+    }
+
+    renderSortByOrderStatus() {
+        const {
+            filterOptions: { status }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+              options={ formatToFieldOptions(availableFilters.status) }
+              value={ status }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ status: +val === 0 ? null : availableFilters.status[+val - 1] });
+                  }
+              } }
+            />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
@@ -285,8 +296,9 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 <Loader isLoading={ isLoading } />
                 { this.renderFilters() }
                 { this.renderSearchBar() }
+                { this.renderSortByOrderStatus() }
+                { this.renderSortByCustomerName() }
                 { this.renderPerPageDropdown() }
-                { this.renderToolbar() }
                 { this.renderPagination() }
                 { this.renderTable() }
                 { this.renderPagination() }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /*
  * @category  Macron
  * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
@@ -65,14 +66,16 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     state = {
         ordersPerPage: +(BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE),
-        sortOptions: {
-            orderStatus: 0 // Filters orders list by status
-        },
         filterOptions: {
             dateFrom: '',
-            dateTo: ''
+            dateTo: '',
+            status: null,
+            user_customer_name: null
         },
-        statusOptions: [],
+        availableFilters: {
+            status: [],
+            user_customer_name: []
+        },
         searchInput: '',
         orderListSearchResult: []
     };
@@ -81,18 +84,19 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
         onDateSelectorChange: this.onDateSelectorChange.bind(this),
-        onInputChange: this.onInputChange.bind(this)
+        onInputChange: this.onInputChange.bind(this),
+        formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
     containerProps() {
         const { ordersPerPageList, device } = this.props;
         const {
             ordersPerPage,
-            sortOptions,
-            statusOptions,
             searchInput,
             orderListSearchResult,
-            dateFrom, dateTo
+            dateFrom, dateTo,
+            filterOptions,
+            availableFilters
         } = this.state;
 
         return {
@@ -103,8 +107,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             ordersPerPage,
             dateFrom,
             dateTo,
-            sortOptions,
-            statusOptions,
+            filterOptions,
+            availableFilters,
             ...super.containerProps()
         };
     }
@@ -113,8 +117,47 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { getOrderList } = this.props;
         const { ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
 
-        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
-        this.setState({ statusOptions: this._getStatusOptions() });
+        getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions).then(
+            /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/componentDidMount/getOrderList/then */
+            () => {
+                // Get Available Filter Options on First Orders
+                this.setState({ availableFilters: this.getAvailablefilterOptions() });
+            }
+        );
+    }
+
+    getAvailablefilterOptions() {
+        const { orderList: { items = [] } } = this.props;
+
+        const uniqueLists = {
+            status: {},
+            user_customer_name: {}
+        };
+
+        // list available options
+        items.forEach((order) => {
+            // add to a hash map to avoid duplicates
+            const { status, user_customer_name } = order;
+            if (status) {
+                uniqueLists.status[status] = 1;
+            }
+            if (user_customer_name) {
+                uniqueLists.user_customer_name[user_customer_name] = 1;
+            }
+        });
+
+        return {
+            status: Object.keys(uniqueLists.status),
+            user_customer_name: Object.keys(uniqueLists.user_customer_name)
+        };
+    }
+
+    formatToFieldOptions(options) {
+        return options.map((option, idx) => ({
+            id: idx + 1,
+            label: __(option),
+            value: idx + 1
+        }));
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -125,10 +168,11 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                 } = {}
             }
         } = this.props;
-        const { sortOptions: { orderStatus }, ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
+        const { ordersPerPage = ORDERS_PER_PAGE, filterOptions, availableFilters } = this.state;
         const {
-            sortOptions: { orderStatus: prevOrderStatus }, ordersPerPage: prevOrdersPerPage,
-            filterOptions: prevFilterOptions
+            ordersPerPage: prevOrdersPerPage,
+            filterOptions: prevFilterOptions,
+            availableFilters: prevAvailableFilters
         } = prevState;
         const { location: prevLocation } = prevProps;
 
@@ -150,49 +194,31 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             return;
         }
 
-        if (orderStatus !== prevOrderStatus
-            || currentPage !== prevPage
+        if (currentPage !== prevPage
             || ordersPerPage !== prevOrdersPerPage
             || filterOptions !== prevFilterOptions
+            || availableFilters !== prevAvailableFilters
         ) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions);
+            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions).then(
+                /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/componentDidUpdate/getOrderList/then */
+                () => {
+                    // Should update available filters when page number is changed
+                    if (currentPage !== prevPage) {
+                        this.setState({ availableFilters: this.getAvailablefilterOptions() });
+                    }
+                }
+            );
             scrollToTop();
         }
     }
 
     updateOptions(option) {
-        this.setState(({ sortOptions }) => ({ sortOptions: { ...sortOptions, ...option } }));
+        this.setState(({ filterOptions }) => ({ filterOptions: { ...filterOptions, ...option } }));
     }
 
     onOrderPerPageChange(ordersPerPage) {
         BrowserDatabase.setItem(ordersPerPage, ORDERS_PER_PAGE_ITEM);
-
         this.setState({ ordersPerPage });
-    }
-
-    _getStatusOptions() {
-        // Get Available Order Statuses Here
-        const { orderList: { items = [] } } = this.props;
-        const uniqueList = {};
-        if (items) {
-            // list available status
-            items.forEach((order) => {
-                // add to a hash map to avoid duplicates
-                uniqueList[order.status] = 1;
-            });
-
-            // correctly format statusList so it can be passed to Field
-            const statusArr = Array.from(Object.keys(uniqueList));
-            const statusOptions = statusArr.map((option, idx) => ({
-                id: idx + 1,
-                label: option,
-                value: idx + 1
-            }));
-
-            return statusOptions;
-        }
-
-        return [];
     }
 
     onDateSelectorChange(e) {
