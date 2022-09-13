@@ -7,6 +7,8 @@
 
 export const ORDER_TYPE_POPUP = 'orderTypePopup';
 export const ORDER_CHOOSE_CUSTOMER_POPUP = 'orderChooseCustomerPopup';
+export const ORDER_TYPE_POPUP_ADD_TO_CART = 'orderTypePopupAddToCart';
+export const ORDER_CHOOSE_CUSTOMER_POPUP_ADD_TO_CART = 'orderChooseCustomerPopupAddToCart';
 export const CUSTOMER_CHANGE_CONFIRMATION_POPUP = 'changeConfirmationPopup';
 export const TYPE_CUSTOMER = 'customer';
 export const TYPE_REPLENISHMENT = 'replenishment';

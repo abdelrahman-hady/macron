@@ -8,7 +8,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { ORDER_TYPE_POPUP } from 'Component/OrderTypePopup/OrderTypePopup.config';
+import { ORDER_TYPE_POPUP_ADD_TO_CART } from 'Component/OrderTypePopup/OrderTypePopup.config';
 import {
     AddToCartContainer as SourceAddToCartContainer,
     mapDispatchToProps as sourceMapDispatchToProps,
@@ -25,7 +25,7 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/AddToCart/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    showOrderTypePopup: (payload) => dispatch(showPopup(`${ORDER_TYPE_POPUP }addProductToCart`, payload))
+    showOrderTypePopup: (payload) => dispatch(showPopup(ORDER_TYPE_POPUP_ADD_TO_CART, payload))
 });
 
 /** @namespace Scandipwa/Component/AddToCart/Container */

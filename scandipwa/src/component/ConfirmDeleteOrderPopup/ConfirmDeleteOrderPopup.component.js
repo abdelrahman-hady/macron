@@ -48,7 +48,7 @@ export class ConfirmDeleteOrderPopupComponent extends PureComponent {
                   clickOutside={ false }
                   mix={ { block: 'OrderDeletePopup' } }
                 >
-                        { this.renderPopupContent() }
+                    { this.renderPopupContent() }
                 </Popup>
             </div>
         );
