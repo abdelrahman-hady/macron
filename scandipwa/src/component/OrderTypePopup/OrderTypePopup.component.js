@@ -13,7 +13,9 @@ import FIELD_TYPE from 'Component/Field/Field.config';
 import Form from 'Component/Form';
 import Popup from 'Component/Popup';
 
-import { ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP } from './OrderTypePopup.config';
+import {
+    CUSTOMER_CHANGE_CONFIRMATION_POPUP, ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP
+} from './OrderTypePopup.config';
 
 import './OrderTypePopup.style';
 
@@ -24,7 +26,9 @@ export class OrderTypePopupComponent extends PureComponent {
         handleReplenishmentClick: PropTypes.func.isRequired,
         onGoBack: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
-        companies: PropTypes.objectOf.isRequired
+        companies: PropTypes.objectOf.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired,
+        onConfirm: PropTypes.func.isRequired
     };
 
     renderFirstStep() {
@@ -109,11 +113,52 @@ export class OrderTypePopupComponent extends PureComponent {
         );
     }
 
+    renderCustomerChangeConfirmationStep() {
+        const { hideActiveOverlay, onConfirm, onGoBack } = this.props;
+        return (
+            <Popup
+              id={ CUSTOMER_CHANGE_CONFIRMATION_POPUP }
+              clickOutside={ false }
+              mix={ { block: 'ChangeConfirmationPopup' } }
+            >
+                <button
+                  block="Button"
+                  elem="GoBack"
+                  mods={ { isHollow: true } }
+                  onClick={ onGoBack }
+                >
+                    { __('< Go back') }
+                </button>
+                <div block="Wrapper">
+                    <h3>{ __('Applied prices might change.') }</h3>
+                    <p>{ __('Are you sure you want to change the customer?') }</p>
+                    <div block="buttons">
+                        <button
+                          block="Button"
+                          mods={ { isHollow: true } }
+                          onClick={ hideActiveOverlay }
+                        >
+                            { __('Cancel') }
+                        </button>
+                        <button
+                          block="Button"
+                          mods={ { isHollow: true } }
+                          onClick={ onConfirm }
+                        >
+                            { __('Yes, change the customer') }
+                        </button>
+                    </div>
+                </div>
+            </Popup>
+        );
+    }
+
     render() {
         return (
             <div block="OrderTypePopup">
                 { this.renderFirstStep() }
                 { this.renderCustomerOrderStep() }
+                { this.renderCustomerChangeConfirmationStep() }
             </div>
         );
     }

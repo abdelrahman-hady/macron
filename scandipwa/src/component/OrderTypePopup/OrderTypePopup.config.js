@@ -7,5 +7,6 @@
 
 export const ORDER_TYPE_POPUP = 'orderTypePopup';
 export const ORDER_CHOOSE_CUSTOMER_POPUP = 'orderChooseCustomerPopup';
+export const CUSTOMER_CHANGE_CONFIRMATION_POPUP = 'changeConfirmationPopup';
 export const TYPE_CUSTOMER = 'customer';
 export const TYPE_REPLENISHMENT = 'replenishment';
