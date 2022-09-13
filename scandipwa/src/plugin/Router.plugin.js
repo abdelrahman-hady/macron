@@ -26,7 +26,8 @@ import {
     CONFIRM_ACCOUNT,
     CREATE_ACCOUNT,
     HOME,
-    LOGIN
+    LOGIN,
+    MY_ACCOUNT
 } from 'Component/Router/Router.config';
 import { appendWithStoreCode } from 'SourceUtil/Url';
 import { isSignedIn } from 'Util/Auth';
@@ -36,7 +37,8 @@ const URL_REMOVAL_LIST = [
     CREATE_ACCOUNT,
     CHANGE_PASSWORD,
     ACCOUNT_FORGOT_PASSWORD,
-    CONFIRM_ACCOUNT
+    CONFIRM_ACCOUNT,
+    MY_ACCOUNT
 ];
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "my-clients" */ '../route/MyClientsPage'));
