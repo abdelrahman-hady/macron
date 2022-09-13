@@ -36,7 +36,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     public function getList($customerId = null)
     {
         $collection = $this->invoicesCollectionFactory;
-        $erp_invoice_cols = [
+        $erpInvoiceCols = [
             'id',
             'invoice_number',
             'user_sap_id',
@@ -46,7 +46,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             'status',
             'download_link'
         ];
-        $customer_entity_cols = [
+        $customerEntityCols = [
             'entity_id',
             'email',
             'firstname',
@@ -55,7 +55,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             'business_partner_id',
             'default_shipping'
         ];
-        $customer_address_entity_cols = [
+        $customerAddressEntityCols = [
             'entity_id',
             'parent_id',
             'city as address_city',
@@ -68,18 +68,18 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             'street as address_street',
             'telephone as address_telephone'
         ];
-        $select = $collection->getSelect()->columns($erp_invoice_cols);
+        $select = $collection->getSelect()->columns($erpInvoiceCols);
 
         if ($customerId !== null) {
             $select->where('customer_id = ?', $customerId);
         }
-        
+
         $select->joinLeft(
             ['ceTable' => $collection->getTable('customer_entity')],
-            'main_table.user_sap_id = ceTable.business_partner_id', $customer_entity_cols)
+            'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols)
             ->joinLeft(
                 ['caeTable' => $collection->getTable('customer_address_entity')],
-                'ceTable.entity_id = caeTable.parent_id', $customer_address_entity_cols)
+                'ceTable.entity_id = caeTable.parent_id', $customerAddressEntityCols)
             ->where('ceTable.default_shipping = caeTable.entity_id');
 
         return $collection->getItems();
