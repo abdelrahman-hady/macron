@@ -12,6 +12,12 @@ type Query {
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
 
+    clientsByKeyword(
+        keyword: String!
+    ): [ClientType]
+    @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
+    @doc(description: "Get clients by keyword")
+
     shipments(
         currentPage: Int = 1
         pageSize: Int = 10

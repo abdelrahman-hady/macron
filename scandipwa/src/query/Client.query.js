@@ -44,6 +44,12 @@ export class ClientQuery {
             .addFieldList(this._getClientFields());
     }
 
+    getClientsByKeywordQuery(keyword) {
+        return new Field('clientsByKeyword')
+            .addArgument('keyword', 'String!', keyword)
+            .addFieldList(this._getClientFields());
+    }
+
     _getClientFields() {
         return [
             'entity_id',

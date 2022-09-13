@@ -16,7 +16,8 @@ import { PureComponent } from 'react';
 import AddIcon from 'Component/AddIcon';
 import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
-import { ClientListType } from 'Type/Client.type';
+import SearchIcon from 'Component/SearchIcon';
+import { ClientListType, ClientType } from 'Type/Client.type';
 import { getListViewAllowedOptions } from 'Util/Config';
 
 import { MY_CLIENTS_URL } from './MyClientsPage.config';
@@ -31,7 +32,10 @@ export class MyClientsPageComponent extends PureComponent {
         clientList: ClientListType.isRequired,
         clientsPerPageList: PropTypes.string.isRequired,
         clientsPerPage: PropTypes.number.isRequired,
-        onClientsPerPageChange: PropTypes.func.isRequired
+        onClientsPerPageChange: PropTypes.func.isRequired,
+        onInputChange: PropTypes.func.isRequired,
+        searchInput: PropTypes.string.isRequired,
+        clientListSearchResult: PropTypes.arrayOf(ClientType).isRequired
     };
 
     static defaultProps = {
@@ -53,6 +57,37 @@ export class MyClientsPageComponent extends PureComponent {
                 <AddIcon />
                 { __('Create new client') }
             </button>
+        );
+    }
+
+    renderSearchBar() {
+        const { onInputChange } = this.props;
+
+        return (
+            <div
+              block="SearchClient"
+              elem="SearchInnerWrapper"
+            >
+                <div
+                  block="SearchClient"
+                  elem="SearchIcon"
+                >
+                    <SearchIcon />
+                </div>
+                <Field
+                  id="SearchClient"
+                  type={ FIELD_TYPE.text }
+                  attr={ {
+                      block: 'SearchClient',
+                      elem: 'SearchInput',
+                      name: 'SearchClient',
+                      placeholder: __('Search by keyword')
+                  } }
+                  events={ {
+                      onChange: onInputChange
+                  } }
+                />
+            </div>
         );
     }
 
@@ -116,7 +151,9 @@ export class MyClientsPageComponent extends PureComponent {
     }
 
     renderTable() {
-        const { clientList: { items = [] } } = this.props;
+        const { clientList: { items = [] }, searchInput, clientListSearchResult } = this.props;
+
+        const clientItems = searchInput !== '' ? clientListSearchResult : items;
 
         return (
             <div block="MyClientsPage">
@@ -125,7 +162,7 @@ export class MyClientsPageComponent extends PureComponent {
                         { this.renderOrderHeadingRow() }
                     </thead>
                     <tbody>
-                        { items.map(this.renderTableRow.bind(this)) }
+                        { clientItems.map(this.renderTableRow.bind(this)) }
                     </tbody>
                 </table>
             </div>
@@ -139,8 +176,13 @@ export class MyClientsPageComponent extends PureComponent {
                 page_info: {
                     total_pages = 0
                 } = {}
-            }
+            },
+            searchInput
         } = this.props;
+
+        if (searchInput !== '') {
+            return null;
+        }
 
         return (
             <Pagination
@@ -155,6 +197,7 @@ export class MyClientsPageComponent extends PureComponent {
             <ContentWrapper label="My Clients Page">
                 { this.renderHeading() }
                 { this.renderCreateClient() }
+                { this.renderSearchBar() }
                 { this.renderPerPageDropdown() }
                 { this.renderPagination() }
                 { this.renderTable() }
