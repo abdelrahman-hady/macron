@@ -125,7 +125,12 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const currentPage = this._getPageFromUrl();
 
         if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
-            this.setState({ ordersPerPage: ordersPerPageList[0] });
+            if (ordersPerPageList.includes(ORDERS_PER_PAGE)) {
+                this.setState({ ordersPerPage: ORDERS_PER_PAGE });
+            } else {
+                this.setState({ ordersPerPage: ordersPerPageList[0] });
+            }
+
             return;
         }
 
