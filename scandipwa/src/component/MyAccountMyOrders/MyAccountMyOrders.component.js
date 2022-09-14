@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable react/forbid-prop-types */
 /*
  * @category  Macron
@@ -33,7 +34,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         updateOptions: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
-        orderListSearchResult: PropTypes.arrayOf.isRequired
+        orderListSearchResult: PropTypes.arrayOf.isRequired,
+        filterOptions: PropTypes.object.isRequired
     };
 
     renderToolbar() {
@@ -182,6 +184,63 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderOrderHeadingRow() {
+        return (
+            <tr>
+                <th>{ __('Order') }</th>
+                <th>{ __('Customer') }</th>
+                <th>{ __('Date') }</th>
+                <th>{ __('Status') }</th>
+                <th block="hidden-mobile">{ __('Total') }</th>
+            </tr>
+        );
+    }
+
+    renderSortByCustomerName() {
+        const {
+            filterOptions: { user_customer_name }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by customer') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByCustomer' } }
+              options={ formatToFieldOptions(availableFilters.user_customer_name) }
+              value={ user_customer_name }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({
+                          // eslint-disable-next-line max-len
+                          user_customer_name: +val === 0 ? null : availableFilters.user_customer_name[+val - 1]
+                      });
+                  }
+              } }
+            />
+        );
+    }
+
+    renderSortByOrderStatus() {
+        const {
+            filterOptions: { status }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
+              options={ formatToFieldOptions(availableFilters.status) }
+              value={ status }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ status: +val === 0 ? null : availableFilters.status[+val - 1] });
+                  }
+              } }
+            />
+        );
+    }
+
     render() {
         const { isLoading } = this.props;
 
@@ -190,6 +249,9 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 <Loader isLoading={ isLoading } />
                 { this.renderSearchBar() }
                 { this.renderPerPageDropdown() }
+                { this.renderPagination() }
+                { this.renderSortByOrderStatus() }
+                { this.renderSortByCustomerName() }
                 { this.renderTable() }
                 { this.renderPagination() }
                 { this.renderPerPageDropdown() }
