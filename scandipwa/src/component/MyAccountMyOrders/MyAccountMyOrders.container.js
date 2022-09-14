@@ -105,6 +105,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { getOrderList } = this.props;
         const { ordersPerPage } = this.state;
 
+        if (!BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM)) {
+            this.onOrderPerPageChange(ORDERS_PER_PAGE);
+        }
+
         getOrderList(this._getPageFromUrl(), ordersPerPage);
         this.setState({ statusOptions: this._getStatusOptions() });
     }
@@ -125,11 +129,11 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const currentPage = this._getPageFromUrl();
 
         if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
-            if (ordersPerPageList.includes(ORDERS_PER_PAGE)) {
-                this.setState({ ordersPerPage: ORDERS_PER_PAGE });
-            } else {
-                this.setState({ ordersPerPage: ordersPerPageList[0] });
-            }
+            this.onOrderPerPageChange(
+                ordersPerPageList.includes(ORDERS_PER_PAGE)
+                    ? ORDERS_PER_PAGE
+                    : ordersPerPageList[0]
+            );
 
             return;
         }
