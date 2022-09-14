@@ -97,6 +97,7 @@ type Shipment {
     date: String
     customer_name: String
     address: String
+    packing_list_link: String
 }
 
 input CreateClientInput {

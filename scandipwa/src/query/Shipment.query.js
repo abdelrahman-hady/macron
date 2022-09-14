@@ -28,7 +28,8 @@ export class ShipmentQuery {
             'tracking_number',
             'date',
             'customer_name',
-            'address'
+            'address',
+            'packing_list_link'
         ];
     }
 }
