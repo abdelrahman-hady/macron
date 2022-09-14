@@ -11,6 +11,7 @@ import { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
+import { appendWithStoreCode } from 'SourceUtil/Url';
 import { ShipmentType } from 'Type/Shipment.type';
 
 import './ShipmentsTable.style';
@@ -34,7 +35,8 @@ export class ShipmentsTableComponent extends PureComponent {
                 <th>{ __('Way of delivery') }</th>
                 <th>{ __('Status') }</th>
                 <th>{ __('Tracking') }</th>
-                <th>{ }</th>
+                { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
+                <th />
             </tr>
         );
     }
@@ -47,7 +49,8 @@ export class ShipmentsTableComponent extends PureComponent {
                 <th>{ __('Date') }</th>
                 <th>{ __('Tracking') }</th>
                 <th>{ __('Status') }</th>
-                <th>{ }</th>
+                { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
+                <th />
             </tr>
         );
     }
@@ -55,9 +58,9 @@ export class ShipmentsTableComponent extends PureComponent {
     renderActionButtons(shipment_number) {
         return (
             <div>
-                <Link to={ `/shipments/${shipment_number}` }>{ __('View') }</Link>
+                <Link to={ appendWithStoreCode(`/shipments/${shipment_number}`) }>{ __('View Shipment') }</Link>
                 <span> | </span>
-                <Link to="/">{ __('Download') }</Link>
+                <Link to={ appendWithStoreCode('/') }>{ __('Download') }</Link>
             </div>
         );
     }
@@ -65,7 +68,7 @@ export class ShipmentsTableComponent extends PureComponent {
     renderCompactActionButtons(shipment_number, packing_link) {
         return (
             <div>
-                <Link to={ `/shipments/${shipment_number}` }>{ __('View Shipment') }</Link>
+                <Link to={ appendWithStoreCode(`/shipments/${shipment_number}`) }>{ __('View Shipment') }</Link>
                 <span> | </span>
                 <Link to={ packing_link } target="_blank">{ __('Packing List') }</Link>
             </div>
@@ -74,7 +77,7 @@ export class ShipmentsTableComponent extends PureComponent {
 
     renderTableTitle() {
         return (
-            <h2 block="Shipments" elem="Title">
+            <h2 block="ShipmentsTable" elem="Title">
                 { __('Upcoming Shipments') }
             </h2>
         );
@@ -83,7 +86,7 @@ export class ShipmentsTableComponent extends PureComponent {
     renderViewAllButton() {
         const { onViewAllButtonClick } = this.props;
         return (
-            <button block="Shipments" elem="Button" onClick={ onViewAllButtonClick }>
+            <button block="ShipmentsTable" elem="Button" onClick={ onViewAllButtonClick }>
                 { __('View All Shipments') }
             </button>
         );
