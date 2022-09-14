@@ -59,10 +59,14 @@
             "status": true,
             "download_link": true,
             "connected_order_ids": true,
-            "connected_shipment_ids": true
+            "connected_shipment_ids": true,
+            "currency": true,
+            "due_date": true,
+            "customer_id": true
         },
         "constraint": {
-            "PRIMARY": true
+            "PRIMARY": true,
+            "ERP_INVOICE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
         }
     },
     "erp_price_wholesale": {
