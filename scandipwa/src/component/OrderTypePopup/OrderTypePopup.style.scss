@@ -28,7 +28,7 @@
     }
 }
 
-.OrderChooseCustomerPopup {
+.OrderChooseCustomerPopup, .ChangeConfirmationPopup {
     .Popup {
         &-Content {
             .Button-GoBack {
@@ -41,6 +41,12 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+
+                .buttons {
+                    Button {
+                        margin: 10px;
+                    }
+                }
             }
         }
 

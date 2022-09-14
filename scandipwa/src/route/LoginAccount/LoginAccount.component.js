@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 
 import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader';
+import StoreSwitcher from 'Component/StoreSwitcher';
 import { LoginAccountComponent as SourceLoginAccountComponent } from
 'SourceRoute/LoginAccount/LoginAccount.component';
 
@@ -19,8 +20,17 @@ export class LoginAccountComponent extends SourceLoginAccountComponent {
     renderSignInWrapper() {
         return (
             <div block="LoginAccount" elem="SignInWrapper">
-                <h2>{ __('Macron') }</h2>
+                { this.renderStoreSwitcher() }
+                <h3>{ __('Macron') }</h3>
                 { this.renderSignIn() }
+            </div>
+        );
+    }
+
+    renderStoreSwitcher() {
+        return (
+            <div block="LoginAccount" elem="Switcher">
+                <StoreSwitcher />
             </div>
         );
     }

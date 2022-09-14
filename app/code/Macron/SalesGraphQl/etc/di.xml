@@ -10,4 +10,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="ScandiPWA\SalesGraphQl\Model\Formatter\Order" type="Macron\SalesGraphQl\Model\Formatter\Order"/>
+    <preference
+        for="ScandiPWA\SalesGraphQl\Model\Resolver\CustomerOrders\Query\OrderFilter"
+        type="Macron\SalesGraphQl\Model\Resolver\CustomerOrders\Query\OrderFilter"
+    />
 </config>
