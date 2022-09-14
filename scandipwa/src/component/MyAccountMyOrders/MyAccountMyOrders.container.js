@@ -224,7 +224,16 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     onDateSelectorChange(e) {
         const { name, value } = e.target;
         const { filterOptions } = this.state;
-        this.setState({ filterOptions: { ...filterOptions, [name]: value } });
+        // eslint-disable-next-line fp/no-let
+        let date = value;
+        if (name === 'dateTo') {
+            const valueArr = value.split('-');
+            const day = parseFloat(valueArr[2]) + 1;
+            // eslint-disable-next-line no-magic-numbers
+            valueArr[2] = String(`0${ day}`).slice(-2);
+            date = valueArr.join('-');
+        }
+        this.setState({ filterOptions: { ...filterOptions, [name]: date } });
     }
 
     onInputChange(e) {
