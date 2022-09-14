@@ -8,3 +8,4 @@
 export * from 'SourceRoute/CartPage/CartPage.config';
 
 export const CONFIRM_DELETE_ORDER_POPUP = 'order_delete_popup';
+export const CONFIRM_DELETE_ORDER_POPUP_NEW_ORDER = 'order_delete_popup_new_order';

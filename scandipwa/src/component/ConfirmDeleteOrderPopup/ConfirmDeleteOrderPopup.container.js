@@ -53,6 +53,13 @@ export class ConfirmDeleteOrderPopupContainer extends PureComponent {
         handleDeleteOrder: this.handleDeleteOrder.bind(this)
     };
 
+    containerProps() {
+        const { isOrderType } = this.props;
+        return {
+            isOrderType
+        };
+    }
+
     async handleDeleteOrder() {
         const {
             clearCart, updateTypeAndCustomerSelect, hideActivePopup, showPopup, isOrderType
@@ -73,6 +80,7 @@ export class ConfirmDeleteOrderPopupContainer extends PureComponent {
     render() {
         return (
             <ConfirmDeleteOrderPopup
+              { ...this.containerProps() }
               { ...this.containerFunctions }
             />
         );

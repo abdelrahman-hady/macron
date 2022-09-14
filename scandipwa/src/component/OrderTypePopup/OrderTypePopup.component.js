@@ -15,6 +15,7 @@ import Popup from 'Component/Popup';
 
 import {
     CUSTOMER_CHANGE_CONFIRMATION_POPUP,
+    CUSTOMER_CHANGE_CONFIRMATION_POPUP_ADD_TO_CART,
     ORDER_CHOOSE_CUSTOMER_POPUP,
     ORDER_CHOOSE_CUSTOMER_POPUP_ADD_TO_CART,
     ORDER_TYPE_POPUP,
@@ -33,8 +34,12 @@ export class OrderTypePopupComponent extends PureComponent {
         companies: PropTypes.objectOf.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         onConfirm: PropTypes.func.isRequired,
-        addProductToCart: PropTypes.func.isRequired,
-        selectedCustomer: PropTypes.string.isRequired
+        selectedCustomer: PropTypes.string.isRequired,
+        addProductToCart: PropTypes.func
+    };
+
+    static defaultProps = {
+        addProductToCart: null
     };
 
     renderFirstStep() {
@@ -123,10 +128,15 @@ export class OrderTypePopupComponent extends PureComponent {
     }
 
     renderCustomerChangeConfirmationStep() {
-        const { hideActiveOverlay, onConfirm, onGoBack } = this.props;
+        const {
+            hideActiveOverlay, onConfirm, onGoBack, addProductToCart
+        } = this.props;
+
         return (
             <Popup
-              id={ CUSTOMER_CHANGE_CONFIRMATION_POPUP }
+              id={ addProductToCart
+                  ? CUSTOMER_CHANGE_CONFIRMATION_POPUP_ADD_TO_CART
+                  : CUSTOMER_CHANGE_CONFIRMATION_POPUP }
               clickOutside={ false }
               mix={ { block: 'ChangeConfirmationPopup' } }
             >

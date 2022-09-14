@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import ConfirmDeleteOrderPopupComponent from 'Component/ConfirmDeleteOrderPopup';
 import OrderTypePopup from 'Component/OrderTypePopup';
 import { ORDER_TYPE_POPUP } from 'Component/OrderTypePopup/OrderTypePopup.config';
-import { CONFIRM_DELETE_ORDER_POPUP } from 'Route/CartPage/CartPage.config';
+import { CONFIRM_DELETE_ORDER_POPUP_NEW_ORDER } from 'Route/CartPage/CartPage.config';
 import {
     Menu as SourceMenu
 } from 'SourceComponent/Menu/Menu.component';
@@ -49,7 +49,9 @@ export class MenuComponent extends SourceMenu {
               mix={ { block: 'Button', mods: { isHollow: true } } }
               // eslint-disable-next-line react/jsx-no-bind
               onClick={ () => (
-                  cartTotals.items.length ? showPopup(CONFIRM_DELETE_ORDER_POPUP) : showPopup(ORDER_TYPE_POPUP)
+                  cartTotals.items.length
+                      ? showPopup(CONFIRM_DELETE_ORDER_POPUP_NEW_ORDER)
+                      : showPopup(ORDER_TYPE_POPUP)
               ) }
             >
                 { __('NEW ORDER') }
