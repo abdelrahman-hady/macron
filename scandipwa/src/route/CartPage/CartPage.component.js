@@ -10,19 +10,16 @@ import PropTypes from 'prop-types';
 
 import CartItem from 'Component/CartItem';
 import ClientDetails from 'Component/ClientDetails';
+import ConfirmDeleteOrderPopupComponent from 'Component/ConfirmDeleteOrderPopup';
 import Loader from 'Component/Loader';
-import Popup from 'Component/Popup';
 import {
     CartPage as SourceCartPage
 } from 'SourceRoute/CartPage/CartPage.component';
-
-import { CONFIRM_DELETE_ORDER_POPUP } from './CartPage.config';
 
 /** @namespace Scandipwa/Route/CartPage/Component */
 export class CartPageComponent extends SourceCartPage {
     static propTypes = {
         ...super.propTypes,
-        handleDeleteOrder: PropTypes.func.isRequired,
         showDeleteOrderPopup: PropTypes.func.isRequired
     };
 
@@ -30,29 +27,6 @@ export class CartPageComponent extends SourceCartPage {
         const { totals: { items } } = this.props;
         return (
             items.length && <ClientDetails />
-        );
-    }
-
-    renderPopupContent() {
-        const { handleDeleteOrder } = this.props;
-        return (
-            <div block="Buttons">
-                <h3><b>{ __('All the items added to the order will be lost') }</b></h3>
-                <h3>{ __('Are you sure you want to start a new order?') }</h3>
-                <button
-                  block="Button"
-                  mods={ { isHollow: true } }
-                >
-                    { __('Add to quote and continue') }
-                </button>
-                <button
-                  block="Button"
-                  mods={ { isHollow: true } }
-                  onClick={ handleDeleteOrder }
-                >
-                    { __('Yes, start a new order') }
-                </button>
-            </div>
         );
     }
 
@@ -125,13 +99,7 @@ export class CartPageComponent extends SourceCartPage {
                     </svg>
                         { __('delete order') }
                     </button>
-                    <Popup
-                      id={ CONFIRM_DELETE_ORDER_POPUP }
-                      clickOutside={ false }
-                      mix={ { block: 'OrderDeletePopup' } }
-                    >
-                        { this.renderPopupContent() }
-                    </Popup>
+                    <ConfirmDeleteOrderPopupComponent />
                 </div>
             )
         );

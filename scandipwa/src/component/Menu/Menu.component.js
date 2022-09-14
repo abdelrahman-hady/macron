@@ -7,10 +7,14 @@
 
 import PropTypes from 'prop-types';
 
+import ConfirmDeleteOrderPopupComponent from 'Component/ConfirmDeleteOrderPopup';
 import OrderTypePopup from 'Component/OrderTypePopup';
+import { ORDER_TYPE_POPUP } from 'Component/OrderTypePopup/OrderTypePopup.config';
+import { CONFIRM_DELETE_ORDER_POPUP } from 'Route/CartPage/CartPage.config';
 import {
     Menu as SourceMenu
 } from 'SourceComponent/Menu/Menu.component';
+import { TotalsType } from 'Type/MiniCart.type';
 import { getSortedItems } from 'Util/Menu';
 
 import './Menu.override.style.scss';
@@ -19,28 +23,38 @@ import './Menu.override.style.scss';
 export class MenuComponent extends SourceMenu {
     static propTypes = {
         ...super.propTypes,
-        showOrderTypePopup: PropTypes.func.isRequired
+        showPopup: PropTypes.func.isRequired,
+        cartTotals: TotalsType.isRequired
     };
 
-    renderPopup() {
+    renderPopups() {
         return (
-            <OrderTypePopup />
+            <>
+                <OrderTypePopup />
+                <ConfirmDeleteOrderPopupComponent
+                  isOrderType
+                />
+            </>
         );
     }
 
     renderNewOrderButton() {
-        const { showOrderTypePopup } = this.props;
+        const { showPopup, cartTotals } = this.props;
+
         return (
             <>
             <button
               block="Menu"
               elem="NewOrder"
               mix={ { block: 'Button', mods: { isHollow: true } } }
-              onClick={ showOrderTypePopup }
+              // eslint-disable-next-line react/jsx-no-bind
+              onClick={ () => (
+                  cartTotals.items.length ? showPopup(CONFIRM_DELETE_ORDER_POPUP) : showPopup(ORDER_TYPE_POPUP)
+              ) }
             >
                 { __('NEW ORDER') }
             </button>
-            { this.renderPopup() }
+            { this.renderPopups() }
             </>
         );
     }
