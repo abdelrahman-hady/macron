@@ -18,7 +18,9 @@ import { fetchQuery } from 'Util/Request';
 import OrderTypePopup from './OrderTypePopup.component';
 import {
     CUSTOMER_CHANGE_CONFIRMATION_POPUP,
-    ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_TYPE_POPUP, TYPE_CUSTOMER, TYPE_REPLENISHMENT
+    ORDER_CHOOSE_CUSTOMER_POPUP, ORDER_CHOOSE_CUSTOMER_POPUP_ADD_TO_CART,
+    ORDER_TYPE_POPUP, ORDER_TYPE_POPUP_ADD_TO_CART,
+    TYPE_CUSTOMER, TYPE_REPLENISHMENT
 } from './OrderTypePopup.config';
 
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapStateToProps */
@@ -72,21 +74,23 @@ export class OrderTypePopupContainer extends PureComponent {
 
     containerProps = () => {
         const { companies } = this.state;
-        const { hideActiveOverlay } = this.props;
+        const { hideActiveOverlay, addProductToCart } = this.props;
 
         return {
-            companies, hideActiveOverlay
+            companies, hideActiveOverlay, addProductToCart
         };
     };
 
     handleCustomerClick() {
-        const { showPopup } = this.props;
-        showPopup(ORDER_CHOOSE_CUSTOMER_POPUP);
+        const { showPopup, addProductToCart } = this.props;
+        const type = addProductToCart ? ORDER_CHOOSE_CUSTOMER_POPUP_ADD_TO_CART : ORDER_CHOOSE_CUSTOMER_POPUP;
+        showPopup(type);
     }
 
     onGoBack() {
-        const { showPopup } = this.props;
-        showPopup(ORDER_TYPE_POPUP);
+        const { showPopup, addProductToCart } = this.props;
+        const type = addProductToCart ? ORDER_TYPE_POPUP_ADD_TO_CART : ORDER_TYPE_POPUP;
+        showPopup(type);
     }
 
     onSubmit(_form, fields) {
