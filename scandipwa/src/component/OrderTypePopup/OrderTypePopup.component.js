@@ -34,7 +34,8 @@ export class OrderTypePopupComponent extends PureComponent {
         companies: PropTypes.objectOf.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         onConfirm: PropTypes.func.isRequired,
-        addProductToCart: PropTypes.func
+        addProductToCart: PropTypes.func,
+        selectedCustomer: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -72,7 +73,7 @@ export class OrderTypePopupComponent extends PureComponent {
 
     renderCustomerOrderStep() {
         const {
-            onGoBack, onSubmit, companies, addProductToCart
+            onGoBack, onSubmit, companies, addProductToCart, selectedCustomer
         } = this.props;
 
         // eslint-disable-next-line fp/no-let
@@ -107,6 +108,7 @@ export class OrderTypePopupComponent extends PureComponent {
                           attr={ {
                               id: 'CompanyNames',
                               name: 'CompanyNames',
+                              defaultValue: selectedCustomer,
                               noPlaceholder: true
                           } }
                           label={ <b>{ __('Select the customer') }</b> }
