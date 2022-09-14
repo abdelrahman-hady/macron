@@ -1,24 +1,10 @@
-/* eslint-disable import/prefer-default-export */
-
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
+/*
+ * @category  Macron
+ * @author    Lena Sinichenkova <lena.sinichenkova@scandiweb.com | info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-export const ACCOUNT_INFORMATION_EDIT_URL = '/customer/account/edit';
-export const ACCOUNT_FORGOT_PASSWORD_URL = '/customer/account/forgotpassword';
-export const ACCOUNT_CONFIRMATION_URL = '/customer/account/confirmation';
-export const ACCOUNT_REGISTRATION_URL = '/customer/account/create';
-export const ACCOUNT_LOGIN_URL = '/customer/account/login';
+export * from 'SourceRoute/MyAccount/MyAccount.config';
+
 export const ACCOUNT_URL = '/';
-export const ACCOUNT_ORDER_URL = '/sales/order/view/order_id';
-export const ACCOUNT_ORDER_PRINT_URL = '/sales/order/print/order_id';
-export const ACCOUNT_ORDER_HISTORY = '/sales/order/history';
-// eslint-disable-next-line max-len
-export const LOCKED_ACCOUNT_ERROR_MESSAGE = __('The account sign-in was incorrect or your account is disabled temporarily. Please wait and try again later.');
