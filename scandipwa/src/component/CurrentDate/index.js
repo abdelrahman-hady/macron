@@ -1,1 +1,1 @@
-export { default } from './CurrentDate.container';
+export { default } from './CurrentDate.component';
