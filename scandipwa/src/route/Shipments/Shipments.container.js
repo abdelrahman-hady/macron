@@ -18,6 +18,7 @@ import { LocationType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { transformListViewAllowedValues } from 'Util/Config';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
 import { appendWithStoreCode, getQueryParam } from 'Util/Url';
 
@@ -31,7 +32,7 @@ export const BreadcrumbsDispatcher = import(
 
 /** @namespace Scandipwa/Route/Shipments/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
-    shipmentsPerPageList: state.ConfigReducer.xperpage
+    shipmentsPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage)
 });
 
 /** @namespace Scandipwa/Route/Shipments/Container/mapDispatchToProps */
