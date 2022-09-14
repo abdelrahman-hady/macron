@@ -262,6 +262,31 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         this.setState({ filterOptions: { ...filterOptions, [name]: date } });
     }
 
+    _getStatusOptions() {
+        // Get Available Order Statuses Here
+        const { orderList: { items = [] } } = this.props;
+        const uniqueList = {};
+        if (items) {
+            // list available status
+            items.forEach((order) => {
+                // add to a hash map to avoid duplicates
+                uniqueList[order.status] = 1;
+            });
+
+            // correctly format statusList so it can be passed to Field
+            const statusArr = Array.from(Object.keys(uniqueList));
+            const statusOptions = statusArr.map((option, idx) => ({
+                id: idx + 1,
+                label: option,
+                value: idx + 1
+            }));
+
+            return statusOptions;
+        }
+
+        return [];
+    }
+
     onInputChange(e) {
         const { setLoadingStatus } = this.props;
         const { value } = e.target;
