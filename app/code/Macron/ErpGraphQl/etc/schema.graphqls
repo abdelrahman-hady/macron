@@ -2,7 +2,7 @@ type Query {
     clients(
         pageSize: Int = 10
         currentPage: Int = 1
-    ): [ClientType]
+    ): Clients
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
         @doc(description: "Get list of clients")
 
@@ -36,6 +36,11 @@ type Mutation {
     createClient(client: CreateClientInput!): ClientType
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
         @doc(description: "Create a new client")
+}
+
+type Clients {
+    items: [ClientType]
+    page_info: SearchResultPageInfo
 }
 
 type ClientType {
