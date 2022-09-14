@@ -29,13 +29,23 @@ type Query {
 }
 
 type Mutation {
-    deleteClient(client_id: Int!): ClientType
+    deleteClient(
+        client_id: Int!
+    ): ClientType
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
         @doc(description: "Delete client by id")
 
-    createClient(client: CreateClientInput!): ClientType
+    createClient(
+        client: CreateClientInput!
+    ): ClientType
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
         @doc(description: "Create a new client")
+
+    updateClient(
+        client: UpdateClientInput!
+    ): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
+        @doc(description: "Update client")
 }
 
 type Clients {
