@@ -150,7 +150,7 @@ class Price extends SourcePrice
      * @param $sku
      * @return string|null
      */
-    public function getWholePrice($sku): ?string
+    public function getWholesalePrice($sku): ?string
     {
         return $this->getPriceFromDb($sku, 'wholesale_price_list', 'erp_price_wholesale');
     }
