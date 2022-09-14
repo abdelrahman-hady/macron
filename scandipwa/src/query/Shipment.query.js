@@ -20,6 +20,12 @@ export class ShipmentQuery {
             .addFieldList(this._getShipmentFields());
     }
 
+    getShipmentsByKeywordQuery(keyword) {
+        return new Field('shipmentsByKeyword')
+            .addArgument('keyword', 'String!', keyword)
+            .addFieldList(this._getShipmentFields());
+    }
+
     _getShipmentFields() {
         return [
             'entity_id',
