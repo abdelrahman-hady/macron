@@ -138,30 +138,37 @@ class Price extends SourcePrice
     /**
      * get current customer retail price by sku
      * @param $sku
-     * @return array
+     * @return string|null
      */
-    public function getRetailPrice($sku): array
+    public function getRetailPrice($sku): ?string
     {
-        $customerId = $this->_customerSession->getCustomer()->getId();
-        $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
-        $retailPriceList = $currentCustomer->getRetailPriceList();
-        $connection = $this->resourceConnection->getConnection();
-        $sql = "Select price FROM erp_price_retail WHERE pricelist_id = {$retailPriceList} AND sku = {$sku}";
-        return $connection->fetchAll($sql);
+        return $this->getPriceFromDb($sku, 'retail_price_list', 'erp_price_retail');
     }
 
     /**
      * get current customer wholesale price by sku
      * @param $sku
-     * @return array
+     * @return string|null
      */
-    public function getWholePrice($sku): array
+    public function getWholePrice($sku): ?string
+    {
+        return $this->getPriceFromDb($sku, 'wholesale_price_list', 'erp_price_wholesale');
+    }
+
+    /**
+     * @param $sku
+     * @param $field
+     * @param $tableName
+     * @return string|null
+     */
+    public function getPriceFromDb($sku, $field, $tableName): ?string
     {
         $customerId = $this->_customerSession->getCustomer()->getId();
         $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
-        $wholesalePriceList = $currentCustomer->getWholesalePriceList();
+        $priceList = $currentCustomer->getData($field);
         $connection = $this->resourceConnection->getConnection();
-        $sql = "Select price FROM erp_price_wholesale WHERE pricelist_id = {$wholesalePriceList} AND sku = {$sku}";
-        return $connection->fetchAll($sql);
+        $sql = "Select price FROM {$tableName} WHERE pricelist_id = {$priceList} AND sku like '{$sku}'";
+        $result = $connection->fetchAll($sql);
+        return count($result) ? $result[0]['price'] : null;
     }
 }
