@@ -27,7 +27,8 @@ export const MyAccountDispatcher = import(
 
 /** @namespace Scandipwa/Route/MyProfilePage/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
-    customer: state.MyAccountReducer.customer
+    customer: state.MyAccountReducer.customer,
+    accountmanageremail: state.ConfigReducer.accountmanageremail
 
 });
 /** @namespace Scandipwa/Route/MyProfilePage/Container/mapDispatchToProps */
@@ -50,7 +51,8 @@ export class MyProfilePageContainer extends PureComponent {
         updateMeta: PropTypes.func.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         customer: CustomerType.isRequired,
-        requestCustomerData: PropTypes.func.isRequired
+        requestCustomerData: PropTypes.func.isRequired,
+        accountmanageremail: PropTypes.string.isRequired
     };
 
     state = { isAllAddressesShown: false };
@@ -94,9 +96,9 @@ export class MyProfilePageContainer extends PureComponent {
      }
 
      containerProps() {
-         const { customer } = this.props;
+         const { customer, accountmanageremail } = this.props;
          const { isAllAddressesShown } = this.state;
-         return { customer, isAllAddressesShown };
+         return { customer, isAllAddressesShown, accountmanageremail };
      }
 
      render() {

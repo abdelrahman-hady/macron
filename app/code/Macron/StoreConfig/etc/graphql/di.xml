@@ -12,6 +12,7 @@
         <arguments>
             <argument name="extendedConfigData">
                 <item name="xperpage" xsi:type="string">xperpage/general/text</item>
+                <item name="accountmanageremail" xsi:type="string">trans_email/ident_general/email</item>
             </argument>
         </arguments>
     </type>
