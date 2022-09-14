@@ -27,11 +27,6 @@ use Magento\Framework\App\ResourceConnection;
 class Price extends SourcePrice
 {
     /**
-     * Product price cache tag
-     */
-    const CACHE_TAG = 'PRODUCT_PRICE';
-
-    /**
      * @var array
      */
     protected static $attributeCache = [];
@@ -95,11 +90,6 @@ class Price extends SourcePrice
     private $tierPriceExtensionFactory;
 
     /**
-     * @var CollectionFactory
-     */
-    private CollectionFactory $customerCollection;
-
-    /**
      * @var ResourceConnection
      */
     private ResourceConnection $resourceConnection;
@@ -115,7 +105,6 @@ class Price extends SourcePrice
         ProductTierPriceInterfaceFactory $tierPriceFactory,
         ScopeConfigInterface $config,
         ProductTierPriceExtensionFactory $tierPriceExtensionFactory = null,
-        CollectionFactory $customerCollection,
         ResourceConnection $resourceConnection
     ) {
         parent::__construct(
@@ -130,44 +119,61 @@ class Price extends SourcePrice
             $config,
             $tierPriceExtensionFactory
         );
-
-        $this->customerCollection = $customerCollection;
         $this->resourceConnection = $resourceConnection;
     }
 
     /**
      * get current customer retail price by sku
      * @param $sku
+     * @param $currentCustomer
      * @return string|null
      */
-    public function getRetailPrice($sku): ?string
+    public function getRetailPrice($sku, $currentCustomer): ?string
     {
-        return $this->getPriceFromDb($sku, 'retail_price_list', 'erp_price_retail');
+        return $this->getPriceFromDb($sku, $currentCustomer, 'retail_price_list', 'erp_price_retail');
     }
 
     /**
      * get current customer wholesale price by sku
      * @param $sku
+     * @param $currentCustomer
      * @return string|null
      */
-    public function getWholesalePrice($sku): ?string
+    public function getWholesalePrice($sku, $currentCustomer): ?string
     {
-        return $this->getPriceFromDb($sku, 'wholesale_price_list', 'erp_price_wholesale');
+        return $this->getPriceFromDb($sku, $currentCustomer, 'wholesale_price_list', 'erp_price_wholesale');
+    }
+
+    /**
+     * calculate your wsp value
+     * @param $sku
+     * @param $currentCustomer
+     * @param $mcrProductLine
+     * @return int
+     */
+    public function getYourWsp($sku, $currentCustomer, $mcrProductLine): int
+    {
+        $wsp = $this->getPriceFromDb($sku, $currentCustomer, 'wholesale_price_list', 'erp_price_wholesale');
+        $connection = $this->resourceConnection->getConnection();
+        $businessPartnerId = $currentCustomer->getBusinessPartnerId();
+        $sql = "SELECT discount_amount FROM customer_entity_discounts WHERE business_line = '{$mcrProductLine}' AND business_partner_id = '{$businessPartnerId}'";
+        $result = $connection->fetchAll($sql);
+        $discount = count($result) ? $result[0]['discount_amount'] : 0;
+        return (int)$wsp - (int)$discount;
     }
 
     /**
      * @param $sku
+     * @param $currentCustomer
      * @param $field
      * @param $tableName
      * @return string|null
      */
-    public function getPriceFromDb($sku, $field, $tableName): ?string
+    public function getPriceFromDb($sku, $currentCustomer, $field, $tableName): ?string
     {
-        $customerId = $this->_customerSession->getCustomer()->getId();
-        $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
         $priceList = $currentCustomer->getData($field);
         $connection = $this->resourceConnection->getConnection();
-        $sql = "Select price FROM {$tableName} WHERE pricelist_id = {$priceList} AND sku like '{$sku}'";
+        $sql = "SELECT price FROM {$tableName} WHERE pricelist_id = '{$priceList}' AND sku like '{$sku}'";
         $result = $connection->fetchAll($sql);
         return count($result) ? $result[0]['price'] : null;
     }

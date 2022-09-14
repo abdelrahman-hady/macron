@@ -23,6 +23,7 @@
     </table>
 
     <table name="customer_entity_discounts" resource="default" engine="innodb" comment="Customer Discounts">
+        <column xsi:type="text" name="business_partner_id" comment="Business partner ID"/>
         <column xsi:type="text" name="business_line" comment="Business Line"/>
         <column xsi:type="float" name="discount_amount" comment="Discount Amount"/>
     </table>

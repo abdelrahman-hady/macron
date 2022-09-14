@@ -5,17 +5,33 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import { TYPE_CUSTOMER } from 'Component/OrderTypePopup/OrderTypePopup.config';
 import {
     ProductListQuery as SourceProductListQuery
 } from 'SourceQuery/ProductList.query';
 import { Field } from 'Util/Query';
+import getStore from 'Util/Store';
 
 /** @namespace Scandipwa/Query/ProductList/Query */
 export class ProductListQuery extends SourceProductListQuery {
+    _getPriceRangeField() {
+        const priceRange = new Field('price_range')
+            .addFieldList(this._getPriceRangeFields());
+
+        const { CustomCartDataReducer: { orderType, selectedCustomer } } = getStore().getState();
+
+        if (orderType === TYPE_CUSTOMER) {
+            priceRange.addArgument('customer', 'String', selectedCustomer);
+        }
+
+        return priceRange;
+    }
+
     _getPriceRangeFields() {
         return [
             this._getRetailPriceField(),
-            this._getWholesalePriceField()
+            this._getWholesalePriceField(),
+            this._getYourWspField()
         ];
     }
 
@@ -26,6 +42,11 @@ export class ProductListQuery extends SourceProductListQuery {
 
     _getWholesalePriceField() {
         return new Field('wholesale_price')
+            .addFieldList(this._getCustomPriceFields());
+    }
+
+    _getYourWspField() {
+        return new Field('your_wsp')
             .addFieldList(this._getCustomPriceFields());
     }
 

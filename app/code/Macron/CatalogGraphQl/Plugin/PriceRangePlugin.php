@@ -12,7 +12,10 @@ namespace Macron\CatalogGraphQl\Plugin;
 
 use Macron\Catalog\Model\Product\Type\Price;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ProductRepository;
 use Magento\CatalogGraphQl\Model\Resolver\Product\PriceRange;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
@@ -26,12 +29,37 @@ class PriceRangePlugin
     private Price $priceModel;
 
     /**
+     * @var ProductRepository
+     */
+    private ProductRepository $productRepository;
+
+    /**
+     * @var CollectionFactory
+     */
+    private CollectionFactory $customerCollection;
+
+    /**
+     * @var GetCustomer
+     */
+    private GetCustomer $getCustomer;
+
+
+    /**
      * @param Price $priceModel
+     * @param ProductRepository $productRepository
+     * @param CollectionFactory $customerCollection
+     * @param GetCustomer $getCustomer
      */
     public function __construct(
-        Price $priceModel
+        Price $priceModel,
+        ProductRepository $productRepository,
+        CollectionFactory $customerCollection,
+        GetCustomer $getCustomer,
     ) {
         $this->priceModel = $priceModel;
+        $this->productRepository = $productRepository;
+        $this->customerCollection = $customerCollection;
+        $this->getCustomer = $getCustomer;
     }
 
     /**
@@ -54,19 +82,39 @@ class PriceRangePlugin
         /** @var Product $product */
         $product = $value['model'];
 
+        $customerId = $this->getCustomer->execute($context)->getId();
+        $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
+
+        if (isset($args['customer']) && $args['customer'] !== '') {
+            $collection = $this->customerCollection->create()->getItems();
+            foreach ($collection as $customer) {
+                if ($customer->getCompanyName() === $args['customer']) {
+                    $currentCustomer = $customer;
+                    break;
+                }
+            }
+        }
+
         $returnArray = [];
+        $sku = $product->getSku();
+        $_product = $this->productRepository->getById($product->getId());
 
         $returnArray['wholesale_price'] =
             [
-                'value' => (int)$this->priceModel->getWholesalePrice($product->getSku()),
+                'value' => (int)$this->priceModel->getWholesalePrice($sku, $currentCustomer),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
         $returnArray['retail_price'] =
             [
-                'value' => (int)$this->priceModel->getRetailPrice($product->getSku()),
+                'value' => (int)$this->priceModel->getRetailPrice($sku, $currentCustomer),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
-
+        $returnArray['your_wsp'] =
+            [
+                'value' => $this->priceModel->getYourWsp($sku, $currentCustomer,
+                    $_product->getAttributeText('mcr_product_line')),
+                'currency' => $store->getCurrentCurrencyCode()
+            ];
 
         return $returnArray;
     }
