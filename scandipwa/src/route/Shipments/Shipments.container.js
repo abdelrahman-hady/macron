@@ -13,10 +13,13 @@ import ShipmentsQuery from 'Query/Shipment.query';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { LocationType } from 'Type/Router.type';
+import { isSignedIn } from 'Util/Auth';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
+import { appendWithStoreCode, getQueryParam } from 'Util/Url';
 
 import Shipments from './Shipments.component';
 import { SHIPMENT_URL, SHIPMENTS_PER_PAGE, SHIPMENTS_PER_PAGE_ITEM } from './Shipments.config';
@@ -39,7 +42,8 @@ export const mapDispatchToProps = (dispatch) => ({
         BreadcrumbsDispatcher.then(
             ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
         );
-    }
+    },
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
 });
 
 /** @namespace Scandipwa/Route/Shipments/Container */
@@ -148,7 +152,18 @@ export class ShipmentsContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
+    _getPageFromUrl(url) {
+        const { location: currentLocation } = this.props;
+        const location = url || currentLocation;
+
+        return +(getQueryParam('page', location) || 1);
+    }
+
     render() {
+        if (!isSignedIn()) {
+            history.replace(appendWithStoreCode('/'));
+        }
+
         return (
             <Shipments
               { ...this.containerFunctions }

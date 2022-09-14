@@ -80,7 +80,7 @@ export class ShipmentsComponent extends PureComponent {
     }
 
     renderPagination() {
-        const { isLoading, shipments: { pageInfo = { total_pages: 1 } } } = this.props;
+        const { isLoading, shipments: { pageInfo = { total_pages: 2 } } } = this.props;
         const { total_pages } = pageInfo;
 
         return (
@@ -92,10 +92,14 @@ export class ShipmentsComponent extends PureComponent {
         const { isLoading, shipments } = this.props;
 
         return (
-            <ContentWrapper label="Shipments">
-                { this.renderTitle() }
-                <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
-            </ContentWrapper>
+          <ContentWrapper label="Shipments">
+             { this.renderTitle() }
+             { this.renderShipmentsPerPage() }
+             { this.renderPagination() }
+              <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
+             { this.renderShipmentsPerPage() }
+             { this.renderPagination() }
+          </ContentWrapper>
         );
     }
 
@@ -105,11 +109,7 @@ export class ShipmentsComponent extends PureComponent {
         return (
             <main block="Shipments">
                 <Loader isLoading={ isLoading } />
-                { this.renderShipmentsPerPage() }
-                { this.renderPagination() }
                 { this.renderContent() }
-                { this.renderShipmentsPerPage() }
-                { this.renderPagination() }
             </main>
         );
     }
