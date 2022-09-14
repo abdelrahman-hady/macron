@@ -77,6 +77,10 @@ export class MyClientsPageContainer extends PureComponent {
     componentDidMount() {
         const { clientsPerPage } = this.state;
 
+        if (!BrowserDatabase.getItem(CLIENTS_PER_PAGE_ITEM)) {
+            this.onClientsPerPageChange(CLIENTS_PER_PAGE);
+        }
+
         this.updateMeta();
         this.updateBreadcrumbs();
         this.requestClients(this._getPageFromUrl(), clientsPerPage);
@@ -95,16 +99,18 @@ export class MyClientsPageContainer extends PureComponent {
         const { location: prevLocation } = prevProps;
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
         if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
             const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
             history.replace(`${MY_CLIENTS_URL}${pageParam}`);
         }
+
         if (clientsPerPageList.length > 0 && !clientsPerPageList.includes(clientsPerPage)) {
-            if (clientsPerPageList.includes(CLIENTS_PER_PAGE)) {
-                this.setState({ clientsPerPage: CLIENTS_PER_PAGE });
-            } else {
-                this.setState({ clientsPerPage: clientsPerPageList[0] });
-            }
+            this.onClientsPerPageChange(
+                clientsPerPageList.includes(CLIENTS_PER_PAGE)
+                    ? CLIENTS_PER_PAGE
+                    : clientsPerPageList[0]
+            );
 
             return;
         }

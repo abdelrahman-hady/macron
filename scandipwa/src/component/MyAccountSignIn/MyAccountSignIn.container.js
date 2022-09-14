@@ -62,46 +62,24 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
     };
 
     containerProps() {
-        const {
-            state,
-            onFormError,
-            handleForgotPassword,
-            handleCreateAccount,
-            isCheckout,
-            setLoadingState,
-            emailValue,
-            handleEmailInput,
-            isLoading,
-            profileOverlay
-        } = this.props;
-
-        const { isPasswordVisible } = this.state;
-        const visibilityState = isPasswordVisible;
+        const { profileOverlay } = this.props;
+        const { isPasswordVisible: visibilityState } = this.state;
 
         return {
             ...super.containerProps,
             profileOverlay,
-            state,
-            onFormError,
-            handleForgotPassword,
-            handleCreateAccount,
-            isCheckout,
-            setLoadingState,
-            emailValue,
-            handleEmailInput,
-            isLoading,
             visibilityState
         };
     }
 
-    onPasswordVisibilityClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        // check is made to prevent action trigger on Enter press
-        if (e.target.type !== 'button') {
-            this.setState({ ...this.state, isPasswordVisible: !this.state.isPasswordVisible });
-        }
-    }
+    containerFunctions = {
+        ...this.containerFunctions,
+        myProfileAction: this.myProfileAction.bind(this),
+        getHelpAction: this.getHelpAction.bind(this),
+        logoutAction: this.logoutAction.bind(this),
+        onSignInSuccess: this.onSignInSuccess.bind(this),
+        onPasswordVisibilityClick: this.onPasswordVisibilityClick.bind(this)
+    };
 
     myProfileAction() {
         history.push({ pathname: appendWithStoreCode('my-profile') });
@@ -117,6 +95,14 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
         history.push({ pathname: appendWithStoreCode('/') });
         logout();
     }
-}
 
+    onPasswordVisibilityClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // check is made to prevent action trigger on Enter press
+        if (e.target.type !== 'button') {
+            this.setState({ ...this.state, isPasswordVisible: !this.state.isPasswordVisible });
+        }
+    }
+}
 export default connect(mapStateToProps, mapDispatchToProps)(MyAccountSignInContainer);

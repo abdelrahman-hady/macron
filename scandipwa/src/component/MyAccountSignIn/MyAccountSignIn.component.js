@@ -18,7 +18,7 @@ import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
 
 import VisibilityIcon from '../VisibilityIcon/VisibilityIcon.component';
 
-import './MyAccountSignIn.extension.style.scss';
+import './MyAccountSignIn.override.style';
 
 /** @namespace Scandipwa/Component/MyAccountSignIn/Component */
 export class MyAccountSignInComponent extends SourceMyAccountSignInComponent {

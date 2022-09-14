@@ -29,6 +29,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         ...super.propTypes,
         ordersPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         ordersPerPage: PropTypes.number.isRequired,
+        sortOptions: PropTypes.object.isRequired,
+        statusOptions: PropTypes.array.isRequired,
         updateOptions: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
         onDateSelectorChange: PropTypes.func.isRequired,

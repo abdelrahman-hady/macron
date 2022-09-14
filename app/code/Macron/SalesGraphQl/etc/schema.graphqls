@@ -1,15 +1,15 @@
-input CustomerOrdersFilterInput @doc(description: "Identifies the filter to use for filtering orders.") {
-    entity_id: FilterStringTypeInput @doc(description: "Filters by order entity id.")
-    sap_order_id: FilterStringTypeInput @doc(description: "Filters by sap order entity id.")
-    user_customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
-    status: FilterStringTypeInput @doc(description: "Filters by order status.")
-    created_at: FilterTypeInput @doc(description: "Filters by order date.")
-}
-
 type Query {
     OrdersByKeyword(
         currentPage: String,
         pageSize: String,
         keyword: String!
     ): CustomerOrders @resolver(class: "Macron\\SalesGraphQl\\Model\\Resolver\\OrdersByKeyword")
+}
+
+input CustomerOrdersFilterInput @doc(description: "Identifies the filter to use for filtering orders.") {
+    entity_id: FilterStringTypeInput @doc(description: "Filters by order entity id.")
+    sap_order_id: FilterStringTypeInput @doc(description: "Filters by sap order entity id.")
+    user_customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
+    status: FilterStringTypeInput @doc(description: "Filters by order status.")
+    created_at: FilterTypeInput @doc(description: "Filters by order date.")
 }

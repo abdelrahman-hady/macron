@@ -66,6 +66,12 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     state = {
         ordersPerPage: +(BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE),
+        sortOptions: {
+            orderStatus: 0 // Filters orders list by status
+        },
+        statusOptions: [],
+        searchInput: '',
+        orderListSearchResult: [],
         filterOptions: {
             dateFrom: '',
             dateTo: '',
@@ -75,9 +81,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         availableFilters: {
             status: [],
             user_customer_name: []
-        },
-        searchInput: '',
-        orderListSearchResult: []
+        }
     };
 
     containerFunctions = {
@@ -94,9 +98,12 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             ordersPerPage,
             searchInput,
             orderListSearchResult,
-            dateFrom, dateTo,
+            dateFrom,
+            dateTo,
             filterOptions,
-            availableFilters
+            availableFilters,
+            sortOptions,
+            statusOptions
         } = this.state;
 
         return {
@@ -107,6 +114,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             ordersPerPage,
             dateFrom,
             dateTo,
+            sortOptions,
+            statusOptions,
             filterOptions,
             availableFilters,
             ...super.containerProps()
@@ -117,6 +126,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { getOrderList } = this.props;
         const { ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
 
+        if (!BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM)) {
+            this.onOrderPerPageChange(ORDERS_PER_PAGE);
+        }
+
         getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions).then(
             /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/componentDidMount/getOrderList/then */
             () => {
@@ -124,6 +137,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                 this.setState({ availableFilters: this.getAvailablefilterOptions() });
             }
         );
+        this.setState({ statusOptions: this._getStatusOptions() });
     }
 
     getAvailablefilterOptions() {
@@ -168,8 +182,15 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                 } = {}
             }
         } = this.props;
-        const { ordersPerPage = ORDERS_PER_PAGE, filterOptions, availableFilters } = this.state;
+
         const {
+            sortOptions: { orderStatus },
+            ordersPerPage,
+            filterOptions,
+            availableFilters
+        } = this.state;
+        const {
+            sortOptions: { orderStatus: prevOrderStatus },
             ordersPerPage: prevOrdersPerPage,
             filterOptions: prevFilterOptions,
             availableFilters: prevAvailableFilters
@@ -185,21 +206,25 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         }
 
         if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
-            if (ordersPerPageList.includes(ORDERS_PER_PAGE)) {
-                this.setState({ ordersPerPage: ORDERS_PER_PAGE });
-            } else {
-                this.setState({ ordersPerPage: ordersPerPageList[0] });
-            }
+            this.onOrderPerPageChange(
+                ordersPerPageList.includes(ORDERS_PER_PAGE)
+                    ? ORDERS_PER_PAGE
+                    : ordersPerPageList[0]
+            );
 
             return;
         }
 
-        if (currentPage !== prevPage
-            || ordersPerPage !== prevOrdersPerPage
-            || filterOptions !== prevFilterOptions
-            || availableFilters !== prevAvailableFilters
+        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevFilterOptions));
+        const availFiltersChanged = () => !(JSON.stringify(availableFilters) === JSON.stringify(prevAvailableFilters));
+
+        if (orderStatus !== prevOrderStatus
+             || currentPage !== prevPage
+              || ordersPerPage !== prevOrdersPerPage
+              || filterOptionsChanged()
+               || availFiltersChanged()
         ) {
-            getOrderList(this._getPageFromUrl(), ordersPerPage, filterOptions).then(
+            getOrderList(currentPage, ordersPerPage, filterOptions).then(
                 /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/componentDidUpdate/getOrderList/then */
                 () => {
                     // Should update available filters when page number is changed
@@ -213,6 +238,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     }
 
     updateOptions(option) {
+        this.setState(({ sortOptions }) => ({ sortOptions: { ...sortOptions, ...option } }));
         this.setState(({ filterOptions }) => ({ filterOptions: { ...filterOptions, ...option } }));
     }
 
