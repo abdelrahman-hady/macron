@@ -24,9 +24,10 @@ import './CreateClientPage.style.scss';
 /** @namespace Scandipwa/Route/CreateClientPage/Component */
 export class CreateClientPageComponent extends PureComponent {
     static propTypes = {
-        selectItems: PropTypes.arrayOf(PropTypes.objectOf({ name: PropTypes.string, id: PropTypes.number })).isRequired,
+        clientOptions: PropTypes.objectOf.isRequired,
         onSave: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
+        isOptionsLoading: PropTypes.bool.isRequired,
         isEdit: PropTypes.bool.isRequired,
         client: ClientType
     };
@@ -39,9 +40,9 @@ export class CreateClientPageComponent extends PureComponent {
 
     // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
     get fieldMap() {
-        const { selectItems, client } = this.props;
+        const { clientOptions, client } = this.props;
 
-        return createClientForm({ selectItems, client });
+        return createClientForm({ clientOptions, client });
     }
 
     renderHeading() {
@@ -119,11 +120,11 @@ export class CreateClientPageComponent extends PureComponent {
     }
 
     render() {
-        const { isLoading } = this.props;
+        const { isLoading, isOptionsLoading } = this.props;
 
         return (
             <div block="CreateClientPage">
-                 <Loader isLoading={ isLoading } />
+                 <Loader isLoading={ isLoading || isOptionsLoading } />
                 { this.renderMainContent() }
             </div>
         );

@@ -7,11 +7,11 @@
  */
 declare(strict_types=1);
 
-namespace Macron\ErpGraphQl\Model\ResourceModel\Clients;
+namespace Macron\ErpGraphQl\Model\ResourceModel\Clients\Options\Affiliation;
 
 use Magento\Framework\ObjectManagerInterface;
 
-class CollectionFactory implements CollectionFactoryInterface
+class AffiliationCollectionFactory implements AffiliationCollectionFactoryInterface
 {
     /**
      * Object Manager instance
@@ -44,19 +44,10 @@ class CollectionFactory implements CollectionFactoryInterface
     /**
      * Create clients collection
      *
-     * @param ?int $customerId
      * {@inheritdoc}
      */
-    public function create(int $customerId = null): Collection
+    public function create(): Collection
     {
-        $collection = $this->objectManager->create($this->instanceName);
-
-        if ($customerId) {
-            $collection->addFieldToFilter('customer_id', $customerId);
-        }
-
-        $collection->joinTables();
-
-        return $collection;
+        return $this->objectManager->create($this->instanceName);
     }
 }

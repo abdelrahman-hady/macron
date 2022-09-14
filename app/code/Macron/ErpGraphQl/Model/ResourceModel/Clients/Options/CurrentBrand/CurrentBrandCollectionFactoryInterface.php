@@ -7,18 +7,17 @@
  */
 declare(strict_types=1);
 
-namespace Macron\ErpGraphQl\Model\ResourceModel\Clients;
+namespace Macron\ErpGraphQl\Model\ResourceModel\Clients\Options\CurrentBrand;
 
 /**
  * Class CollectionFactoryInterface
  */
-interface CollectionFactoryInterface
+interface CurrentBrandCollectionFactoryInterface
 {
     /**
      * Create class instance with specified parameters
      *
-     * @param ?int $customerId
      * @return Collection
      */
-    public function create(int $customerId = null): Collection;
+    public function create(): Collection;
 }

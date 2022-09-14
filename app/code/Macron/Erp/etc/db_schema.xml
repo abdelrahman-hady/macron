@@ -3,6 +3,7 @@
 /**
  * @category  Macron
  * @author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+ * @author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -27,45 +28,54 @@
             <column name="entity_id"/>
         </constraint>
         <constraint xsi:type="foreign" referenceId="CUSTOMER_ENTITY_ID" table="erp_shipment" column="customer_id"
-                    referenceTable="customer_entity"
-                    referenceColumn="entity_id"/>
+                    referenceTable="customer_entity" referenceColumn="entity_id"/>
     </table>
 
     <table name="erp_client" resource="default" engine="innodb" comment="Table to store my clients">
         <column xsi:type="int" name="entity_id" identity="true" nullable="false" comment="Client Id"/>
-        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Client Id"/>
         <column xsi:type="text" name="company_name" nullable="false" comment="Company name"/>
-        <column xsi:type="text" name="address" comment="Address"/>
-        <column xsi:type="int" name="vat_number" comment="VAT number"/>
-        <column xsi:type="text" name="contract_expiracy_date" comment="Сontract expiracy date"/>
-        <column xsi:type="text" name="affiliation" comment="Affiliation"/>
-        <column xsi:type="int" name="sport" comment="Sport"/>
-        <column xsi:type="int" name="category" comment="Category"/>
-        <column xsi:type="int" name="primary_color" comment="Primary color"/>
-        <column xsi:type="int" name="secondary_color" comment="Secondary color"/>
-        <column xsi:type="text" name="current_brand" comment="Current brand"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Customer Id"/>
+        <column xsi:type="int" name="affiliation_id" comment="Affiliation"/>
+        <column xsi:type="int" name="date_id" comment="Сontract Expiracy Date"/>
+        <column xsi:type="int" name="current_brand_id" comment="Current brand"/>
+        <column xsi:type="int" name="sport_id" comment="Sport"/>
+        <column xsi:type="int" name="primary_color_id" comment="Primary color"/>
+        <column xsi:type="int" name="secondary_color_id" comment="Secondary color"/>
+        <column xsi:type="text" name="category" comment="Category"/>
         <column xsi:type="int" name="coni_id" comment="Coni ID"/>
-        <column xsi:type="int" name="membership_no" comment="Membership No."/>
-        <column xsi:type="int" name="distance" comment="Distance from MS"/>
-        <column xsi:type="text" name="contact_person" comment="Contact person"/>
-        <column xsi:type="text" name="mobile" comment="Mobile"/>
+        <column xsi:type="int" name="vat_number" comment="VAT number"/>
+        <column xsi:type="boolean" name="is_contract_signed" comment="Signed Contract"/>
+        <column xsi:type="int" name="distance_id" comment="Distance from MS"/>
         <column xsi:type="text" name="email" comment="Email"/>
+        <column xsi:type="text" name="mobile" comment="Mobile"/>
+        <column xsi:type="int" name="membership_no" comment="Membership No."/>
+        <column xsi:type="text" name="address" comment="Address"/>
+        <column xsi:type="text" name="contact_person" comment="Contact person"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
         <constraint xsi:type="foreign" referenceId="CUSTOMER_ENTITY_ID" table="erp_client" column="customer_id"
-                    referenceTable="customer_entity"
-                    referenceColumn="entity_id"/>
+                    referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="AFFILIATION_ID" table="erp_client" column="affiliation_id"
+                    referenceTable="erp_affiliation" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="DATE_ID" table="erp_client" column="date_id"
+                    referenceTable="erp_contract_expiracy_date" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="CURRENT_BRAND_ID" table="erp_client" column="current_brand_id"
+                    referenceTable="erp_current_brand" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="SPORT_ID" table="erp_client" column="sport_id"
+                    referenceTable="erp_sport" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PRIMARY_COLOR_ID" table="erp_client" column="primary_color_id"
+                    referenceTable="erp_color" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="SECONDARY_COLOR_ID" table="erp_client" column="secondary_color_id"
+                    referenceTable="erp_color" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="DISTANCE_ID" table="erp_client" column="distance_id"
+                    referenceTable="erp_distance" referenceColumn="id" onDelete="CASCADE"/>
         <index referenceId="MACRON_ERP_CLIENT_INDEX" indexType="fulltext">
             <column name="company_name"/>
             <column name="address"/>
-            <column name="contract_expiracy_date"/>
-            <column name="affiliation"/>
-            <column name="current_brand"/>
             <column name="contact_person"/>
             <column name="mobile"/>
-            <column name="contact_person"/>
-            <column name="email"/>
+            <column name="category"/>
         </index>
     </table>
 
@@ -117,5 +127,89 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
+    </table>
+
+    <table name="erp_affiliation" resource="default" engine="innodb" comment="Affiliations">
+        <column xsi:type="int" name="id" identity="true" nullable="false"/>
+        <column xsi:type="text" name="label"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="AFFILIATION_STORE_ID" table="erp_affiliation" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_AFFILIATION_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
+    </table>
+
+    <table name="erp_contract_expiracy_date" resource="default" engine="innodb" comment="Contract Expiracy Dates">
+        <column xsi:type="int" name="id" identity="true" nullable="false"/>
+        <column xsi:type="text" name="label"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="DATE_STORE_ID" table="erp_contract_expiracy_date" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_DATE_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
+    </table>
+
+    <table name="erp_current_brand" resource="default" engine="innodb" comment="Current brands">
+        <column xsi:type="int" name="id" identity="true" nullable="false"/>
+        <column xsi:type="text" name="label"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="CURRENT_BRAND_STORE_ID" table="erp_current_brand" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_CURRENT_BRAND_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
+    </table>
+
+    <table name="erp_sport" resource="default" engine="innodb" comment="Sport types">
+        <column xsi:type="int" name="id" identity="true" nullable="false"/>
+        <column xsi:type="text" name="label"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SPORT_STORE_ID" table="erp_sport" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_SPORT_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
+    </table>
+
+    <table name="erp_color" resource="default" engine="innodb" comment="Primary colors">
+        <column xsi:type="int" name="id" identity="true" nullable="false"/>
+        <column xsi:type="text" name="label"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="COLOR_STORE_ID" table="erp_color" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_COLOR_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
+    </table>
+
+    <table name="erp_distance" resource="default" engine="innodb" comment="Primary colors">
+        <column xsi:type="int" name="id" identity="true" nullable="false"/>
+        <column xsi:type="text" name="label"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="DISTANCE_STORE_ID" table="erp_distance" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="MACRON_ERP_DISTANCE_INDEX" indexType="fulltext">
+            <column name="label"/>
+        </index>
     </table>
 </schema>

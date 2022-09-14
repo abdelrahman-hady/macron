@@ -6,7 +6,9 @@ type Query {
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
         @doc(description: "Get list of clients")
 
-    client(client_id: Int!): ClientType
+    client (
+        client_id: Int!
+    ): Client
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
         @doc(description: "Get client by id")
 
@@ -20,12 +22,18 @@ type Query {
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
         @doc(description: "Get list of invoices")
 
+
     shipments(
         currentPage: Int = 1
         pageSize: Int = 10
     ): [Shipment]
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
         @doc(description: "Get shipments list")
+
+
+    clientOptions: ClientOptions
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\ClientOptions")
+        @doc(description: "Get all client options")
 }
 
 type Mutation {
@@ -49,28 +57,36 @@ type Mutation {
 }
 
 type Clients {
-    items: [ClientType]
+    items: [Client]
     page_info: SearchResultPageInfo
 }
 
-type ClientType {
+type Client {
     entity_id: Int
     company_name: String
     address: String
     vat_number: Int
-    contract_expiracy_date: String
+    date_id: Int
+    date: String
+    affiliation_id: Int
     affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
+    sport_id: Int
+    sport: String
+    category: String
+    primary_color_id: Int
+    primary_color: String
+    secondary_color_id: Int
+    secondary_color: String
+    current_brand_id: Int
     current_brand: String
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
+    distance: String
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
 }
 
 type Shipment {
@@ -87,19 +103,20 @@ input CreateClientInput {
     company_name: String!
     address: String
     vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
+    date_id: Int
+    affiliation_id: Int
+    sport_id: Int
+    category: String
+    primary_color_id: Int
+    secondary_color_id: Int
+    current_brand_id: Int
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
 }
 
 input UpdateClientInput {
@@ -107,19 +124,35 @@ input UpdateClientInput {
     company_name: String!
     address: String
     vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
+    date_id: Int
+    date: String
+    affiliation_id: Int
+    sport_id: Int
+    category: String
+    primary_color_id: Int
+    secondary_color_id: Int
+    current_brand_id: Int
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
+}
+
+type ClientOptions {
+    affiliations: [Option]
+    current_brands: [Option]
+    dates: [Option]
+    sports: [Option]
+    colors: [Option]
+    distances: [Option]
+}
+
+type Option {
+    id: Int
+    label: String
 }
 
 type InvoiceType {

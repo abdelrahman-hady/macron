@@ -7,18 +7,17 @@
  */
 declare(strict_types=1);
 
-namespace Macron\ErpGraphQl\Model\ResourceModel\Clients;
+namespace Macron\ErpGraphQl\Model\ResourceModel\Clients\Options\Date;
 
-/**
- * Class CollectionFactoryInterface
- */
-interface CollectionFactoryInterface
+use Magento\Framework\Model\AbstractModel;
+
+class DateModel extends AbstractModel
 {
     /**
-     * Create class instance with specified parameters
-     *
-     * @param ?int $customerId
-     * @return Collection
+     * @return void
      */
-    public function create(int $customerId = null): Collection;
+    protected function _construct(): void
+    {
+        $this->_init(DateCollection::class);
+    }
 }

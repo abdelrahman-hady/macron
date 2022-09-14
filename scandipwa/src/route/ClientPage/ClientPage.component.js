@@ -23,7 +23,7 @@ import './ClientPage.styles.scss';
 /** @namespace Scandipwa/Route/ClientPage/Component */
 export class ClientPageComponent extends PureComponent {
     static propTypes = {
-        client: PropTypes.objectOf(ClientType).isRequired,
+        client: ClientType.isRequired,
         isLoading: PropTypes.bool.isRequired,
         onClickDelete: PropTypes.func.isRequired,
         onClickCreate: PropTypes.func.isRequired,
