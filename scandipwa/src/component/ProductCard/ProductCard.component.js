@@ -5,16 +5,13 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-/* eslint-disable max-len */
 import PropTypes from 'prop-types';
 
+import ProductStockGrid from 'Component/ProductStockGrid';
+import { GRID_COLOR_ITEM } from 'Component/ProductStockGrid/ProductStockGrid.config';
 import {
     ProductCard as SourceProductCard
 } from 'SourceComponent/ProductCard/ProductCard.component';
-
-import { GRID_COLOR_ITEM, GRID_SIZE_ITEM } from './ProductCard.config';
-
-import './ProductCard.override.style.scss';
 
 /** @namespace Scandipwa/Component/ProductCard/Component */
 export class ProductCardComponent extends SourceProductCard {
@@ -63,50 +60,15 @@ export class ProductCardComponent extends SourceProductCard {
     }
 
     renderStockGrid() {
-        const items = new Map();
-        const { product: { variants }, parameters: { [GRID_COLOR_ITEM]: color } = {} } = this.props;
-        const confOptions = this.getConfigurableAttributes();
+        const { product, parameters: { [GRID_COLOR_ITEM]: selectedColor } = {} } = this.props;
 
-        if (!variants) {
-            return null;
-        }
-
-        variants.forEach(({ attributes: { [GRID_SIZE_ITEM]: { attribute_value: sizeValue }, [GRID_COLOR_ITEM]: { attribute_value: colorValue } }, salable_qty }) => {
-            items[`${colorValue}-${sizeValue}`] = salable_qty;
-        });
-
-        return Object.values(confOptions).map(({ attribute_options, attribute_code }) => {
-            if (attribute_code !== GRID_SIZE_ITEM) {
-                return null;
-            }
-
-            return (
-                <table block="ProductCard" elem="Table">
-                    <thead>
-                        <tr>
-                            <th>{ __('Size') }</th>
-                            { Object.values(attribute_options).map(({ swatch_data: { value } }) => (
-                                <th>{ value }</th>
-                            )) }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{ __('HQ') }</td>
-                            { Object.values(attribute_options).map(({ value }) => (
-                                <td>{ items[`${color}-${value}`] }</td>
-                            )) }
-                        </tr>
-                        <tr>
-                            <td>{ __('Arrivals') }</td>
-                            { Object.values(attribute_options).map(() => (
-                                <td>-</td>
-                            )) }
-                        </tr>
-                    </tbody>
-                </table>
-            );
-        });
+        return (
+            <ProductStockGrid
+              configurationOptions={ this.getConfigurableAttributes() }
+              product={ product }
+              selectedColor={ selectedColor }
+            />
+        );
     }
 }
 

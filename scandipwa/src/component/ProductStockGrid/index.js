@@ -5,7 +5,4 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-export * from 'SourceComponent/ProductCard/ProductCard.config.js';
-
-export const GRID_SIZE_ITEM = 'size';
-export const GRID_COLOR_ITEM = 'color';
+export { default } from './ProductStockGrid.component';

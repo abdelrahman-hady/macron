@@ -5,8 +5,5 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-.ProductCard {
-    &-Table {
-        width: 100%;
-    }
-}
+export const GRID_SIZE_ITEM = 'size';
+export const GRID_COLOR_ITEM = 'color';
