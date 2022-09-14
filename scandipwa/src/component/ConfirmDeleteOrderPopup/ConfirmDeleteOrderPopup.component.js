@@ -9,12 +9,17 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Popup from 'Component/Popup';
-import { CONFIRM_DELETE_ORDER_POPUP } from 'Route/CartPage/CartPage.config';
+import { CONFIRM_DELETE_ORDER_POPUP, CONFIRM_DELETE_ORDER_POPUP_NEW_ORDER } from 'Route/CartPage/CartPage.config';
 
 /** @namespace Scandipwa/Component/ConfirmDeleteOrderPopup/Component */
 export class ConfirmDeleteOrderPopupComponent extends PureComponent {
     static propTypes = {
-        handleDeleteOrder: PropTypes.func.isRequired
+        handleDeleteOrder: PropTypes.func.isRequired,
+        isOrderType: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isOrderType: false
     };
 
     renderPopupContent() {
@@ -41,10 +46,11 @@ export class ConfirmDeleteOrderPopupComponent extends PureComponent {
     }
 
     render() {
+        const { isOrderType } = this.props;
         return (
             <div block="ConfirmDeleteOrderPopup">
                 <Popup
-                  id={ CONFIRM_DELETE_ORDER_POPUP }
+                  id={ isOrderType ? CONFIRM_DELETE_ORDER_POPUP_NEW_ORDER : CONFIRM_DELETE_ORDER_POPUP }
                   clickOutside={ false }
                   mix={ { block: 'OrderDeletePopup' } }
                 >
