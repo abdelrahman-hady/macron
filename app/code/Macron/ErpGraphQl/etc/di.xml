@@ -15,4 +15,10 @@
                 type="Macron\ErpGraphQl\Model\ResourceModel\Clients\Client"/>
     <preference for="Macron\ErpGraphQl\Api\Data\ClientSearchResultsInterface"
                 type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Macron\ErpGraphQl\Api\ShipmentRepositoryInterface"
+                type="Macron\ErpGraphQl\Model\ResourceModel\Shipments\ShipmentsRepository"/>
+    <preference for="Macron\ErpGraphQl\Api\Data\ShipmentInterface"
+                type="Macron\ErpGraphQl\Model\ResourceModel\Shipments\Shipment"/>
+    <preference for="Macron\ErpGraphQl\Api\Data\ShipmentSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
 </config>

@@ -20,14 +20,14 @@ import Loader from 'Component/Loader';
 import Pagination from 'Component/Pagination';
 import SearchIcon from 'Component/SearchIcon';
 import ShipmentsTable from 'Component/ShipmentsTable';
-import { ShipmentType } from 'Type/Shipment.type';
+import { ShipmentsType, ShipmentType } from 'Type/Shipment.type';
 
 import './Shipments.style';
 
 /** @namespace Scandipwa/Route/Shipments/Component */
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
-        shipments: ShipmentType.isRequired,
+        shipments: PropTypes.arrayOf(ShipmentsType).isRequired,
         isLoading: PropTypes.bool,
         onInputChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
@@ -64,6 +64,7 @@ export class ShipmentsComponent extends PureComponent {
                 </div>
                 <Field
                   id="SearchShipment"
+                  value={ 0 }
                   type={ FIELD_TYPE.text }
                   attr={ {
                       block: 'SearchShipment',
@@ -93,8 +94,9 @@ export class ShipmentsComponent extends PureComponent {
 
     renderContent() {
         const {
-            isLoading, shipments: { items = [] }, searchInput, shipmentsSearchResult
+            isLoading, shipments: items, searchInput, shipmentsSearchResult
         } = this.props;
+
         const shipments = searchInput !== '' ? shipmentsSearchResult : items;
 
         return (

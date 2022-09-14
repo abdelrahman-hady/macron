@@ -24,6 +24,12 @@ type Query {
     ): [Shipment]
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
     @doc(description: "Get shipments list")
+
+    shipmentsByKeyword(
+        keyword: String!
+    ): [Shipment]
+    @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ShipmentsByKeyword")
+    @doc(description: "Get shipments by keyword")
 }
 
 type Mutation {

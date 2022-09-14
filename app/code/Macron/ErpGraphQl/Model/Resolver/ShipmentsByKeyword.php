@@ -5,6 +5,7 @@
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
+
 declare(strict_types=1);
 
 namespace Macron\ErpGraphQl\Model\Resolver;
@@ -31,12 +32,12 @@ class ShipmentsByKeyword implements ResolverInterface
     /**
      * @var CollectionFactory
      */
-    protected CollectionFactory $ShipmentsCollection;
+    protected CollectionFactory $shipmentsCollection;
 
     /**
      * @var ShipmentFilter
      */
-    protected ShipmentFilter $ShipmentFilter;
+    protected ShipmentFilter $shipmentFilter;
 
     /**
      * @var SearchCriteriaBuilder
@@ -44,9 +45,9 @@ class ShipmentsByKeyword implements ResolverInterface
     protected SearchCriteriaBuilder $searchCriteriaBuilder;
 
     /**
-     * @param ShipmentsRepository $ShipmentRepository
-     * @param CollectionFactory $ShipmentsCollection
-     * @param ShipmentFilter $ShipmentFilter
+     * @param ShipmentsRepository $shipmentRepository
+     * @param CollectionFactory $shipmentsCollection
+     * @param ShipmentFilter $shipmentFilter
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
@@ -55,9 +56,9 @@ class ShipmentsByKeyword implements ResolverInterface
         ShipmentFilter $shipmentFilter,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
-        $this->ShipmentRepository = $shipmentRepository;
-        $this->ShipmentsCollection = $shipmentsCollection;
-        $this->ShipmentFilter = $shipmentFilter;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->shipmentsCollection = $shipmentsCollection;
+        $this->shipmentFilter = $shipmentFilter;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
@@ -101,10 +102,10 @@ class ShipmentsByKeyword implements ResolverInterface
             $filterCondition['filter'][$fieldName] = ['match' => $args['keyword']];
         }
 
-        $filterGroups = $this->ShipmentFilter->createFilterGroups($filterCondition, $customerId);
+        $filterGroups = $this->shipmentFilter->createFilterGroups($filterCondition, $customerId);
         $this->searchCriteriaBuilder->setFilterGroups($filterGroups);
 
-        $searchResult = $this->ShipmentRepository->getList($this->searchCriteriaBuilder->create(), $customerId);
+        $searchResult = $this->shipmentRepository->getList($this->searchCriteriaBuilder->create(), $customerId);
 
         return $searchResult->getItems();
     }

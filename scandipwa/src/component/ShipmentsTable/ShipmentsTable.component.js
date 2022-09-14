@@ -48,6 +48,7 @@ export class ShipmentsTableComponent extends PureComponent {
 
     renderTableRow(data) {
         const {
+            entity_id,
             shipment_number,
             status,
             tracking_number,
@@ -57,7 +58,7 @@ export class ShipmentsTableComponent extends PureComponent {
         } = data;
 
         return (
-            <tr key={ tracking_number }>
+            <tr key={ entity_id }>
                 <td>{ shipment_number }</td>
                 <td>{ date }</td>
                 <td>{ customer_name }</td>

@@ -13,7 +13,11 @@ import ShipmentsQuery from 'Query/Shipment.query';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
-import { fetchQuery } from 'Util/Request';
+import { showNotification } from 'Store/Notification/Notification.action';
+import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
+import { appendWithStoreCode } from 'Util/Url';
 
 import Shipments from './Shipments.component';
 import { SHIPMENT_URL } from './Shipments.config';
@@ -35,14 +39,16 @@ export const mapDispatchToProps = (dispatch) => ({
         BreadcrumbsDispatcher.then(
             ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
         );
-    }
+    },
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
 });
 
 /** @namespace Scandipwa/Route/Shipments/Container */
 export class ShipmentsContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,
-        updateBreadcrumbs: PropTypes.func.isRequired
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        showErrorNotification: PropTypes.func.isRequired
     };
 
     state = {
@@ -61,12 +67,28 @@ export class ShipmentsContainer extends PureComponent {
     componentDidMount() {
         this.updateMeta();
         this.updateBreadcrumbs();
+        this.requestShipments();
     }
 
     __construct(props) {
         super.__construct(props, 'ShipmentsContainer');
 
         this.updateBreadcrumbs();
+    }
+
+    async requestShipments() {
+        const { showErrorNotification } = this.props;
+
+        this.setState({ isLoading: true });
+
+        try {
+            const { shipments } = await fetchQuery(ShipmentsQuery.getShipmentsQuery());
+
+            this.setState({ shipments, isLoading: false });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+            this.setState({ isLoading: false });
+        }
     }
 
     containerProps = () => {
@@ -128,6 +150,10 @@ export class ShipmentsContainer extends PureComponent {
     }
 
     render() {
+        if (!isSignedIn()) {
+            history.replace(appendWithStoreCode('/'));
+        }
+
         return (
             <Shipments
               { ...this.containerFunctions }
