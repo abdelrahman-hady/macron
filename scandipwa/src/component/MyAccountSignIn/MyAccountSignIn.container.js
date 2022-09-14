@@ -49,12 +49,12 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
 
     containerProps() {
         const { profileOverlay } = this.props;
-        const { isPasswordVisible } = this.state;
+        const { isPasswordVisible: visibilityState } = this.state;
 
         return {
             ...super.containerProps,
             profileOverlay,
-            isPasswordVisible
+            visibilityState
         };
     }
 
