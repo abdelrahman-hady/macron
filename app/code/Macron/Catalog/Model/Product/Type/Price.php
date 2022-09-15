@@ -15,75 +15,16 @@ use Magento\Catalog\Api\Data\ProductTierPriceInterfaceFactory;
 use Magento\Catalog\Model\Product\Type\Price as SourcePrice;
 use Magento\CatalogRule\Model\ResourceModel\RuleFactory;
 use Magento\Customer\Api\GroupManagementInterface;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\App\ResourceConnection;
 
 class Price extends SourcePrice
 {
-    /**
-     * @var array
-     */
-    protected static $attributeCache = [];
-
-    /**
-     * Core event manager proxy
-     *
-     * @var ManagerInterface
-     */
-    protected $_eventManager;
-
-    /**
-     * Customer session
-     *
-     * @var Session
-     */
-    protected $_customerSession;
-
-    /**
-     * @var TimezoneInterface
-     */
-    protected $_localeDate;
-
-    /**
-     * Store manager
-     *
-     * @var StoreManagerInterface
-     */
-    protected $_storeManager;
-
-    /**
-     * Rule factory
-     *
-     * @var RuleFactory
-     */
-    protected $_ruleFactory;
-
-    /**
-     * @var PriceCurrencyInterface
-     */
-    protected $priceCurrency;
-
-    /**
-     * @var GroupManagementInterface
-     */
-    protected $_groupManagement;
-
-    /**
-     * @var ProductTierPriceInterfaceFactory
-     */
-    protected $tierPriceFactory;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $config;
-
     /**
      * @var ProductTierPriceExtensionFactory
      */
@@ -94,6 +35,19 @@ class Price extends SourcePrice
      */
     private ResourceConnection $resourceConnection;
 
+    /**
+     * @param RuleFactory $ruleFactory
+     * @param StoreManagerInterface $storeManager
+     * @param TimezoneInterface $localeDate
+     * @param Session $customerSession
+     * @param ManagerInterface $eventManager
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param GroupManagementInterface $groupManagement
+     * @param ProductTierPriceInterfaceFactory $tierPriceFactory
+     * @param ScopeConfigInterface $config
+     * @param ProductTierPriceExtensionFactory|null $tierPriceExtensionFactory
+     * @param ResourceConnection $resourceConnection
+     */
     public function __construct(
         RuleFactory $ruleFactory,
         StoreManagerInterface $storeManager,
@@ -154,12 +108,15 @@ class Price extends SourcePrice
     public function getYourWsp($sku, $currentCustomer, $mcrProductLine): int
     {
         $wsp = $this->getPriceFromDb($sku, $currentCustomer, 'wholesale_price_list', 'erp_price_wholesale');
-        $connection = $this->resourceConnection->getConnection();
         $businessPartnerId = $currentCustomer->getBusinessPartnerId();
-        $sql = "SELECT discount_amount FROM customer_entity_discounts WHERE business_line = '{$mcrProductLine}' AND business_partner_id = '{$businessPartnerId}'";
-        $result = $connection->fetchAll($sql);
-        $discount = count($result) ? $result[0]['discount_amount'] : 0;
-        return (int)$wsp - (int)$discount;
+        return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $wsp);
+    }
+
+    public function getCustomerRrp($sku, $endCustomer, $currentCustomer, $mcrProductLine): int
+    {
+        $rrp = $this->getPriceFromDb($sku, $currentCustomer, 'retail_price_list', 'erp_price_retail');
+        $businessPartnerId = $endCustomer->getBusinessPartnerId();
+        return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $rrp);
     }
 
     /**
@@ -173,8 +130,32 @@ class Price extends SourcePrice
     {
         $priceList = $currentCustomer->getData($field);
         $connection = $this->resourceConnection->getConnection();
-        $sql = "SELECT price FROM {$tableName} WHERE pricelist_id = '{$priceList}' AND sku like '{$sku}'";
-        $result = $connection->fetchAll($sql);
+        $table = $connection->getTableName($tableName);
+        $sql = $connection->select()->from($table, 'price')->where('pricelist_id = :pricelist_id AND sku = :sku');
+        $bind = [':pricelist_id' => $priceList, ':sku' => $sku];
+        $result = $connection->fetchAll($sql, $bind);
         return count($result) ? $result[0]['price'] : null;
+    }
+
+    /**
+     * @param $mcrProductLine
+     * @param $businessPartnerId
+     * @param $wsp
+     * @return Int
+     */
+    public function getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $wsp): int
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $table = $connection->getTableName('customer_entity_discounts');
+        $sql = $connection->select()->from(
+            $table,
+            'discount_amount'
+        )->where(
+            'business_line = :business_line AND business_partner_id = :business_partner_id',
+        );
+        $bind = [':business_line' => $mcrProductLine, ':business_partner_id' => $businessPartnerId];
+        $result = $connection->fetchAll($sql, $bind);
+        $discount = count($result) ? $result[0]['discount_amount'] : 0;
+        return (int)$wsp - (int)$discount;
     }
 }
