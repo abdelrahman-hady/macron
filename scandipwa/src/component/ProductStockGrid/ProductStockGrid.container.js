@@ -12,7 +12,7 @@ import { AttributesType, ProductType } from 'Type/ProductList.type';
 import { StockType } from 'Type/Stock.type';
 
 import ProductStockGrid from './ProductStockGrid.component';
-import { EMPTY_QTY, GRID_COLOR_ITEM, GRID_SIZE_ITEM } from './ProductStockGrid.config';
+import { GRID_COLOR_ITEM, GRID_SIZE_ITEM } from './ProductStockGrid.config';
 
 /** @namespace Scandipwa/Component/ProductStockGrid/Container */
 export class ProductStockGridContainer extends PureComponent {
@@ -21,11 +21,13 @@ export class ProductStockGridContainer extends PureComponent {
         product: ProductType.isRequired,
         selectedColor: PropTypes.string,
         stock: PropTypes.arrayOf(StockType).isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        warehouses: PropTypes.arrayOf(PropTypes.string)
     };
 
     static defaultProps = {
-        selectedColor: null
+        selectedColor: null,
+        warehouses: []
     };
 
     state = {
@@ -44,7 +46,7 @@ export class ProductStockGridContainer extends PureComponent {
     containerProps = () => {
         const { attributeOptions } = this.state;
         const {
-            product, selectedColor, stock, isLoading
+            product, selectedColor, stock, isLoading, warehouses
         } = this.props;
 
         return {
@@ -52,7 +54,8 @@ export class ProductStockGridContainer extends PureComponent {
             product,
             selectedColor,
             stock,
-            isLoading
+            isLoading,
+            warehouses
         };
     };
 
@@ -75,15 +78,14 @@ export class ProductStockGridContainer extends PureComponent {
     getStockByWarehouse(warehouse) {
         const stockItems = this._getCurrentStockItems(warehouse);
 
-        const stocks = [];
-        stockItems.forEach((stockItem) => {
+        const stocks = {};
+        stockItems.forEach(({ value, stockItem }) => {
             if (!stockItem) {
-                stocks.push(EMPTY_QTY);
                 return;
             }
 
             const { qty } = stockItem;
-            stocks.push(qty);
+            stocks[value] = (stocks[value] ?? 0) + qty;
         });
 
         return stocks;
@@ -92,10 +94,9 @@ export class ProductStockGridContainer extends PureComponent {
     getArrivalsByWarehouse(warehouse) {
         const stockItems = this._getCurrentStockItems(warehouse);
 
-        const stocks = [];
-        stockItems.forEach((stockItem) => {
+        const stocks = {};
+        stockItems.forEach(({ value, stockItem }) => {
             if (!stockItem) {
-                stocks.push(EMPTY_QTY);
                 return;
             }
 
@@ -106,7 +107,11 @@ export class ProductStockGridContainer extends PureComponent {
                 initialStock
             );
 
-            stocks.push(totalQty === 0 ? EMPTY_QTY : totalQty);
+            if (totalQty === 0) {
+                return;
+            }
+
+            stocks[value] = (stocks[value] ?? 0) + totalQty;
         });
 
         return stocks;
@@ -116,30 +121,26 @@ export class ProductStockGridContainer extends PureComponent {
         const { attributeOptions } = this.state;
         const { product: { variants } = {}, selectedColor, stock } = this.props;
 
-        if (!variants || !stock) {
+        if (!variants || stock.length === 0) {
             return [];
         }
 
         const items = [];
         attributeOptions.forEach(({ value }) => {
-            const variant = variants.find(({
+            const filteredVariants = variants.filter(({
                 attributes: {
                     [GRID_SIZE_ITEM]: { attribute_value: sizeValue },
                     [GRID_COLOR_ITEM]: { attribute_value: colorValue }
                 }
-            }) => value === sizeValue && selectedColor === colorValue);
+            }) => (selectedColor ? value === sizeValue && selectedColor === colorValue : value === sizeValue));
 
-            if (!variant) {
-                items.push(null);
-                return;
-            }
+            filteredVariants.forEach(({ sku: variantSku }) => {
+                const stockItem = stock.find((
+                    { sku: stockSku, warehouse: stockWarehouse }
+                ) => variantSku === stockSku && warehouse === stockWarehouse);
 
-            const { sku: variantSku } = variant;
-            const stockItem = stock.find((
-                { sku: stockSku, warehouse: stockWarehouse }
-            ) => variantSku === stockSku && warehouse === stockWarehouse);
-
-            items.push(stockItem);
+                items.push({ value, stockItem });
+            });
         });
 
         return items;

@@ -5,8 +5,4 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-.ProductStockGrid {
-    &-Table {
-        width: 120%;
-    }
-}
+export const customerWarehouses = ['Store', 'Store1'];
