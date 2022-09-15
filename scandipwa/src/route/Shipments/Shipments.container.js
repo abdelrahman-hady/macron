@@ -84,21 +84,10 @@ export class ShipmentsContainer extends PureComponent {
             }
         } = this.state;
         const { shipmentsPerPage: prevShipmentsPerPage } = prevState;
-        const { shipmentsPerPageList } = this.props;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
-
-        if (shipmentsPerPageList.length > 0 && !shipmentsPerPageList.includes(shipmentsPerPage)) {
-            this.onShipmentsPerPageChange(
-                shipmentsPerPageList.includes(SHIPMENTS_PER_PAGE)
-                    ? SHIPMENTS_PER_PAGE
-                    : shipmentsPerPageList[0]
-            );
-
-            return;
-        }
 
         if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
             const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';

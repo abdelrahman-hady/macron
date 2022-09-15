@@ -17,6 +17,11 @@ export class ShipmentQuery {
         return new Field('shipments')
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
+            .addField(this._getShipmentsField());
+    }
+
+    _getShipmentsField() {
+        return new Field('items')
             .addFieldList(this._getShipmentFields());
     }
 
