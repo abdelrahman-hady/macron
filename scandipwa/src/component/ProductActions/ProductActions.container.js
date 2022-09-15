@@ -64,8 +64,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { product: prevProduct } = prevProps;
         const { product } = this.props;
 
-        this.requestClient();
-
         if (product !== prevProduct) {
             this.setState({
                 patchList: this.getPatchListFromSku(product.sku)
@@ -141,6 +139,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     async requestPatchProducts() {
         const { showErrorNotification } = this.props;
+
+        console.log('ccheck query');
 
         try {
             const { patchProductCollection } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
