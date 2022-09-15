@@ -16,12 +16,24 @@ import {
     CartPage as SourceCartPage
 } from 'SourceRoute/CartPage/CartPage.component';
 
+import CurrentDate from '../../component/CurrentDate';
+
 /** @namespace Scandipwa/Route/CartPage/Component */
 export class CartPageComponent extends SourceCartPage {
     static propTypes = {
         ...super.propTypes,
         showDeleteOrderPopup: PropTypes.func.isRequired
     };
+
+    renderCurrentDate() {
+        return (
+            <h4 block="CartPage" elem="Date">
+                { __('Date') }
+                :
+                <CurrentDate />
+            </h4>
+        );
+    }
 
     renderClientDetails() {
         const { totals: { items } } = this.props;
@@ -110,6 +122,7 @@ export class CartPageComponent extends SourceCartPage {
             <>
                 <div block="CartPage" elem="Static">
                     { this.renderHeading() }
+                    { this.renderCurrentDate() }
                     { this.renderClientDetails() }
                     { this.renderDeleteOrder() }
                     { this.renderCartItems() }
@@ -124,6 +137,7 @@ export class CartPageComponent extends SourceCartPage {
         return (
             <div block="CartPage" elem="Static">
                 { this.renderHeading() }
+                { this.renderCurrentDate() }
                 { this.renderClientDetails() }
                 { this.renderDeleteOrder() }
                 { this.renderCartItems() }
