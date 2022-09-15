@@ -33,7 +33,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     /**
      * @return array|DataObject[]
      */
-    public function getList($customerId = null)
+    public function getList($customerId = null): array
     {
         $collection = $this->invoicesCollectionFactory;
         $erpInvoiceCols = [
@@ -55,19 +55,6 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             'business_partner_id',
             'default_shipping'
         ];
-        $customerAddressEntityCols = [
-            'entity_id',
-            'parent_id',
-            'city as address_city',
-            'company as address_company',
-            'country_id as address_country_id',
-            'fax as address_fax',
-            'firstname as address_firstname',
-            'lastname as address_lastname',
-            'postcode as address_postcode',
-            'street as address_street',
-            'telephone as address_telephone'
-        ];
         $select = $collection->getSelect()->columns($erpInvoiceCols);
 
         if ($customerId !== null) {
@@ -76,11 +63,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
 
         $select->joinLeft(
             ['ceTable' => $collection->getTable('customer_entity')],
-            'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols)
-            ->joinLeft(
-                ['caeTable' => $collection->getTable('customer_address_entity')],
-                'ceTable.entity_id = caeTable.parent_id', $customerAddressEntityCols)
-            ->where('ceTable.default_shipping = caeTable.entity_id');
+            'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols);
 
         return $collection->getItems();
     }
