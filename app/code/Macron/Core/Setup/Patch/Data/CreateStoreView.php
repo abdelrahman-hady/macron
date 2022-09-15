@@ -6,6 +6,8 @@
  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
 
+declare(strict_types=1);
+
 namespace Macron\Core\Setup\Patch\Data;
 
 use Magento\Framework\Setup\Patch\DataPatchInterface;
@@ -14,6 +16,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Store\Model\ResourceModel\Store;
+use Throwable;
 
 
 class CreateStoreView implements DataPatchInterface {
@@ -40,7 +43,6 @@ class CreateStoreView implements DataPatchInterface {
             'code' => 'es'
         ],
     ];
-
 
     /**
      * @var StoreFactory
@@ -108,11 +110,17 @@ class CreateStoreView implements DataPatchInterface {
         $this->moduleDataSetup->endSetup();
     }
 
+    /**
+     * Checks if store view exists
+     * @param String $code
+     * 
+     * @return bool
+     */
     private function checkStoreViewExist(String $code) {
         try {
             $store = $this->storeRepository->get($code);
             return true;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return false;
         }
     }
