@@ -5,4 +5,4 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-export { default } from './ProductStockGrid.component';
+export { default } from './ProductStockGrid.container';
