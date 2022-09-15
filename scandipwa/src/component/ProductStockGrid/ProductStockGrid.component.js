@@ -5,92 +5,99 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+/* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-conditional */
+import Loader from '@scandipwa/scandipwa/src/component/Loader';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { GRID_COLOR_ITEM, GRID_SIZE_ITEM } from 'Component/ProductStockGrid/ProductStockGrid.config';
-import { AttributesType, ProductType } from 'Type/ProductList.type';
+import { EMPTY_QTY, WAREHOUSE_HQ } from './ProductStockGrid.config';
 
 import './ProductStockGrid.style';
 
 /** @namespace Scandipwa/Component/ProductStockGrid/Component */
 export class ProductStockGridComponent extends PureComponent {
     static propTypes = {
-        configurationOptions: AttributesType.isRequired,
-        product: ProductType.isRequired,
-        selectedColor: PropTypes.string
+        attributeOptions: PropTypes.arrayOf(PropTypes.shape({
+            label: PropTypes.string,
+            count: PropTypes.number,
+            value_string: PropTypes.string,
+            swatch_data: PropTypes.shape({ type: PropTypes.string, value: PropTypes.string })
+        })).isRequired,
+        getStockByWarehouse: PropTypes.func.isRequired,
+        getArrivalsByWarehouse: PropTypes.func.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
 
-    static defaultProps = {
-        selectedColor: ''
-    };
+    renderStockHeadingRow() {
+        const { attributeOptions } = this.props;
 
-    renderStockHeadingRow(attributeOptions) {
         return (
-            <thead>
-                <tr>
-                    <th>{ __('Size') }</th>
-                    { attributeOptions.map(({ swatch_data: { value } }) => (
-                        <th>{ value }</th>
-                    )) }
-                </tr>
-            </thead>
+            <tr>
+                <th>{ __('Size') }</th>
+                { attributeOptions.map(({ swatch_data: { value } }) => (
+                    <th>{ value }</th>
+                )) }
+            </tr>
         );
     }
 
-    renderGridContent(attributeOptions) {
-        const { product: { variants } = {}, selectedColor } = this.props;
+    renderHeadquarterStockRow() {
+        const { getStockByWarehouse } = this.props;
+        const headquarterStock = getStockByWarehouse(WAREHOUSE_HQ);
 
-        if (!variants) {
-            return null;
+        if (headquarterStock.length === 0) {
+            return this.renderDefaultRow();
         }
 
-        const stocks = {};
-        variants.forEach(({
-            attributes: {
-                [GRID_SIZE_ITEM]: { attribute_value: sizeValue },
-                [GRID_COLOR_ITEM]: { attribute_value: colorValue }
-            }, salable_qty
-        }) => {
-            stocks[`${colorValue}-${sizeValue}`] = salable_qty;
-        });
+        return (
+            <tr>
+                <th>{ __('HQ') }</th>
+                { headquarterStock.map((qty) => <th>{ qty === EMPTY_QTY ? '-' : qty }</th>) }
+            </tr>
+        );
+    }
+
+    renderDefaultRow() {
+        const { attributeOptions } = this.props;
 
         return (
-            <tbody>
-                <tr>
-                    <td>{ __('HQ') }</td>
-                    { attributeOptions.map(({ value }) => (
-                        <td>{ stocks[`${selectedColor}-${value}`] }</td>
-                    )) }
-                </tr>
-                <tr>
-                    <td>{ __('Arrivals') }</td>
-                    { attributeOptions.map(() => (
-                        <td>-</td>
-                    )) }
-                </tr>
-            </tbody>
+            <tr>
+                <th>-</th>
+                { attributeOptions.map(() => (
+                    <th>-</th>
+                )) }
+            </tr>
+        );
+    }
+
+    renderArrivalsRow() {
+        const { getArrivalsByWarehouse } = this.props;
+        const arrivals = getArrivalsByWarehouse(WAREHOUSE_HQ);
+
+        return (
+            <tr>
+                <td>{ __('Arrivals') }</td>
+                { arrivals.map((qty) => <td>{ qty === EMPTY_QTY ? '-' : qty }</td>) }
+            </tr>
         );
     }
 
     render() {
-        const { configurationOptions } = this.props;
-        const configurationOption = Object.values(configurationOptions).find(
-            ({ attribute_code }) => attribute_code === GRID_SIZE_ITEM
-        );
-
-        if (!configurationOption) {
-            return null;
-        }
-
-        const { attribute_options } = configurationOption;
-        const attributeOptions = Object.values(attribute_options);
+        const { isLoading } = this.props;
 
         return (
-            <table block="ProductStockGrid" elem="Table">
-                { this.renderStockHeadingRow(attributeOptions) }
-                { this.renderGridContent(attributeOptions) }
-            </table>
+            <div block="ProductStockGrid">
+                <Loader isLoading={ isLoading } />
+                <table block="ProductStockGrid" elem="Table">
+                    <thead>
+                        { this.renderStockHeadingRow() }
+                        { this.renderHeadquarterStockRow() }
+                    </thead>
+                    <tbody>
+                        { this.renderArrivalsRow() }
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }

@@ -7,12 +7,15 @@
 
 import { connect } from 'react-redux';
 
+import { WAREHOUSE_HQ } from 'Component/ProductStockGrid/ProductStockGrid.config';
+import StockQuery from 'Query/Stock.query';
 import {
     mapDispatchToProps,
     mapStateToProps,
     ProductContainer as SourceProductContainer
 } from 'SourceComponent/Product/Product.container';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
 
 export {
     mapDispatchToProps,
@@ -37,8 +40,41 @@ export class ProductContainer extends SourceProductContainer {
         // Used for configurable product - it can be ether parent or variant
         selectedProduct: null,
         // eslint-disable-next-line react/destructuring-assignment
-        parameters: this.props.parameters
+        parameters: this.props.parameters,
+
+        stock: [],
+        stockLoading: false
     };
+
+    componentDidMount() {
+        this.updateSelectedValues();
+        this.updateAdjustedPrice();
+        this.requestStock();
+    }
+
+    async requestStock() {
+        const { product: { variants }, showError } = this.props;
+
+        if (!variants || variants.length === 0) {
+            return;
+        }
+
+        const SKUs = [];
+        variants.forEach(({ sku }) => {
+            SKUs.push(sku);
+        });
+
+        this.setState({ stockLoading: true });
+
+        try {
+            const { pimStock: stock } = await fetchQuery(StockQuery.getStockQuery(SKUs, [WAREHOUSE_HQ]));
+
+            this.setState({ stock, stockLoading: false });
+        } catch (e) {
+            showError(getErrorMessage(e));
+            this.setState({ stockLoading: false });
+        }
+    }
 
     async addToCart() {
         this.updateSelectedValues();

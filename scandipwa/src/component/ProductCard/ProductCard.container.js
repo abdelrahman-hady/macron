@@ -26,11 +26,13 @@ export const mapDispatchToProps = (dispatch) => ({
 /** @namespace Scandipwa/Component/ProductCard/Container */
 export class ProductCardContainer extends SourceProductCardContainer {
     containerProps() {
-        const { parameters } = this.state;
+        const { parameters, stock, stockLoading } = this.state;
 
         return {
             ...super.containerProps(),
-            parameters
+            parameters,
+            stock,
+            stockLoading
         };
     }
 }

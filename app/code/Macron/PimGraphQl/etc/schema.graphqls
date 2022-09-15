@@ -8,6 +8,7 @@ type Query {
 }
 
 type Stock {
+    id: Int
     sku: String
     warehouse: String
     qty: Int
