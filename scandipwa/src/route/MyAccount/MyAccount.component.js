@@ -16,10 +16,10 @@ import PropTypes from 'prop-types';
 import { lazy, Suspense } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import DashboardShipmentsTable from 'Component/DashboardShipmentsTable';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
 import MyAccountOrder from 'Component/MyAccountOrder';
-import ShipmentsTable from 'Component/ShipmentsTable';
 import NoMatch from 'Route/NoMatch';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
@@ -73,7 +73,7 @@ export class MyAccountComponent extends SourceMyAccount {
     };
 
     renderUpcomingShipmentsTable() {
-        return <ShipmentsTable isCompact />;
+        return <DashboardShipmentsTable />;
     }
 
     renderContent() {
