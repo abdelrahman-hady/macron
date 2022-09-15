@@ -34,16 +34,16 @@ export class ProductPriceComponent extends SourceProductPrice {
             } = price;
 
             return (
-            <div block={ label }>
-                { this.renderPriceBadge(label) }
-                <br />
-                <span
-                  block="ProductPrice"
-                  elem="PriceValue"
-                >
-                    { formatPrice(value, currency) }
-                </span>
-            </div>
+                <div block={ label }>
+                    { this.renderPriceBadge(label) }
+                    <br />
+                    <span
+                      block="ProductPrice"
+                      elem="PriceValue"
+                    >
+                        { formatPrice(value, currency) }
+                    </span>
+                </div>
             );
         }
 
