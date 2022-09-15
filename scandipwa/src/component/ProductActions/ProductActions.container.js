@@ -13,17 +13,24 @@ import { connect } from 'react-redux';
 
 import PatchProductQuery from 'Query/PatchProduct.query';
 import {
-    mapDispatchToProps
+    mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceComponent/Product/Product.container';
 import { mapStateToProps, ProductActionsContainer as SourceProductActionsContainer }
 from 'SourceComponent/ProductActions/ProductActions.container';
+import { showNotification } from 'Store/Notification/Notification.action';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
 
 import { data as patchData, products as myProducts } from './patch_sample_data';
 
 export {
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 };
+
+/** @namespace Scandipwa/Component/ProductActions/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
+});
 
 /** @namespace Scandipwa/Component/ProductActions/Container */
 export class ProductActionsContainer extends SourceProductActionsContainer {
@@ -56,6 +63,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
         const { product: prevProduct } = prevProps;
         const { product } = this.props;
+
+        this.requestClient();
 
         if (product !== prevProduct) {
             this.setState({
@@ -130,11 +139,21 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         }];
     }
 
+    async requestPatchProducts() {
+        const { showErrorNotification } = this.props;
+
+        try {
+            const query = await fetchQuery(PatchProductQuery.getPatchProductQuery());
+
+            console.log('ccheck query', query);
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+        }
+    }
+
     addAnotherPatch() {
         const { patchList } = this.state;
-        const query = PatchProductQuery.getPatchProductQuery();
 
-        console.log('ccheck query got added', query);
         this.setState({
             patchList: [...patchList, {
                 id: nanoid(),
