@@ -73,7 +73,15 @@ export class MyAccountComponent extends SourceMyAccount {
     };
 
     renderUpcomingShipmentsTable() {
-        return <DashboardShipmentsTable />;
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === 'DASHBOARD') {
+            return <DashboardShipmentsTable />;
+        }
+
+        return '';
     }
 
     renderContent() {
