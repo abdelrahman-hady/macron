@@ -437,6 +437,8 @@ return [
         'Magento_WishlistGiftCard' => 1,
         'Magento_WishlistGiftCardGraphQl' => 1,
         'Magento_GiftCardGraphQl' => 1,
+        'Macron_Catalog' => 1,
+        'Macron_CatalogGraphQl' => 1,
         'Macron_Core' => 1,
         'Macron_Customer' => 1,
         'Macron_CustomerGraphQl' => 1,

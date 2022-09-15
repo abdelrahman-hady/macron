@@ -1,0 +1,9 @@
+type PriceRange {
+    wholesale_price: CustomPrice @doc(description: "Product wholesale price.")
+    retail_price: CustomPrice @doc(description:  "Product retail price.")
+}
+
+type CustomPrice {
+    value: String
+    currency: String
+}
