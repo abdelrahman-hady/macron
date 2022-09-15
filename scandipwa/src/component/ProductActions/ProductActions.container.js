@@ -1,6 +1,7 @@
 /**
   * @category    Macron
   * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @author      Juris Kucinskis <juris.kucinskis@scandiweb.com | info@scandiweb.com>
   * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
   * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
   */
@@ -20,8 +21,6 @@ from 'SourceComponent/ProductActions/ProductActions.container';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
 
-import { data as patchData, products as myProducts } from './patch_sample_data';
-
 export {
     mapStateToProps
 };
@@ -37,7 +36,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     state = {
         ...this.state,
         isAddPatchDropOpen: false,
-        patchCodes: patchData.map((patch) => patch.Sku),
+        patchCodes: [],
+        patchData: [],
         patchList: []
     };
 
@@ -58,6 +58,26 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         toggleDropDown: PropTypes.func
     };
 
+    containerFunctions = {
+        ...this.containerFunctions,
+        toggleDropDown: this.toggleDropDown.bind(this),
+        addAnotherPatch: this.addAnotherPatch.bind(this),
+        patchSelectionChange: this.patchSelectionChange.bind(this),
+        deletePatchRow: this.deletePatchRow.bind(this),
+        updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
+        patchInputOnChange: this.patchInputOnChange.bind(this),
+        patchCodeInputChange: this.patchCodeInputChange.bind(this),
+        openSelectPatch: this.openSelectPatch.bind(this),
+        closeSelectPatch: this.closeSelectPatch.bind(this),
+        getFilteredPatchCodes: this.getFilteredPatchCodes.bind(this),
+        getPatchListFromSku: this.getPatchListFromSku.bind(this)
+    };
+
+    componentDidMount() {
+        this.requestPatchProductsSku();
+        this.requestPatchProducts();
+    }
+
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate(prevProps, prevState);
 
@@ -65,8 +85,10 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { product } = this.props;
 
         if (product !== prevProduct) {
+            this.requestPatchProductsSku();
+            this.requestPatchProducts();
             this.setState({
-                patchList: this.getPatchListFromSku(product.sku)
+                patchList: this.getPatchListFromSku(product.Sku)
             });
         }
     }
@@ -88,7 +110,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     getFilteredPatchCodes(key = '') {
         const pattern = new RegExp(`^${key}`, 'i');
-        const { patchList } = this.state;
+        const { patchList, patchData } = this.state;
 
         const unSelectedData = patchData.filter((patch) => {
             const tryToFind = patchList.find((obj) => obj.Sku === patch.Sku);
@@ -112,7 +134,9 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     }
 
     getPatchListFromSku(Sku) {
-        const list = myProducts.find((product) => product.Sku === Sku);
+        const { patchData } = this.state;
+
+        const list = patchData.find((product) => product.Sku === Sku);
         if (typeof list !== 'undefined' && list.length > 0) {
             return list.patchList.map((patch) => {
                 const newObj = patch;
@@ -137,15 +161,33 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         }];
     }
 
+    async requestPatchProductsSku() {
+        const { showErrorNotification } = this.props;
+
+        try {
+            const {
+                patchProductCollection:
+                { allPatchProducts }
+            } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
+
+            this.setState({
+                patchCodes: allPatchProducts.map((patch) => patch.Sku)
+            });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+        }
+    }
+
     async requestPatchProducts() {
         const { showErrorNotification } = this.props;
 
-        console.log('ccheck query');
-
         try {
-            const { patchProductCollection } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
+            const {
+                patchProductCollection:
+                { allPatchProducts }
+            } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
 
-            console.log('ccheck query', patchProductCollection);
+            this.setState({ patchData: allPatchProducts });
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
         }
@@ -175,6 +217,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     }
 
     findObjFromSku(Sku) {
+        const { patchData } = this.state;
+
         const Obj = patchData.find((patch) => patch.Sku === Sku);
         if (typeof Obj !== 'undefined') {
             Obj.id = nanoid();
@@ -337,21 +381,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
             })
         });
     }
-
-    containerFunctions = {
-        ...this.containerFunctions,
-        toggleDropDown: this.toggleDropDown.bind(this),
-        addAnotherPatch: this.addAnotherPatch.bind(this),
-        patchSelectionChange: this.patchSelectionChange.bind(this),
-        deletePatchRow: this.deletePatchRow.bind(this),
-        updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
-        patchInputOnChange: this.patchInputOnChange.bind(this),
-        patchCodeInputChange: this.patchCodeInputChange.bind(this),
-        openSelectPatch: this.openSelectPatch.bind(this),
-        closeSelectPatch: this.closeSelectPatch.bind(this),
-        getFilteredPatchCodes: this.getFilteredPatchCodes.bind(this),
-        getPatchListFromSku: this.getPatchListFromSku.bind(this)
-    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductActionsContainer);

@@ -73,7 +73,7 @@ class PatchProducts implements ResolverInterface
 
             foreach($products as $product) {
                 $productId = $product->getId();
-                $productRecord['allPatchProducts'][$productId]['sku'] = $product->getSku();
+                $productRecord['allPatchProducts'][$productId]['Sku'] = $product->getSku();
                 $productRecord['allPatchProducts'][$productId]['name'] = $product->getName();
                 $productRecord['allPatchProducts'][$productId]['price'] = $product->getPrice();
             }

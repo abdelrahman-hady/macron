@@ -11,7 +11,7 @@ import { Field } from 'Util/Query';
 export class PatchProductQuery {
     getPatchProductQuery() {
         return new Field('patchProductCollection')
-            .addFieldList(this._getPatchProductField());
+            .addField(this._getPatchProductField());
     }
 
     _getPatchProductField() {
@@ -21,7 +21,7 @@ export class PatchProductQuery {
 
     _getPatchProductFields() {
         return [
-            'sku',
+            'Sku',
             'name',
             'price'
         ];
