@@ -21,6 +21,7 @@ export class InvoiceQuery {
             'date',
             'firstname',
             'lastname',
+            'due_date',
             'currency',
             'grand_total',
             'status',

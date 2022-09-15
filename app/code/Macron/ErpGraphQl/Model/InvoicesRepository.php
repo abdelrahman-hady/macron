@@ -76,12 +76,8 @@ class InvoicesRepository implements InvoicesRepositoryInterface
 
         $select->joinLeft(
             ['ceTable' => $collection->getTable('customer_entity')],
-            'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols)
-            ->joinLeft(
-                ['caeTable' => $collection->getTable('customer_address_entity')],
-                'ceTable.entity_id = caeTable.parent_id', $customerAddressEntityCols)
-            ->where('ceTable.default_shipping = caeTable.entity_id');
-
+            'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols);
+        $collection->setOrder('id', 'DESC');
         return $collection->getItems();
     }
 }

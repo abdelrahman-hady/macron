@@ -127,6 +127,7 @@ type InvoiceType {
     invoice_number: String
     user_sap_id: String
     date: String
+    due_date: String
     currency: String
     grand_total: String
     status: String

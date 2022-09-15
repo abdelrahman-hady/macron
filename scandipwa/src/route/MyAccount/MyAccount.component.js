@@ -32,6 +32,8 @@ import {
 import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 
+import DashboardInvoicesTable from '../../component/DashboardInvoicesTable';
+
 export const MyAccountAddressBook = lazy(() => import(
     /* webpackMode: "lazy", webpackChunkName: "account-address" */
     'Component/MyAccountAddressBook'
@@ -70,6 +72,10 @@ export class MyAccountComponent extends SourceMyAccount {
         [ACCOUNT_INFORMATION]: MyAccountInformation
     };
 
+    renderInvoicesTable() {
+        return <DashboardInvoicesTable />;
+    }
+
     renderContent() {
         const {
             activeTab,
@@ -104,6 +110,7 @@ export class MyAccountComponent extends SourceMyAccount {
                   elem="TabContent"
                   mods={ { activeTab } }
                 >
+                    { this.renderInvoicesTable() }
                     <h2 block="MyAccount" elem="Heading">
                         { title || tabName }
                         { this.renderSubHeading() }
