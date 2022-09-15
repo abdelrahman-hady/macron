@@ -85,16 +85,6 @@ class PriceRangePlugin
         $customerId = $this->getCustomer->execute($context)->getId();
         $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
 
-        if (isset($args['customer']) && $args['customer'] !== '') {
-            $collection = $this->customerCollection->create()->getItems();
-            foreach ($collection as $customer) {
-                if ($customer->getCompanyName() === $args['customer']) {
-                    $currentCustomer = $customer;
-                    break;
-                }
-            }
-        }
-
         $returnArray = [];
         $sku = $product->getSku();
         $_product = $this->productRepository->getById($product->getId());
