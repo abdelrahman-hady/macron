@@ -24,7 +24,7 @@
                        showInStore="0">
                     <label>Value</label>
                     <comment>Comma-separation.</comment>
-                    <validate>required-entry no-whitespace</validate>
+                    <validate>required-entry no-whitespace validate-comma-separated-numbers</validate>
                 </field>
             </group>
         </section>
