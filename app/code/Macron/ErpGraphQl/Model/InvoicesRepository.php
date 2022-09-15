@@ -16,6 +16,7 @@ use Magento\Framework\DataObject;
 
 class InvoicesRepository implements InvoicesRepositoryInterface
 {
+
     /**
      * @var InvoicesCollectionFactory
      */
@@ -33,7 +34,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     /**
      * @return array|DataObject[]
      */
-    public function getList($customerId = null): array
+    public function getList($businessPartnerId = null): array
     {
         $collection = $this->invoicesCollectionFactory;
         $erpInvoiceCols = [
@@ -55,15 +56,14 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             'business_partner_id',
             'default_shipping'
         ];
-        $select = $collection->getSelect()->columns($erpInvoiceCols);
-
-        if ($customerId !== null) {
-            $select->where('customer_id = ?', $customerId);
+        $select = $collection->getSelect()->columns($erpInvoiceCols)
+            ->joinLeft(
+                ['ceTable' => $collection->getTable('customer_entity')],
+                'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols);
+        if ($businessPartnerId !== null) {
+            $select->where('business_partner_id = ?', $businessPartnerId);
         }
-
-        $select->joinLeft(
-            ['ceTable' => $collection->getTable('customer_entity')],
-            'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols);
+        $collection->setOrder('id', 'DESC');
 
         return $collection->getItems();
     }
