@@ -1,0 +1,20 @@
+type Query {
+    pimStock(
+        SKU: [String]!
+        Warehouse: [String]!
+    ): [Stock]
+    @resolver(class: "\\Macron\\PimGraphQl\\Model\\Resolver\\PimStock")
+    @doc(description: "Get pim stock")
+}
+
+type Stock {
+    sku: String
+    warehouse: String
+    qty: Int
+    newArrivals: [Arrival]
+}
+
+type Arrival {
+    qty: Int
+    date: String
+}
