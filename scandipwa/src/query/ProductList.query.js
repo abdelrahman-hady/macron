@@ -39,8 +39,6 @@ export class ProductListQuery extends SourceProductListQuery {
         const { requireInfo } = this.options;
         const filterArgumentMap = this._getFilterArgumentMap();
 
-        console.log('ccheckquery', filterArgumentMap);
-
         return {
             currentPage: { type: 'Int!' },
             pageSize: {
@@ -76,8 +74,6 @@ export class ProductListQuery extends SourceProductListQuery {
                         customFilters: { category_id, IsPatch } = {}
                     } = options;
 
-                    console.log('ccheckquery 123', options, IsPatch);
-
                     /**
                      * Remove category ID from select, if there is a custom filter
                      * of category already selected in filtering options.
@@ -103,8 +99,6 @@ export class ProductListQuery extends SourceProductListQuery {
                         },
                         {}
                     );
-
-                    console.log('ccheckquery123 123', parsedOptions);
 
                     return parsedOptions;
                 }

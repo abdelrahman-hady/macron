@@ -11,14 +11,10 @@ import AddIcon from '@scandipwa/scandipwa/src/component/AddIcon';
 import ChevronIcon from '@scandipwa/scandipwa/src/component/ChevronIcon';
 import CloseIcon from '@scandipwa/scandipwa/src/component/CloseIcon';
 
+import ClickOutside from 'Component/ClickOutside';
 import PRODUCT_TYPE from 'Component/Product/Product.config';
-import {
-    SEARCH
-} from 'SourceComponent/Header/Header.config';
 import { ProductActions as SourceProductActions } from 'SourceComponent/ProductActions/ProductActions.component';
 import { isCrawler, isSSR } from 'Util/Browser';
-
-import PatchItemSearchField from '../PatchItemSearchField/PatchItemSearchField.component';
 
 import './ProductActions.extension.style.scss';
 /** @namespace Scandipwa/Component/ProductActions/Component */
@@ -31,12 +27,11 @@ export class ProductActionsComponent extends SourceProductActions {
 
         return (
             <div>
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                 <div
                   block="ProductActions"
                   elem="PatchHeadingHolder"
-                  role="presentation"
                   onClick={ toggleDropDown }
-                  onKeyDown={ toggleDropDown }
                 >
                     <span>
                         ⌗
@@ -59,60 +54,16 @@ export class ProductActionsComponent extends SourceProductActions {
         );
     }
 
-    renderOptions() {
-        const { patchData } = this.props;
-
-        return (patchData.map((data) => (
-            data.Sku === '-'
-                ? ''
-                : (
-                    <option key={ data.Sku }>
-                        { data.Sku }
-                    </option>
-                )
-        )));
-    }
-
-    renderSearchField(isVisible = true) {
-        const {
-            searchCriteria,
-            onSearchOutsideClick,
-            onSearchBarFocus,
-            onSearchBarChange,
-            onClearSearchButtonClick,
-            navigationState: { name },
-            isCheckout,
-            hideActiveOverlay
-        } = this.props;
-
-        const isPatchSearch = true;
-
-        if (isCheckout) {
-            return null;
-        }
-
-        return (
-            <PatchItemSearchField
-              key="search"
-              searchCriteria={ searchCriteria }
-              onSearchOutsideClick={ onSearchOutsideClick }
-              onSearchBarFocus={ onSearchBarFocus }
-              onSearchBarChange={ onSearchBarChange }
-              onClearSearchButtonClick={ onClearSearchButtonClick }
-              isVisible={ isVisible }
-              isActive={ name === SEARCH }
-              hideActiveOverlay={ hideActiveOverlay }
-              isPatchSearch={ isPatchSearch }
-            />
-        );
-    }
-
     renderPatchRow(patch) {
         const {
-            patchSelectionChange,
             deletePatchRow,
             updatePatchQuantityButton,
-            patchInputOnChange
+            patchInputOnChange,
+            patchCodeInputChange,
+            patchSelectionChange,
+            openSelectPatch,
+            closeSelectPatch,
+            patchCodes
         } = this.props;
 
         return (
@@ -122,31 +73,49 @@ export class ProductActionsComponent extends SourceProductActions {
                         <div>
                             <span
                               block="ProductActions"
-                              elem="PatchTable"
+                              elem="PatchInput"
                               mods={ { MarginTop: true } }
                             >
                                 <ChevronIcon direction="bottom" />
                             </span>
-                            <select
-                              block="ProductActions"
-                              elem="PatchTable"
-                              mods={ { Length: 'Long' } }
-                              name="patchCode"
-                              value={ patch.Sku }
-                              /* eslint-disable-next-line react/jsx-no-bind */
-                              onChange={ (e) => patchSelectionChange(e, patch.id) }
-                            >
-                                <option value={ patch.id }>
-                                    { __('Select a patch code') }
-                                </option>
-                                { this.renderOptions() }
-                            </select>
+
+                            { /* eslint-disable-next-line react/jsx-no-bind */ }
+                            <ClickOutside onClick={ () => closeSelectPatch(patch.id, patch.isSelectOpen) }>
+                                <input
+                                  block="ProductActions"
+                                  elem="PatchInput"
+                                  mods={ { Length: 'Long' } }
+                                  name="patchCode"
+                                  placeholder="Select a patch code"
+                                  value={ patch.code }
+                                  // eslint-disable-next-line react/jsx-no-bind
+                                  onChange={ (e) => patchCodeInputChange(e, patch.id) }
+                                  // eslint-disable-next-line react/jsx-no-bind
+                                  onClick={ (e) => openSelectPatch(e, patch.id) }
+                                  autoComplete="off"
+                                />
+                                <div
+                                  block="ProductActions"
+                                  elem="PatchInput"
+                                  mods={ { IsHidden: !patch.isSelectOpen } }
+                                >
+                                    { patchCodes.map((code) => (
+                                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                                    <div
+                                      // eslint-disable-next-line react/jsx-no-bind
+                                      onClick={ (e) => patchSelectionChange(e, patch.id) }
+                                    >
+                                        { code }
+                                    </div>
+                                    )) }
+                                </div>
+                            </ClickOutside>
                         </div>
                     </form>
                 </td>
                 <td>{ patch.name }</td>
                 { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
-                <td>{ patch.Sku !== '-' ? patch.price : '-' }</td>
+                <td>{ patch.Sku !== '-' ? patch.price.toFixed(2) : '-' }</td>
                 <td>
                     <div
                       block="ProductActions"
@@ -154,13 +123,13 @@ export class ProductActionsComponent extends SourceProductActions {
                     >
                         <input
                           block="ProductActions"
-                          elem="PatchTable"
+                          elem="PatchInput"
                           mods={ { Length: 'Short' } }
                           name="quantity"
                           type="text"
                           value={ patch.quantity > 0 ? patch.quantity : '' }
                           disabled={ patch.Sku === '-' }
-                        /* eslint-disable-next-line react/jsx-no-bind */
+                          /* eslint-disable-next-line react/jsx-no-bind */
                           onChange={ (e) => patchInputOnChange(e, patch.id) }
                         />
                         <div
@@ -168,18 +137,18 @@ export class ProductActionsComponent extends SourceProductActions {
                           elem="PatchQuantityButtonHolder"
                         >
                             <button
-                            /* eslint-disable-next-line react/jsx-no-bind */
+                              /* eslint-disable-next-line react/jsx-no-bind */
                               onClick={ () => updatePatchQuantityButton(1, patch.id) }
                               disabled={ patch.Sku === '-' }
                             >
                                 +
                             </button>
                             <button
-                            /* eslint-disable-next-line react/jsx-no-bind */
+                              /* eslint-disable-next-line react/jsx-no-bind */
                               onClick={ () => updatePatchQuantityButton(-1, patch.id) }
                               disabled={ patch.Sku === '-' || patch.quantity < 2 }
                             >
-                                    -
+                                -
                             </button>
                         </div>
                     </div>
@@ -189,14 +158,14 @@ export class ProductActionsComponent extends SourceProductActions {
                         <div>
                             <span
                               block="ProductActions"
-                              elem="PatchTable"
+                              elem="PatchInput"
                               mods={ { MarginTop: true } }
                             >
                                 %
                             </span>
                             <input
                               block="ProductActions"
-                              elem="PatchTable"
+                              elem="PatchInput"
                               mods={ { Length: 'Short' } }
                               name="discount"
                               type="text"
@@ -211,7 +180,7 @@ export class ProductActionsComponent extends SourceProductActions {
                 { /* eslint-disable-next-line @scandipwa/scandipwa-guidelines/jsx-no-conditional */ }
                 <td>{ patch.Sku !== '-' ? patch.line : '-' }</td>
                 <td>
-                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
+                    { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ }
                     <div
                       /* eslint-disable-next-line react/jsx-no-bind */
                       onClick={ () => deletePatchRow(patch.id) }
@@ -322,7 +291,6 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderProductAlerts() }
                 { this.renderPriceWithGlobalSchema() }
                 { this.renderAddToCartActionBlock() }
-                { this.renderSearchField() }
                 { this.renderAddPatchBlock() }
                 { this.renderAddToCartButton() }
             </>

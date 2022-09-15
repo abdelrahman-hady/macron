@@ -7,30 +7,79 @@
 
 export const data = [
     {
-        id: 'dshjhdjs723',
         Sku: '12345678',
         name: 'Patch X',
-        price: 5.00,
-        quantity: 2,
-        discount: 0,
-        line: 25.00
+        price: 3.80
     },
     {
-        id: 'dsonwi22',
-        Sku: '87654321',
+        Sku: '23456789',
         name: 'Patch Q',
-        price: 10.00,
-        quantity: -4,
-        discount: 0,
-        line: 30.00
+        price: 7.30
     },
     {
-        id: 'uidba82',
-        Sku: '13579864',
+        Sku: '34567890',
+        name: 'Patch M',
+        price: 5.50
+    },
+    {
+        Sku: '45678901',
+        name: 'Patch U',
+        price: 4.30
+    },
+    {
+        Sku: '56789012',
+        name: 'Patch S',
+        price: 7.60
+    },
+    {
+        Sku: '67890123',
+        name: 'Patch R',
+        price: 9.50
+    },
+    {
+        Sku: '13',
+        name: 'Patch C',
+        price: 1.80
+    },
+    {
+        Sku: '17',
+        name: 'Patch P',
+        price: 2.10
+    },
+    {
+        Sku: '15',
         name: 'Patch Z',
-        price: 15.00,
-        quantity: 1,
-        discount: 0,
-        line: 35.00
+        price: 8.90
+    }
+];
+
+export const products = [
+    {
+        Sku: 'n31253498',
+        patchList: [
+            {
+                Sku: '13',
+                name: 'Patch C',
+                price: 1.80
+            },
+            {
+                Sku: '17',
+                name: 'Patch P',
+                price: 2.10
+            },
+            {
+                Sku: '15',
+                name: 'Patch Z',
+                price: 8.90
+            }
+        ]
+    },
+    {
+        Sku: '123',
+        patchList: []
+    },
+    {
+        Sku: '456',
+        patchList: []
     }
 ];

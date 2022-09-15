@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
   * @category    Macron
   * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
@@ -6,153 +5,136 @@
   * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
   */
 
+/* eslint-disable max-lines */
+
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import PatchProductQuery from 'Query/PatchProduct.query';
 import {
-    mapDispatchToProps as sourceMapDispatchToProps
-} from 'Component/Product/Product.container';
-import { MENU, SEARCH } from 'SourceComponent/Header/Header.config';
-import {
-    mapStateToProps as sourceMapStateToProps,
-    ProductActionsContainer as SourceProductActionsContainer
-} from 'SourceComponent/ProductActions/ProductActions.container';
-import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
-import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
-import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { appendWithStoreCode } from 'Util/Url';
+    mapDispatchToProps
+} from 'SourceComponent/Product/Product.container';
+import { mapStateToProps, ProductActionsContainer as SourceProductActionsContainer }
+from 'SourceComponent/ProductActions/ProductActions.container';
 
-import { data as patchData } from './patch_sample_data';
+import { data as patchData, products as myProducts } from './patch_sample_data';
 
-/** @namespace Scandipwa/Component/ProductActions/Container/mapStateToProps */
-export const mapStateToProps = (state) => ({
-    ...sourceMapStateToProps(state),
-    navigationState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState
-});
-
-/** @namespace Scandipwa/Component/ProductActions/Container/mapDispatchToProps */
-export const mapDispatchToProps = (dispatch) => ({
-    ...sourceMapDispatchToProps(dispatch),
-    showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-    hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-    setNavigationState: (stateName) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, stateName)),
-    goToPreviousNavigationState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE))
-});
+export {
+    mapStateToProps,
+    mapDispatchToProps
+};
 
 /** @namespace Scandipwa/Component/ProductActions/Container */
 export class ProductActionsContainer extends SourceProductActionsContainer {
     state = {
         ...this.state,
         isAddPatchDropOpen: false,
-        patchData,
-        searchCriteria: '',
-        patchList: [{
+        patchCodes: patchData.map((patch) => patch.Sku),
+        patchList: []
+    };
+
+    static propTypes = {
+        ...SourceProductActionsContainer.propTypes,
+        addAnotherPatch: PropTypes.func,
+        findObjFromSku: PropTypes.func,
+        patchSelectionChange: PropTypes.func,
+        patchInputOnChange: PropTypes.func,
+        deletePatchRow: PropTypes.func,
+        updatePatchQuantityButton: PropTypes.func,
+        calculatePatchLine: PropTypes.func,
+        patchCodeInputChange: PropTypes.func,
+        openSelectPatch: PropTypes.func,
+        closeSelectPatch: PropTypes.func,
+        getFilteredPatchCodes: PropTypes.func,
+        getPatchListFromSku: PropTypes.func,
+        toggleDropDown: PropTypes.func
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+
+        const { product: prevProduct } = prevProps;
+        const { product } = this.props;
+
+        if (product !== prevProduct) {
+            this.setState({
+                patchList: this.getPatchListFromSku(product.sku)
+            });
+        }
+    }
+
+    containerProps() {
+        const {
+            isAddPatchDropOpen,
+            patchList,
+            patchCodes
+        } = this.state;
+
+        return {
+            ...super.containerProps(),
+            isAddPatchDropOpen,
+            patchList,
+            patchCodes
+        };
+    }
+
+    getFilteredPatchCodes(key = '') {
+        const pattern = new RegExp(`^${key}`, 'i');
+        const { patchList } = this.state;
+
+        const unSelectedData = patchData.filter((patch) => {
+            const tryToFind = patchList.find((obj) => obj.Sku === patch.Sku);
+            if (typeof tryToFind !== 'undefined') {
+                return false;
+            }
+
+            return true;
+        });
+
+        if (key === '-' || !key || key === '') {
+            this.setState({
+                patchCodes: unSelectedData.map((patch) => patch.Sku)
+            });
+        } else {
+            const filteredData = unSelectedData.filter((patch) => pattern.test(patch.Sku));
+            this.setState({
+                patchCodes: filteredData.map((patch) => patch.Sku)
+            });
+        }
+    }
+
+    getPatchListFromSku(Sku) {
+        const list = myProducts.find((product) => product.Sku === Sku);
+        if (typeof list !== 'undefined' && list.length > 0) {
+            return list.patchList.map((patch) => {
+                const newObj = patch;
+                newObj.id = nanoid();
+                newObj.quantity = 1;
+                newObj.discount = 0;
+                newObj.code = newObj.Sku;
+                newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
+                return newObj;
+            });
+        }
+
+        return [{
             id: nanoid(),
             Sku: '-',
             name: '-',
             price: '-',
             quantity: '0',
             discount: '0',
+            code: '',
             line: '-'
-        }]
-    };
-
-    static propTypes = {
-        ...SourceProductActionsContainer.propTypes,
-        addAnotherPatch: PropTypes.func.isRequired,
-        findObjFromSku: PropTypes.func.isRequired,
-        patchSelectionChange: PropTypes.func.isRequired,
-        patchInputOnChange: PropTypes.func.isRequired,
-        deletePatchRow: PropTypes.func.isRequired,
-        updatePatchQuantityButton: PropTypes.func.isRequired,
-        goToPreviousNavigationState: PropTypes.func.isRequired,
-        showOverlay: PropTypes.func.isRequired,
-        hideActiveOverlay: PropTypes.func.isRequired
-    };
-
-    containerFunctions = {
-        ...this.containerFunctions,
-        toggleDropDown: this.toggleDropDown.bind(this),
-        addAnotherPatch: this.addAnotherPatch.bind(this),
-        patchSelectionChange: this.patchSelectionChange.bind(this),
-        deletePatchRow: this.deletePatchRow.bind(this),
-        updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
-        patchInputOnChange: this.patchInputOnChange.bind(this),
-        onSearchBarChange: this.onSearchBarChange.bind(this),
-        onSearchBarFocus: this.onSearchBarFocus.bind(this),
-        onSearchOutsideClick: this.onSearchOutsideClick.bind(this)
-    };
-
-    containerProps() {
-        const {
-            activeOverlay,
-            navigationState
-        } = this.props;
-
-        const {
-            isAddPatchDropOpen,
-            patchList,
-            searchCriteria
-        } = this.state;
-
-        return {
-            ...super.containerProps(),
-            isAddPatchDropOpen,
-            patchData,
-            patchList,
-            searchCriteria,
-            activeOverlay,
-            navigationState
-        };
-    }
-
-    onSearchBarChange({ target: { value: searchCriteria } }) {
-        this.setState({ searchCriteria });
-        console.log('ccheck i got clicked', searchCriteria);
-    }
-
-    onSearchBarFocus() {
-        const {
-            setNavigationState,
-            goToPreviousNavigationState,
-            showOverlay,
-            navigationState: { name },
-            device
-        } = this.props;
-
-        if (
-            (!device.isMobile && name === SEARCH)
-            || (device.isMobile && name !== MENU)
-        ) {
-            return;
-        }
-
-        showOverlay(SEARCH);
-
-        setNavigationState({
-            name: SEARCH,
-            onBackClick: () => {
-                showOverlay(MENU);
-                goToPreviousNavigationState();
-            }
-        });
-    }
-
-    onSearchOutsideClick() {
-        const {
-            goToPreviousNavigationState,
-            navigationState: { name }
-        } = this.props;
-
-        if (name === SEARCH) {
-            this.hideSearchOverlay();
-            goToPreviousNavigationState();
-        }
+        }];
     }
 
     addAnotherPatch() {
         const { patchList } = this.state;
+        const query = PatchProductQuery.getPatchProductQuery();
+
+        console.log('ccheck query got added', query);
         this.setState({
             patchList: [...patchList, {
                 id: nanoid(),
@@ -166,9 +148,18 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         });
     }
 
+    calculatePatchLine(price, quantity, discount) {
+        // eslint-disable-next-line no-magic-numbers
+        return (price * quantity) - (price * quantity * (discount / 100));
+    }
+
     findObjFromSku(Sku) {
         const Obj = patchData.find((patch) => patch.Sku === Sku);
         if (typeof Obj !== 'undefined') {
+            Obj.id = nanoid();
+            Obj.quantity = 1;
+            Obj.discount = 0;
+            Obj.line = this.calculatePatchLine(Obj.price, Obj.quantity, Obj.discount).toFixed(2);
             return Obj;
         }
 
@@ -183,13 +174,31 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         };
     }
 
-    patchSelectionChange(e, rowId) {
+    patchCodeInputChange(e, rowId) {
+        e.preventDefault();
         const { patchList } = this.state;
-        const patchObj = this.findObjFromSku(e.target.value);
 
         this.setState({
             patchList: patchList.map((patch) => {
                 if (patch.id === rowId) {
+                    const patchObj = patch;
+                    patchObj.code = e.target.value;
+                    return patchObj;
+                }
+
+                return patch;
+            })
+        });
+        this.getFilteredPatchCodes(e.target.value);
+    }
+
+    patchSelectionChange(e, rowId) {
+        const { patchList } = this.state;
+        const patchObj = this.findObjFromSku(e.target.textContent);
+        this.setState({
+            patchList: patchList.map((patch) => {
+                if (patch.id === rowId) {
+                    patchObj.code = patchObj.Sku;
                     return patchObj;
                 }
 
@@ -199,11 +208,12 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     }
 
     patchInputOnChange(e, rowId) {
+        e.preventDefault();
+
         const { patchList } = this.state;
         const { name } = e.target;
         // eslint-disable-next-line fp/no-let
         let { value } = e.target;
-
         this.setState({
             patchList: patchList.map((patch) => {
                 const newObj = patch;
@@ -223,6 +233,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
                         }
                     }
                     newObj[name] = value;
+                    newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
+                    return newObj;
                 }
 
                 return patch;
@@ -240,7 +252,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     updatePatchQuantityButton(mode, rowId) {
         const { patchList } = this.state;
-
         this.setState({
             patchList: patchList.map((patch) => {
                 if (patch.id === rowId) {
@@ -250,7 +261,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
                     } else if (mode < 0 && (newObj.quantity - 1) > 0) {
                         newObj.quantity--;
                     }
-
+                    newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
                     return newObj;
                 }
 
@@ -264,28 +275,62 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         this.setState({ isAddPatchDropOpen: !isAddPatchDropOpen });
     }
 
-    getNavigationState() {
-        const { navigationState } = this.props;
+    openSelectPatch(e, rowId) {
+        const { patchList } = this.state;
 
-        const { pathname } = location;
-        const { state: historyState } = window.history || {};
-        const { state = {} } = historyState || {};
+        this.setState({
+            patchList: patchList.map((patch) => {
+                if (patch.id === rowId) {
+                    const openRow = patchList.find((patch) => patch.id === rowId);
+                    openRow.isSelectOpen = true;
+                    return openRow;
+                }
 
-        // TODO: something here breaks /<STORE CODE> from being opened, and / when, the url-based stores are enabled.
-
-        const activeRoute = Object.keys(this.routeMap)
-            .find((route) => (
-                route !== '/'
-                || pathname === appendWithStoreCode('/')
-                || pathname === '/'
-            ) && pathname.includes(route));
-
-        if (state.category || state.product || state.page || state.popupOpen) { // keep state if it category is in state
-            return navigationState;
-        }
-
-        return this.routeMap[activeRoute] || this.default_state;
+                return patch;
+            })
+        });
+        this.getFilteredPatchCodes(e.target.value);
     }
+
+    closeSelectPatch(rowId, wasOpen) {
+        if (!wasOpen) {
+            return;
+        }
+        const { patchList } = this.state;
+        this.setState({
+            patchList: patchList.map((patch) => {
+                const openRow = patch;
+                if (patch.Sku !== patch.code) {
+                    if (patch.Sku !== '-') {
+                        openRow.code = patch.Sku;
+                    } else {
+                        openRow.code = '';
+                    }
+                }
+                if (patch.id === rowId) {
+                    openRow.isSelectOpen = false;
+                    return openRow;
+                }
+
+                return openRow;
+            })
+        });
+    }
+
+    containerFunctions = {
+        ...this.containerFunctions,
+        toggleDropDown: this.toggleDropDown.bind(this),
+        addAnotherPatch: this.addAnotherPatch.bind(this),
+        patchSelectionChange: this.patchSelectionChange.bind(this),
+        deletePatchRow: this.deletePatchRow.bind(this),
+        updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
+        patchInputOnChange: this.patchInputOnChange.bind(this),
+        patchCodeInputChange: this.patchCodeInputChange.bind(this),
+        openSelectPatch: this.openSelectPatch.bind(this),
+        closeSelectPatch: this.closeSelectPatch.bind(this),
+        getFilteredPatchCodes: this.getFilteredPatchCodes.bind(this),
+        getPatchListFromSku: this.getPatchListFromSku.bind(this)
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductActionsContainer);
