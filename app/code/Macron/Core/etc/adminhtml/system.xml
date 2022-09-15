@@ -2,6 +2,7 @@
 <!--
 @category  Macron
 @author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
 @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
 @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
 -->
@@ -25,6 +26,24 @@
                     <label>Value</label>
                     <comment>Comma-separation.</comment>
                     <validate>required-entry no-whitespace validate-per-page-value-list</validate>
+                </field>
+            </group>
+        </section>
+
+        <section id="stock_cache_lifetime" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20"
+                 translate="label">
+            <class>class-separator</class>
+            <label>Stock</label>
+            <tab>macron</tab>
+            <resource>Macron_Core::stock</resource>
+
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Stock cache lifetime</label>
+                <field id="text" type="text" translate="label" sortOrder="2" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Value</label>
+                    <comment>In seconds</comment>
+                    <validate>required-entry integer validate-greater-than-zero</validate>
                 </field>
             </group>
         </section>
