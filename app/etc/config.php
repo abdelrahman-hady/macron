@@ -447,6 +447,7 @@ return [
         'Macron_Erp' => 1,
         'Macron_Migration' => 1,
         'Macron_Pim' => 1,
+        'Macron_PimGraphQl' => 1,
         'Macron_QuoteGraphQl' => 1,
         'ScandiPWA_Route717' => 1,
         'Macron_Sales' => 1,
