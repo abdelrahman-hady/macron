@@ -20,6 +20,8 @@ import {
 } from 'SourceComponent/Header/Header.container';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
+import { appendWithStoreCode } from 'Util/Url';
 
 import { CHECKOUT_ACCOUNT, CUSTOMER_ACCOUNT } from './Header.config';
 
@@ -87,6 +89,11 @@ export class HeaderContainer extends SourceHeaderContainer {
                 onCloseClick: this.closeOverlay
             });
         });
+    }
+
+    // overridden to direct the user to a cart page instead of to open minicart
+    onMinicartButtonClick() {
+        history.push({ pathname: appendWithStoreCode('/cart') });
     }
 }
 
