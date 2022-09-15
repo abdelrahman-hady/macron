@@ -6,9 +6,7 @@ type Query {
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
         @doc(description: "Get list of clients")
 
-    client (
-        client_id: Int!
-    ): Client
+    client(client_id: Int!): Client
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
         @doc(description: "Get client by id")
 
@@ -20,7 +18,7 @@ type Query {
 
     invoices: [InvoiceType]
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
-        @doc(description: "Get list of invoices")
+        @doc(description: "Get list of invoices for the current logged in customer")
 
 
     shipments(
@@ -167,9 +165,4 @@ type InvoiceType {
     download_link: String
     firstname: String
     lastname: String
-    address_city: String
-    address_street: String
-    address_postcode: String
-    address_country_id: String
-    address_telephone: String
 }

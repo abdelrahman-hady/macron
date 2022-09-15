@@ -23,12 +23,7 @@ export class InvoiceQuery {
             'lastname',
             'currency',
             'grand_total',
-            'status',
-            'address_city',
-            'address_street',
-            'address_postcode',
-            'address_country_id',
-            'address_telephone'
+            'status'
         ];
     }
 }

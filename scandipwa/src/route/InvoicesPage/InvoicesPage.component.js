@@ -39,8 +39,7 @@ export class InvoicesPageComponent extends PureComponent {
             <tr>
                 <th>{ __('Invoice number') }</th>
                 <th>{ __('Date') }</th>
-                <th>{ __('customer') }</th>
-                <th>{ __('Address') }</th>
+                <th>{ __('Customer') }</th>
                 <th>{ __('Total') }</th>
                 <th>{ __('Status') }</th>
                 <th>{ __('Action') }</th>
@@ -60,15 +59,8 @@ export class InvoicesPageComponent extends PureComponent {
 
     renderTableRow(data) {
         const {
-            id, invoice_number, date, firstname, lastname, currency, grand_total, status,
-            address_city,
-            address_street,
-            address_postcode,
-            address_country_id,
-            address_telephone
+            id, invoice_number, date, firstname, lastname, currency, grand_total, status
         } = data;
-        const address = `${address_city} ${address_street} ${address_country_id} 
-        ${address_postcode} T:${address_telephone}`;
         const customer = `${firstname} ${lastname}`;
 
         return (
@@ -76,7 +68,6 @@ export class InvoicesPageComponent extends PureComponent {
                 <td>{ invoice_number }</td>
                 <td>{ date }</td>
                 <td>{ customer }</td>
-                <td>{ address }</td>
                 <td>
                     { grand_total }
                     { ' ' }
