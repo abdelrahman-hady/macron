@@ -49,7 +49,8 @@ export class ProductPriceComponent extends SourceProductPrice {
             priceRange,
             priceRange: {
                 wholesale_price,
-                retail_price
+                retail_price,
+                your_wsp
             },
             mix
         } = this.props;
@@ -65,6 +66,7 @@ export class ProductPriceComponent extends SourceProductPrice {
             >
                 { this.renderPrice(wholesale_price, 'RRP') }
                 { this.renderPrice(retail_price, 'WSP') }
+                { this.renderPrice(your_wsp, 'Your WSP') }
             </div>
         );
     }

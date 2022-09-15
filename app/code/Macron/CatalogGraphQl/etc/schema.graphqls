@@ -1,6 +1,11 @@
+interface ProductInterface {
+    price_range(customer: String): PriceRange! @resolver(class: "Magento\\CatalogGraphQl\\Model\\Resolver\\Product\\PriceRange")
+}
+
 type PriceRange {
     wholesale_price: CustomPrice @doc(description: "Product wholesale price.")
     retail_price: CustomPrice @doc(description:  "Product retail price.")
+    your_wsp: CustomPrice @doc(description:  "Product retail price.")
 }
 
 type CustomPrice {
