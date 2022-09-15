@@ -73,7 +73,15 @@ export class MyAccountComponent extends SourceMyAccount {
     };
 
     renderInvoicesTable() {
-        return <DashboardInvoicesTable />;
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === 'DASHBOARD') {
+            return <DashboardInvoicesTable />;
+        }
+
+        return '';
     }
 
     renderContent() {
