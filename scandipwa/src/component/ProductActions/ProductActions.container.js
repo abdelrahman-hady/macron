@@ -143,9 +143,9 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { showErrorNotification } = this.props;
 
         try {
-            const query = await fetchQuery(PatchProductQuery.getPatchProductQuery());
+            const { patchProductCollection } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
 
-            console.log('ccheck query', query);
+            console.log('ccheck query', patchProductCollection);
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
         }
@@ -153,6 +153,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     addAnotherPatch() {
         const { patchList } = this.state;
+
+        this.requestPatchProducts();
 
         this.setState({
             patchList: [...patchList, {
