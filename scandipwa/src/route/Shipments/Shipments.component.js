@@ -19,13 +19,13 @@ import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
 import Pagination from 'Component/Pagination';
 import ShipmentsTable from 'Component/ShipmentsTable';
-import { ShipmentType } from 'Type/Shipment.type';
+import { ShipmentsType } from 'Type/Shipment.type';
 
 /** @namespace Scandipwa/Route/Shipments/Component */
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
-        shipments: ShipmentType.isRequired,
+        shipments: ShipmentsType.isRequired,
         shipmentsPerPageList: PropTypes.string.isRequired,
         shipmentsPerPage: PropTypes.number.isRequired,
         onShipmentPerPageChange: PropTypes.func.isRequired
@@ -80,8 +80,7 @@ export class ShipmentsComponent extends PureComponent {
     }
 
     renderPagination() {
-        const { isLoading, shipments: { pageInfo = { total_pages: 1 } } } = this.props;
-        const { total_pages } = pageInfo;
+        const { isLoading, shipments: { page_info: { total_pages = 0 } = {} } } = this.props;
 
         return (
              <Pagination totalPages={ total_pages } isLoading={ isLoading } />
@@ -89,13 +88,17 @@ export class ShipmentsComponent extends PureComponent {
     }
 
     renderContent() {
-        const { isLoading, shipments } = this.props;
+        const { isLoading, shipments: { items = [] } } = this.props;
 
         return (
-            <ContentWrapper label="Shipments">
-                { this.renderTitle() }
-                <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
-            </ContentWrapper>
+          <ContentWrapper label="Shipments">
+             { this.renderTitle() }
+             { this.renderShipmentsPerPage() }
+             { this.renderPagination() }
+            <ShipmentsTable shipments={ items } isLoading={ isLoading } />
+             { this.renderShipmentsPerPage() }
+             { this.renderPagination() }
+          </ContentWrapper>
         );
     }
 
@@ -105,11 +108,7 @@ export class ShipmentsComponent extends PureComponent {
         return (
             <main block="Shipments">
                 <Loader isLoading={ isLoading } />
-                { this.renderShipmentsPerPage() }
-                { this.renderPagination() }
                 { this.renderContent() }
-                { this.renderShipmentsPerPage() }
-                { this.renderPagination() }
             </main>
         );
     }

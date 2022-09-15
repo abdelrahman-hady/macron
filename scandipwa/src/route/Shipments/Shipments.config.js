@@ -7,4 +7,4 @@
 
 export const SHIPMENT_URL = '/shipments';
 export const SHIPMENTS_PER_PAGE = 10;
-export const SHIPMENTS_PER_PAGE_ITEM = 'SHIPMENTS_PER_PAGE_ITEM';
+export const SHIPMENTS_PER_PAGE_ITEM = 'shipments_per_page_item';

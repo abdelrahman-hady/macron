@@ -58,11 +58,18 @@ class Shipments implements ResolverInterface
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
 
-        return $this->shipmentsCollection
+        $collection = $this->shipmentsCollection
             ->create($customerId)
             ->setPageSize($pageSize)
-            ->setCurPage($currentPage)
-            ->setOrder('entity_id', 'DESC')
-            ->getData();
+            ->setCurPage($currentPage);
+
+        return [
+            'items' => $collection->getData(),
+            'page_info' => [
+                'page_size' => $collection->getPageSize(),
+                'current_page' => $collection->getCurPage(),
+                'total_pages' => $collection->getLastPageNumber()
+            ],
+        ];
     }
 }
