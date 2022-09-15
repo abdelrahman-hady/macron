@@ -17,12 +17,18 @@ export class ShipmentQuery {
         return new Field('shipments')
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
-            .addField(this._getShipmentsField());
+            .addField(this._getShipmentsField())
+            .addField(this._getPageInfoField());
     }
 
     _getShipmentsField() {
         return new Field('items')
             .addFieldList(this._getShipmentFields());
+    }
+
+    _getPageInfoField() {
+        return new Field('page_info')
+            .addFieldList(this._getPageInfoFields());
     }
 
     _getShipmentFields() {
@@ -34,6 +40,14 @@ export class ShipmentQuery {
             'date',
             'customer_name',
             'address'
+        ];
+    }
+
+    _getPageInfoFields() {
+        return [
+            'current_page',
+            'page_size',
+            'total_pages'
         ];
     }
 }

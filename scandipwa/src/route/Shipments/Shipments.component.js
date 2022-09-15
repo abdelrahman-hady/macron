@@ -80,7 +80,7 @@ export class ShipmentsComponent extends PureComponent {
     }
 
     renderPagination() {
-        const { isLoading, shipments: { pageInfo: { total_pages = 0 } = {} } } = this.props;
+        const { isLoading, shipments: { page_info: { total_pages = 0 } = {} } } = this.props;
 
         return (
              <Pagination totalPages={ total_pages } isLoading={ isLoading } />
