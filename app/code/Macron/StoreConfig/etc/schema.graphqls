@@ -1,3 +1,4 @@
 extend type StoreConfig {
     xperpage: String! @doc(description: "The X Per Page Configuration value")
+    closeout_discount: String @doc(description: "The Closeout Discount configuration value")
 }
