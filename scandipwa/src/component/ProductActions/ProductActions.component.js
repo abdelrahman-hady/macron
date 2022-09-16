@@ -1,23 +1,37 @@
 /**
   * @category    Macron
   * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
   * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
   * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
   */
 
 /* eslint-disable max-lines */
+/* eslint-disable max-len */
 
-import AddIcon from '@scandipwa/scandipwa/src/component/AddIcon';
-import ChevronIcon from '@scandipwa/scandipwa/src/component/ChevronIcon';
-import CloseIcon from '@scandipwa/scandipwa/src/component/CloseIcon';
+import PropTypes from 'prop-types';
 
+import AddIcon from 'Component/AddIcon';
+import ChevronIcon from 'Component/ChevronIcon';
+import CloseIcon from 'Component/CloseIcon';
 import PRODUCT_TYPE from 'Component/Product/Product.config';
+import ProductStockGrid from 'Component/ProductStockGrid';
+import { GRID_COLOR_ITEM } from 'Component/ProductStockGrid/ProductStockGrid.config';
+import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample_data';
 import { ProductActions as SourceProductActions } from 'SourceComponent/ProductActions/ProductActions.component';
+import { StockType } from 'Type/Stock.type';
 import { isCrawler, isSSR } from 'Util/Browser';
 
 import './ProductActions.extension.style.scss';
 /** @namespace Scandipwa/Component/ProductActions/Component */
 export class ProductActionsComponent extends SourceProductActions {
+    static propTypes = {
+        ...super.propTypes,
+        parameters: PropTypes.objectOf(PropTypes.string).isRequired,
+        stock: PropTypes.arrayOf(StockType).isRequired,
+        stockLoading: PropTypes.bool.isRequired
+    };
+
     renderAddPatchBlock() {
         const {
             isAddPatchDropOpen,
@@ -266,6 +280,23 @@ export class ProductActionsComponent extends SourceProductActions {
         );
     }
 
+    renderStockGrid() {
+        const {
+            product, parameters: { [GRID_COLOR_ITEM]: selectedColor } = {}, stock, stockLoading
+        } = this.props;
+
+        return (
+            <ProductStockGrid
+              configurationOptions={ this.getConfigurableAttributes() }
+              product={ product }
+              selectedColor={ selectedColor }
+              stock={ stock }
+              isLoading={ stockLoading }
+              warehouses={ customerWarehouses }
+            />
+        );
+    }
+
     renderDesktop() {
         return (
             <>
@@ -275,6 +306,7 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderSkuAndStock() }
                 { this.renderShortDescription() }
                 { this.renderConfigurableOptions() }
+                { this.renderStockGrid() }
                 { this.renderCustomAndBundleOptions() }
                 { this.renderGroupedOptions() }
                 { this.renderDownloadableSamples() }
@@ -308,6 +340,7 @@ export class ProductActionsComponent extends SourceProductActions {
                 { this.renderShortDescription() }
                 { this.renderProductAlerts() }
                 { this.renderConfigurableOptions() }
+                { this.renderStockGrid() }
                 { this.renderCustomAndBundleOptions() }
                 { this.renderGroupedOptions() }
                 { this.renderDownloadableSamples() }
