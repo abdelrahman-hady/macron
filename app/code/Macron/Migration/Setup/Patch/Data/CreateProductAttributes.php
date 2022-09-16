@@ -11,13 +11,25 @@ declare (strict_types=1);
 namespace Macron\Migration\Setup\Patch\Data;
 
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Setup\CategorySetupFactory;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class CreateProductAttributes implements DataPatchInterface
 {
     protected EavSetupFactory $eavSetupFactory;
+
+    /**
+     * @var CategorySetupFactory
+     */
+    protected CategorySetupFactory $categorySetupFactory;
+
+    /**
+     * @var ModuleDataSetupInterface
+     */
+    protected ModuleDataSetupInterface $moduleDataSetup;
 
     protected const ATTRIBUTES = [
         'block_for_countries' => [
@@ -119,10 +131,16 @@ class CreateProductAttributes implements DataPatchInterface
 
     /**
      * @param EavSetupFactory $eavSetupFactory
+     * @param CategorySetupFactory $categorySetupFactory
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
-    {
+    public function __construct(
+        ModuleDataSetupInterface $moduleDataSetup,
+        EavSetupFactory $eavSetupFactory,
+        CategorySetupFactory $categorySetupFactory
+    ) {
         $this->eavSetupFactory = $eavSetupFactory;
+        $this->categorySetupFactory = $categorySetupFactory;
+        $this->moduleDataSetup = $moduleDataSetup;
     }
 
     /**
@@ -130,29 +148,48 @@ class CreateProductAttributes implements DataPatchInterface
      */
     public function apply()
     {
+        $attributeGroupName = "Macron";
+        $this->createAttributeGroup($attributeGroupName);
+
         $eavSetup = $this->eavSetupFactory->create();
 
         foreach (self::ATTRIBUTES as $attribute => $data) {
-            $scope = $attribute === 'mcr_colors' ?  ScopedAttributeInterface::SCOPE_GLOBAL :  ScopedAttributeInterface::SCOPE_STORE;
+            $scope = $attribute === 'mcr_colors' ? ScopedAttributeInterface::SCOPE_GLOBAL : ScopedAttributeInterface::SCOPE_STORE;
             $eavSetup->addAttribute(
                 Product::ENTITY,
                 $attribute,
-                [...$data, ...[
-                    'group' => 'Product Details',
-                    'default' => null,
-                    'global' => $scope,
-                    'required' => false,
-                    'user_defined' => false,
-                    'is_visible_in_grid' => true,
-                    'visible' => true,
-                    'visible_on_front' => true,
-                    'used_in_product_listing' => true,
-                ]]
+                [
+                    ...$data,
+                    ...[
+                        'group' => $attributeGroupName,
+                        'default' => null,
+                        'global' => $scope,
+                        'required' => false,
+                        'user_defined' => false,
+                        'is_visible_in_grid' => true,
+                        'visible' => true,
+                        'visible_on_front' => true,
+                        'used_in_product_listing' => true,
+                    ]
+                ]
             );
         }
     }
 
-     /**
+    /**
+     * @param string $name
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function createAttributeGroup(string $name)
+    {
+        $categorySetup = $this->categorySetupFactory->create(['setup' => $this->moduleDataSetup]);
+        $entityTypeId = $categorySetup->getEntityTypeId(Product::ENTITY);
+        $attributeSetId = $categorySetup->getDefaultAttributeSetId($entityTypeId);
+        $categorySetup->addAttributeGroup($entityTypeId, $attributeSetId, $name, 11);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public static function getDependencies(): array
