@@ -65,13 +65,11 @@ export class DashboardShipmentsTableContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         try {
-            const { shipments = [] } = await fetchQuery(ShipmentQuery.getShipmentsQuery());
-            this.setState({ isLoading: false });
-            if (shipments.length > compactLength) {
-                this.setState({ shipments: shipments.slice(0, compactLength) });
-            } else {
-                this.setState({ shipments });
-            }
+            const { shipments = [] } = await fetchQuery(
+                ShipmentQuery.getShipmentsQuery({ page: 1, pageSize: compactLength })
+            );
+
+            this.setState({ shipments, isLoading: false });
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
             this.setState({ isLoading: false });

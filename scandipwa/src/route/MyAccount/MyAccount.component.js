@@ -34,6 +34,10 @@ import {
 import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 
+import {
+    DASHBOARD
+} from '../../type/Account.type';
+
 export const MyAccountAddressBook = lazy(() => import(
     /* webpackMode: "lazy", webpackChunkName: "account-address" */
     'Component/MyAccountAddressBook'
@@ -77,7 +81,7 @@ export class MyAccountComponent extends SourceMyAccount {
             activeTab
         } = this.props;
 
-        if (activeTab === 'DASHBOARD') {
+        if (activeTab === DASHBOARD) {
             return <DashboardShipmentsTable />;
         }
 
