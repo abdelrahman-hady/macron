@@ -10,10 +10,15 @@
 /* eslint-disable max-len */
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
 
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { mapDispatchToProps, mapStateToProps, MyAccountContainer as SourceMyAccountContainer } from 'SourceRoute/MyAccount/MyAccount.container';
+import {
+    mapDispatchToProps,
+    mapStateToProps as sourceMapStateToProps,
+    MyAccountContainer as SourceMyAccountContainer
+} from 'SourceRoute/MyAccount/MyAccount.container';
 import OrderReducer from 'Store/Order/Order.reducer';
 import {
     ACCOUNT_INFORMATION,
@@ -25,6 +30,8 @@ import {
 } from 'Type/Account.type';
 import { withReducers } from 'Util/DynamicReducer';
 
+import MyAccount from './MyAccount.component';
+
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
@@ -34,13 +41,35 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
-export { mapStateToProps, mapDispatchToProps };
+export { mapDispatchToProps };
+
+/** @namespace Scandipwa/Route/MyAccount/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    IsSapID: state.OrderReducer.orderList.items
+});
 
 /** @namespace Scandipwa/Route/MyAccount/Container */
 export class MyAccountContainer extends SourceMyAccountContainer {
     static defaultProps = {
         selectedTab: null
     };
+
+    static propTypes = {
+        ...super.propTypes,
+        IsSapID: PropTypes.arrayOf(PropTypes.string)
+    };
+
+    containerProps() {
+        const {
+            IsSapID
+        } = this.props;
+
+        return {
+            IsSapID,
+            ...super.containerProps()
+        };
+    }
 
     static tabMap = {
         [MY_ACCOUNT]: {
@@ -95,6 +124,16 @@ export class MyAccountContainer extends SourceMyAccountContainer {
             MyAccountContainer.isTabEnabled(this.props, key)
                 ? { ...enabledTabs, [key]: value } : enabledTabs
         ), {});
+    }
+
+    render() {
+        return (
+            <MyAccount
+              { ...this.containerProps() }
+              { ...this.containerFunctions }
+              tabMap={ this.tabsFilterEnabled(MyAccountContainer.tabMap) }
+            />
+        );
     }
 }
 

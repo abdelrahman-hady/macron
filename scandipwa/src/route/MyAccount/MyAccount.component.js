@@ -32,6 +32,8 @@ import {
 import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 
+import { ACCOUNT_ORDER_URL } from './MyAccount.config';
+
 export const MyAccountAddressBook = lazy(() => import(
     /* webpackMode: "lazy", webpackChunkName: "account-address" */
     'Component/MyAccountAddressBook'
@@ -59,7 +61,8 @@ export class MyAccountComponent extends SourceMyAccount {
         changeTabName: PropTypes.func.isRequired,
         tabName: PropTypes.string,
         setTabSubheading: PropTypes.func.isRequired,
-        isTabEnabled: PropTypes.func.isRequired
+        isTabEnabled: PropTypes.func.isRequired,
+        IsSapID: PropTypes.arrayOf(PropTypes.string)
     };
 
     renderMap = {
@@ -70,6 +73,16 @@ export class MyAccountComponent extends SourceMyAccount {
         [ACCOUNT_INFORMATION]: MyAccountInformation
     };
 
+    getTabContent() {
+        const { activeTab, location: { pathname } } = this.props;
+
+        if (activeTab === MY_ORDERS && pathname.includes(ACCOUNT_ORDER_URL)) {
+            return this.renderMap[MY_ORDER];
+        }
+
+        return this.renderMap[activeTab];
+    }
+
     renderContent() {
         const {
             activeTab,
@@ -79,8 +92,11 @@ export class MyAccountComponent extends SourceMyAccount {
             changeTabName,
             tabName,
             setTabSubheading,
-            isTabEnabled
+            isTabEnabled,
+            IsSapID
         } = this.props;
+
+        const orders = IsSapID !== undefined ? IsSapID : null;
 
         if (!isSignedIn()) {
             return this.renderLoginOverlay();
@@ -115,6 +131,7 @@ export class MyAccountComponent extends SourceMyAccount {
                           changeTabName={ changeTabName }
                           tabMap={ tabMap }
                           setTabSubheading={ setTabSubheading }
+                          IsSapID={ orders }
                         />
                     </Suspense>
                 </div>

@@ -28,7 +28,8 @@ export class OrderQuery extends SourceOrderQuery {
             ...super._getOrderItemsFields(isSingleOrder),
             'internal_note',
             'reference_note',
-            'user_customer_name'
+            'user_customer_name',
+            'sap_order_id'
         ];
 
         if (isSingleOrder) {
@@ -53,9 +54,15 @@ export class OrderQuery extends SourceOrderQuery {
 
     _getOrdersField(options) {
         const {
-            orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions, isSapOrderId
         } = options || {};
         const ordersField = new Field('orders');
+
+        if (isSapOrderId) {
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { sap_order_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
+        }
 
         if (orderId) {
             return ordersField
