@@ -17,12 +17,23 @@ export class ShipmentQuery {
         return new Field('shipments')
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
-            .addFieldList(this._getShipmentFields());
+            .addField(this._getShipmentsField())
+            .addField(this._getPageInfoField());
     }
 
     getShipmentsByKeywordQuery(keyword) {
         return new Field('shipmentsByKeyword')
             .addArgument('keyword', 'String!', keyword)
+            .addFieldList(this._getShipmentFields());
+    }
+
+    _getPageInfoField() {
+        return new Field('page_info')
+            .addFieldList(this._getPageInfoFields());
+    }
+
+    _getShipmentsField() {
+        return new Field('items')
             .addFieldList(this._getShipmentFields());
     }
 
@@ -34,7 +45,16 @@ export class ShipmentQuery {
             'tracking_number',
             'date',
             'customer_name',
-            'address'
+            'address',
+            'packing_list_link'
+        ];
+    }
+
+    _getPageInfoFields() {
+        return [
+            'current_page',
+            'page_size',
+            'total_pages'
         ];
     }
 }

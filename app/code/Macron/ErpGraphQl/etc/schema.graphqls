@@ -19,9 +19,9 @@ type Query {
     @doc(description: "Get clients by keyword")
 
     shipments(
-        currentPage: Int = 1
         pageSize: Int = 10
-    ): [Shipment]
+        currentPage: Int = 1
+    ): Shipments
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
     @doc(description: "Get shipments list")
 
@@ -79,12 +79,18 @@ type ClientType {
 
 type Shipment {
     entity_id: Int
-    shipment_number: String,
-    status: String,
-    tracking_number: String,
-    date: String,
-    customer_name: String,
-    address: String
+    shipment_number: String
+    status: String
+    tracking_number: String
+    date: String
+    customer_name: String
+    address: String,
+    packing_list_link: String
+}
+
+type Shipments {
+    items: [Shipment]
+    page_info: SearchResultPageInfo
 }
 
 input CreateClientInput {
