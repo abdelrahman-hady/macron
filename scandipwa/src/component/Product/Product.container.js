@@ -12,16 +12,23 @@ import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample
 import StockQuery from 'Query/Stock.query';
 import {
     mapDispatchToProps,
-    mapStateToProps,
+    mapStateToProps as sourceMapStateToProps,
     ProductContainer as SourceProductContainer
 } from 'SourceComponent/Product/Product.container';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
 
+import { ONE_MILLISECOND } from './Product.config';
+
 export {
-    mapDispatchToProps,
-    mapStateToProps
+    mapDispatchToProps
 };
+
+/** @namespace Scandipwa/Component/Product/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    stockCacheLifetime: state.ConfigReducer.stock_cache_lifetime
+});
 
 /** @namespace Scandipwa/Component/Product/Container */
 export class ProductContainer extends SourceProductContainer {
@@ -53,8 +60,16 @@ export class ProductContainer extends SourceProductContainer {
         this.requestStock();
     }
 
+    componentWillUnmount() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+    }
+
+    timeout = null;
+
     async requestStock() {
-        const { product: { variants }, showError } = this.props;
+        const { product: { variants }, showError, stockCacheLifetime } = this.props;
 
         if (!variants || variants.length === 0) {
             return;
@@ -72,6 +87,10 @@ export class ProductContainer extends SourceProductContainer {
             const { pimStock: stock } = await fetchQuery(StockQuery.getStockQuery(SKUs, warehouses));
 
             this.setState({ stock, stockLoading: false });
+
+            if (stockCacheLifetime) {
+                this.timeout = setTimeout(this.requestStock.bind(this), stockCacheLifetime * ONE_MILLISECOND);
+            }
         } catch (e) {
             showError(getErrorMessage(e));
             this.setState({ stockLoading: false });
