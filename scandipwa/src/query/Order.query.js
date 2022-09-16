@@ -27,7 +27,8 @@ export class OrderQuery extends SourceOrderQuery {
         const basicFields = [
             ...super._getOrderItemsFields(isSingleOrder),
             'internal_note',
-            'reference_note'
+            'reference_note',
+            'user_customer_name'
         ];
 
         if (isSingleOrder) {
@@ -35,6 +36,11 @@ export class OrderQuery extends SourceOrderQuery {
         }
 
         return basicFields;
+    }
+
+    _getOrderItemsField(isSingleOrder) {
+        return new Field('items')
+            .addFieldList(this._getOrderItemsFields(isSingleOrder));
     }
 
     _getDownloadableFields() {
@@ -46,13 +52,30 @@ export class OrderQuery extends SourceOrderQuery {
     }
 
     _getOrdersField(options) {
-        const { orderId, page = 1, pageSize = ORDERS_PER_PAGE } = options || {};
+        const {
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions
+        } = options || {};
         const ordersField = new Field('orders');
 
         if (orderId) {
             return ordersField
                 .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
                 .addFieldList(this._getOrdersFields(true));
+        }
+
+        const { status, user_customer_name } = filterOptions;
+
+        const filter = { };
+        if (status) {
+            filter.status = { eq: status };
+        }
+
+        if (user_customer_name) {
+            filter.user_customer_name = { eq: user_customer_name };
+        }
+
+        if (Object.keys(filter).length) {
+            ordersField.addArgument('filter', 'CustomerOrdersFilterInput', filter);
         }
 
         return ordersField

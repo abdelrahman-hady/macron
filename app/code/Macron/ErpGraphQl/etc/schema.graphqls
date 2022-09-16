@@ -6,9 +6,7 @@ type Query {
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
     @doc(description: "Get list of clients")
 
-    client (
-        client_id: Int!
-    ): ClientType
+    client(client_id: Int!): ClientType
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
     @doc(description: "Get client by id")
 
@@ -17,6 +15,10 @@ type Query {
     ): [ClientType]
     @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
     @doc(description: "Get clients by keyword")
+
+    invoices: [InvoiceType]
+    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+    @doc(description: "Get list of invoices for the current logged in customer")
 
     shipments(
         currentPage: Int = 1
@@ -118,4 +120,17 @@ input UpdateClientInput {
     contact_person: String
     mobile: String
     email: String
+}
+
+type InvoiceType {
+    id: Int
+    invoice_number: String
+    user_sap_id: String
+    date: String
+    currency: String
+    grand_total: String
+    status: String
+    download_link: String
+    firstname: String
+    lastname: String
 }

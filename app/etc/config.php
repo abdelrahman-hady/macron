@@ -441,8 +441,8 @@ return [
         'Macron_Customer' => 1,
         'Macron_CustomerGraphQl' => 1,
         'Macron_DisableStock' => 1,
-        'Macron_Erp' => 1,
         'Macron_ErpGraphQl' => 1,
+        'Macron_Erp' => 1,
         'Macron_Migration' => 1,
         'Macron_Pim' => 1,
         'Macron_QuoteGraphQl' => 1,
@@ -485,7 +485,6 @@ return [
         'ScandiPWA_UrlrewriteGraphQl' => 1,
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
-        'Scandiweb_ERPInvoice' => 1,
         'Scandiweb_MagefanBlog' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
         'Temando_ShippingRemover' => 1
