@@ -5,6 +5,7 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+/* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -29,6 +30,10 @@ export class ProductStockGridComponent extends PureComponent {
         warehouses: PropTypes.arrayOf(PropTypes.string).isRequired
     };
 
+    state = {
+        hoveredArrival: {}
+    };
+
     renderStockHeadingRow() {
         const { attributeOptions } = this.props;
 
@@ -51,8 +56,10 @@ export class ProductStockGridComponent extends PureComponent {
         return (
             <tr>
                 <th>{ title }</th>
-                { attributeOptions.map(({ value }) => (
-                    <th>{ stocks[value] ?? '-' }</th>
+                { attributeOptions.map(({ value: size }) => (
+                    <th key={ `${size}-${stocks[size]}-${warehouse}` }>
+                        { stocks[size] ?? '-' }
+                    </th>
                 )) }
             </tr>
         );
@@ -65,10 +72,45 @@ export class ProductStockGridComponent extends PureComponent {
         return (
             <tr>
                 <td>{ __('Arrivals') }</td>
-                { attributeOptions.map(({ value }) => (
-                    <th>{ arrivals[value] ?? '-' }</th>
-                )) }
+                { attributeOptions.map(({ value: size }) => {
+                    const { total, newArrivals } = arrivals[size] ?? {};
+
+                    return (
+                        <th
+                          key={ `${size}-${total}-${warehouse}-arrival` }
+                          onMouseOver={ () => this.handleMouseOver(size, warehouse, newArrivals) }
+                          onFocus={ () => this.handleMouseOver(size, warehouse, newArrivals) }
+                          onMouseLeave={ () => this.handleMouseOver(null) }
+                        >
+                            { total ?? '-' }
+                            { this.renderTooltip(size, warehouse) }
+                        </th>
+                    );
+                }) }
             </tr>
+        );
+    }
+
+    // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
+    handleMouseOver(size, warehouse, newArrivals) {
+        this.setState({ hoveredArrival: { size, warehouse, newArrivals } });
+    }
+
+    renderTooltip(currentSize, currentWarehouse) {
+        const { hoveredArrival: { size, warehouse, newArrivals } } = this.state;
+
+        if (currentSize !== size || currentWarehouse !== warehouse || !newArrivals) {
+            return null;
+        }
+
+        return (
+            <div block="ProductStockGrid" elem="Tooltip">
+                 { newArrivals.map(({ qty, date }) => (
+                    <span block="ProductStockGrid" elem="TooltipItem">
+                        { `${date} ${qty} ${__('pcs')}` }
+                    </span>
+                 )) }
+            </div>
         );
     }
 
@@ -106,7 +148,7 @@ export class ProductStockGridComponent extends PureComponent {
             <div block="ProductStockGrid">
                 <Loader isLoading={ isLoading } />
                 <table block="ProductStockGrid" elem="Table">
-                    { this.renderStoreTable(WAREHOUSE_HQ) }
+                    { this.renderHeadquarterTable() }
                     { warehouses.map(this.renderStoreTable.bind(this)) }
                 </table>
             </div>

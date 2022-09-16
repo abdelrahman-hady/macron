@@ -76,31 +76,21 @@ export class ProductStockGridContainer extends PureComponent {
     }
 
     getStockByWarehouse(warehouse) {
+        const stocks = {};
         const stockItems = this._getCurrentStockItems(warehouse);
 
-        const stocks = {};
-        stockItems.forEach(({ value, stockItem }) => {
-            if (!stockItem) {
-                return;
-            }
-
-            const { qty } = stockItem;
-            stocks[value] = (stocks[value] ?? 0) + qty;
+        stockItems.forEach(({ size, stockItem: { qty } }) => {
+            stocks[size] = (stocks[size] ?? 0) + qty;
         });
 
         return stocks;
     }
 
     getArrivalsByWarehouse(warehouse) {
+        const stocks = {};
         const stockItems = this._getCurrentStockItems(warehouse);
 
-        const stocks = {};
-        stockItems.forEach(({ value, stockItem }) => {
-            if (!stockItem) {
-                return;
-            }
-
-            const { newArrivals } = stockItem;
+        stockItems.forEach(({ size, stockItem: { newArrivals } }) => {
             const initialStock = 0;
             const totalQty = newArrivals.reduce(
                 (previousValue, { qty }) => previousValue + qty,
@@ -111,7 +101,8 @@ export class ProductStockGridContainer extends PureComponent {
                 return;
             }
 
-            stocks[value] = (stocks[value] ?? 0) + totalQty;
+            const { total: prevTotal = 0, newArrivals: prevArrivals = [] } = (stocks[size] ?? {});
+            stocks[size] = { total: prevTotal + totalQty, newArrivals: [...prevArrivals, ...newArrivals] };
         });
 
         return stocks;
@@ -126,20 +117,24 @@ export class ProductStockGridContainer extends PureComponent {
         }
 
         const items = [];
-        attributeOptions.forEach(({ value }) => {
+        attributeOptions.forEach(({ value: size }) => {
             const filteredVariants = variants.filter(({
                 attributes: {
                     [GRID_SIZE_ITEM]: { attribute_value: sizeValue },
                     [GRID_COLOR_ITEM]: { attribute_value: colorValue }
                 }
-            }) => (selectedColor ? value === sizeValue && selectedColor === colorValue : value === sizeValue));
+            }) => (selectedColor ? size === sizeValue && selectedColor === colorValue : size === sizeValue));
 
             filteredVariants.forEach(({ sku: variantSku }) => {
                 const stockItem = stock.find((
                     { sku: stockSku, warehouse: stockWarehouse }
                 ) => variantSku === stockSku && warehouse === stockWarehouse);
 
-                items.push({ value, stockItem });
+                if (!stockItem) {
+                    return;
+                }
+
+                items.push({ size, stockItem });
             });
         });
 
