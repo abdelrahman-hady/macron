@@ -76,11 +76,6 @@ export class OrderQuery extends SourceOrderQuery {
             filter.created_at = { ...filter.created_at, lteq: dateTo };
         }
 
-        if (Object.keys(filter).length) {
-            ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', filter);
-        }
-
         if (status) {
             filter.status = { eq: status };
         }
