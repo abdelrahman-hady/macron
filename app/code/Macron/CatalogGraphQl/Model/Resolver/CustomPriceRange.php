@@ -9,14 +9,15 @@ declare(strict_types=1);
 
 namespace Macron\CatalogGraphQl\Model\Resolver;
 
-use Magento\Framework\GraphQl\Config\Element\Field;
-use Magento\Framework\GraphQl\Query\ResolverInterface;
-use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Macron\Catalog\Model\Product\Type\CustomPrice;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\GraphQl\Config\Element\Field;
+use Magento\Framework\GraphQl\Query\ResolverInterface;
+use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
 class CustomPriceRange implements ResolverInterface
 {
@@ -35,19 +36,27 @@ class CustomPriceRange implements ResolverInterface
      */
     private GetCustomer $getCustomer;
 
-     /**
+    /**
+     * @var CustomPrice
+     */
+    private CustomPrice $customPriceModel;
+
+    /**
      * @param ProductRepository $productRepository
      * @param CollectionFactory $customerCollection
      * @param GetCustomer $getCustomer
+     * @param CustomPrice $customPriceModel
      */
     public function __construct(
         ProductRepository $productRepository,
         CollectionFactory $customerCollection,
         GetCustomer $getCustomer,
+        CustomPrice $customPriceModel
     ) {
         $this->productRepository = $productRepository;
         $this->customerCollection = $customerCollection;
         $this->getCustomer = $getCustomer;
+        $this->customPriceModel = $customPriceModel;
     }
 
     /**
@@ -87,31 +96,33 @@ class CustomPriceRange implements ResolverInterface
 
         $returnArray['wholesale_price'] =
             [
-                'value' => (int)$product->getPriceModel()->getWholesalePrice($sku, $currentCustomer),
+                'value' => (int)$this->customPriceModel->getWholesalePrice($sku, $currentCustomer),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
         $returnArray['retail_price'] =
             [
-                'value' => (int)$product->getPriceModel()->getRetailPrice($sku, $currentCustomer),
+                'value' => (int)$this->customPriceModel->getRetailPrice($sku, $currentCustomer),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
         $returnArray['your_wsp'] =
             [
-                'value' => $product->getPriceModel()->getYourWsp(
+                'value' => $this->customPriceModel->getYourWsp(
                     $sku,
                     $currentCustomer,
-                    $_product->getAttributeText('mcr_product_line')),
+                    $_product->getAttributeText('mcr_product_line')
+                ),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
 
         if ($endCustomer) {
             $returnArray['customer_rrp'] =
                 [
-                    'value' => $product->getPriceModel()->getCustomerRrp(
+                    'value' => $this->customPriceModel->getCustomerRrp(
                         $sku,
                         $endCustomer,
                         $currentCustomer,
-                        $_product->getAttributeText('mcr_product_line')),
+                        $_product->getAttributeText('mcr_product_line')
+                    ),
                     'currency' => $store->getCurrentCurrencyCode()
                 ];
         }
