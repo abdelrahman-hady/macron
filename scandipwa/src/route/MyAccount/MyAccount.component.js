@@ -32,6 +32,8 @@ import {
 import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 
+import DashboardOrdersTable from '../../component/DashboardOrdersTable';
+
 export const MyAccountAddressBook = lazy(() => import(
     /* webpackMode: "lazy", webpackChunkName: "account-address" */
     'Component/MyAccountAddressBook'
@@ -48,6 +50,8 @@ export const MyAccountMyOrders = lazy(() => import(
 
 /** @namespace Scandipwa/Route/MyAccount/Component */
 export class MyAccountComponent extends SourceMyAccount {
+    DASHBOARD='dashboard';
+
     static propTypes = {
         isEditingActive: PropTypes.bool.isRequired,
         subHeading: PropTypes.string,
@@ -69,6 +73,18 @@ export class MyAccountComponent extends SourceMyAccount {
         [ADDRESS_BOOK]: MyAccountAddressBook,
         [ACCOUNT_INFORMATION]: MyAccountInformation
     };
+
+    renderOrdersTable() {
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === this.DASHBOARD) {
+            return <DashboardOrdersTable />;
+        }
+
+        return '';
+    }
 
     renderContent() {
         const {
@@ -104,6 +120,7 @@ export class MyAccountComponent extends SourceMyAccount {
                   elem="TabContent"
                   mods={ { activeTab } }
                 >
+                    { this.renderOrdersTable() }
                     <h2 block="MyAccount" elem="Heading">
                         { title || tabName }
                         { this.renderSubHeading() }
