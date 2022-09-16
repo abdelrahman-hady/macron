@@ -35,7 +35,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         onInputChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
         orderListSearchResult: PropTypes.arrayOf.isRequired,
-        filterOptions: PropTypes.object.isRequired
+        filterOptions: PropTypes.object.isRequired,
+        onDateSelectorChange: PropTypes.func.isRequired
     };
 
     renderToolbar() {
@@ -112,6 +113,47 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         );
     }
 
+    renderFilters() {
+        const {
+            onDateSelectorChange,
+            dateFrom,
+            dateTo
+        } = this.props;
+
+        return (
+            <div block="MyAccountMyOrders" elem="Filters">
+                <div block="MyAccountMyOrders" elem="DateFilter">
+                    <p>{ __('Data from:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateFrom',
+                          name: 'dateFrom',
+                          value: dateFrom
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+                <div block="MyAccountMyOrders" elem="DateFilter">
+                    <p>{ __('Data to:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateTo',
+                          name: 'dateTo',
+                          value: dateTo
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+            </div>
+        );
+    }
+
     renderOrderRows() {
         const {
             orderList: { items = [] },
@@ -119,18 +161,17 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             sortOptions: { orderStatus },
             statusOptions,
             searchInput,
-            orderListSearchResult
+            orderListSearchResult: { items: searchedItems = [] }
         } = this.props;
 
-        if (!isLoading && !items.length && !orderListSearchResult.length) {
+        const orderItems = searchInput !== '' ? searchedItems : items;
+        if (!isLoading && !orderItems.length) {
             return this.renderNoOrders();
         }
 
-        const ordersItems = searchInput !== '' ? orderListSearchResult : items;
-
         if (orderStatus === 0) {
             // no filters selected -> render all orders
-            return ordersItems.reduceRight(
+            return orderItems.reduceRight(
                 (acc, order) => [...acc, this.renderOrderRow(order)],
                 []
             );
@@ -138,7 +179,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
 
         // Filter Orders By Status
         const [filterOption = {}] = statusOptions.filter((option) => option.id === orderStatus);
-        return ordersItems.reduceRight(
+        return orderItems.reduceRight(
             (acc, order) => {
                 if (filterOption.label?.value === order.status) {
                     return [...acc, this.renderOrderRow(order)];
@@ -176,11 +217,29 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
     }
 
     renderPagination() {
-        const { isLoading, orderList: { pageInfo = { total_pages: 1 } } } = this.props;
-        const { total_pages } = pageInfo;
+        const {
+            isLoading,
+            orderList: {
+                pageInfo: {
+                    total_pages = 0
+                } = {}
+            },
+            orderListSearchResult: {
+                pageInfo: {
+                    total_pages_searched = 0
+                } = {}
+            },
+            searchInput
+        } = this.props;
+
+        const pages = searchInput !== '' ? total_pages_searched : total_pages;
 
         return (
-             <Pagination totalPages={ total_pages } isLoading={ isLoading } />
+            <Pagination
+              isLoading={ isLoading }
+              totalPages={ pages }
+              mix={ { block: 'MyAccountMyOrders', elem: 'Pagination' } }
+            />
         );
     }
 
@@ -247,6 +306,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         return (
             <div block="MyAccountMyOrders">
                 <Loader isLoading={ isLoading } />
+                { this.renderFilters() }
                 { this.renderSearchBar() }
                 { this.renderPerPageDropdown() }
                 { this.renderPagination() }

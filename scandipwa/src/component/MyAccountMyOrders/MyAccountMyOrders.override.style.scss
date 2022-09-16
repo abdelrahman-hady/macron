@@ -15,6 +15,21 @@
             margin: unset;
         }
     }
+
+    &-Filters {
+        display: flex;
+        gap: 15px;
+
+        @include mobile {
+            flex-direction: column;
+        }
+    }
+
+    &-DateFilter {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
 }
 
 .SearchOrder {

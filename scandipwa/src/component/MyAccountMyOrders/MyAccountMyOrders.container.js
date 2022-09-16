@@ -62,6 +62,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         device: DeviceType.isRequired
     };
 
+    timer = null;
+
     state = {
         ordersPerPage: +(BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM) ?? ORDERS_PER_PAGE),
         sortOptions: {
@@ -72,7 +74,9 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         orderListSearchResult: [],
         filterOptions: {
             status: null,
-            user_customer_name: null
+            user_customer_name: null,
+            dateFrom: '',
+            dateTo: ''
         },
         availableFilters: {
             status: [],
@@ -86,6 +90,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
         onInputChange: this.onInputChange.bind(this),
+        onDateSelectorChange: this.onDateSelectorChange.bind(this),
         formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
@@ -97,6 +102,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             statusOptions,
             searchInput,
             orderListSearchResult,
+            dateFrom,
+            dateTo,
             filterOptions,
             availableFilters
         } = this.state;
@@ -111,6 +118,8 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             statusOptions,
             filterOptions,
             availableFilters,
+            dateFrom,
+            dateTo,
             ...super.containerProps()
         };
     }
@@ -262,11 +271,27 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         return [];
     }
 
+    onDateSelectorChange(e) {
+        const { name, value } = e.target;
+        const { filterOptions } = this.state;
+        // eslint-disable-next-line fp/no-let
+        let date = value;
+        if (name === 'dateTo') {
+            const valueArr = value.split('-');
+            const day = parseFloat(valueArr[2]) + 1;
+            // eslint-disable-next-line no-magic-numbers
+            valueArr[2] = String(`0${ day}`).slice(-2);
+            date = valueArr.join('-');
+        }
+        this.setState({ filterOptions: { ...filterOptions, [name]: date } });
+    }
+
     onInputChange(e) {
         const { setLoadingStatus } = this.props;
         const { value } = e.target;
+        const { ordersPerPage } = this.state;
         this.setState({ searchInput: value });
-        const query = OrderQuery.getOrdersByKeywordQuery(value);
+        const query = OrderQuery.getOrdersByKeywordQuery(this._getPageFromUrl(), ordersPerPage, value);
         this.debounce(
             () => {
                 setLoadingStatus(true);
@@ -274,8 +299,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                     fetchQuery(query).then(
                     /** @namespace Scandipwa/Component/MyAccountMyOrders/Container/MyAccountMyOrdersContainer/onInputChange/debounce/fetchQuery/then */
                         ({ OrdersByKeyword }) => {
+                            const { items = [], page_info } = OrdersByKeyword;
+                            const formattedOrders = formatOrders(items);
                             setLoadingStatus(false);
-                            this.setState({ orderListSearchResult: formatOrders(OrdersByKeyword) });
+                            this.setState({ orderListSearchResult: { items: formattedOrders, pageInfo: page_info } });
                         }
                     );
                 } catch (error) {
