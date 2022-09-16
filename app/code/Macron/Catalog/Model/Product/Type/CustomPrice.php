@@ -100,7 +100,7 @@ class CustomPrice
         $bind = [':pricelist_id' => $priceList, ':sku' => $sku];
         $result = $this->connection->fetchOne($sql, $bind);
 
-        return $result ? $result['price'] : null;
+        return $result ?: null;
     }
 
     /**
@@ -122,7 +122,7 @@ class CustomPrice
         );
         $bind = [':business_line' => $mcrProductLine, ':business_partner_id' => $businessPartnerId];
         $result = $this->connection->fetchOne($sql, $bind);
-        $discount = $result ? $result['discount_amount'] : 0;
+        $discount = $result ?: 0;
 
         return (int)$wsp - (int)$discount;
     }
