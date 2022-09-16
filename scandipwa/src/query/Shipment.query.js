@@ -21,14 +21,15 @@ export class ShipmentQuery {
             .addField(this._getPageInfoField());
     }
 
-    _getShipmentsField() {
-        return new Field('items')
+    getShipmentsByKeywordQuery(keyword) {
+        return new Field('shipmentsByKeyword')
+            .addArgument('keyword', 'String!', keyword)
             .addFieldList(this._getShipmentFields());
     }
 
-    _getPageInfoField() {
-        return new Field('page_info')
-            .addFieldList(this._getPageInfoFields());
+    _getShipmentsField() {
+        return new Field('items')
+            .addFieldList(this._getShipmentFields());
     }
 
     _getShipmentFields() {

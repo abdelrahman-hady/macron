@@ -60,10 +60,13 @@ export class ShipmentsContainer extends PureComponent {
     state = {
         shipmentsPerPage: +(BrowserDatabase.getItem(SHIPMENTS_PER_PAGE_ITEM) ?? SHIPMENTS_PER_PAGE),
         shipments: [],
-        isLoading: false
+        isLoading: false,
+        searchInput: '',
+        shipmentsSearchResult: []
     };
 
     containerFunctions = {
+        onInputChange: this.onInputChange.bind(this),
         onShipmentsPerPageChange: this.onShipmentsPerPageChange.bind(this)
     };
 
@@ -123,10 +126,12 @@ export class ShipmentsContainer extends PureComponent {
 
     containerProps = () => {
         const { shipmentsPerPageList } = this.props;
-        const { shipments, isLoading, shipmentsPerPage } = this.state;
+        const {
+            shipments, isLoading, searchInput, shipmentsPerPage, shipmentsSearchResult
+        } = this.state;
 
         return {
-            shipments, isLoading, shipmentsPerPageList, shipmentsPerPage
+            shipments, isLoading, shipmentsPerPageList, shipmentsPerPage, searchInput, shipmentsSearchResult
         };
     };
 
@@ -153,11 +158,42 @@ export class ShipmentsContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
+    onInputChange(e) {
+        const { value } = e.target;
+        this.setState({ searchInput: value });
+        const query = ShipmentsQuery.getShipmentsByKeywordQuery(value);
+
+        this.debounce(
+            () => {
+                this.setState({ isLoading: true });
+
+                try {
+                    fetchQuery(query).then(
+                    /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/onInputChange/debounce/fetchQuery/then */
+                        ({ shipmentsByKeyword }) => {
+                            this.setState({ isLoading: false, shipmentsSearchResult: shipmentsByKeyword });
+                        }
+                    );
+                } catch (error) {
+                    this.setState({ isLoading: false });
+                }
+            }
+        );
+    }
+
     _getPageFromUrl(url) {
         const { location: currentLocation } = this.props;
         const location = url || currentLocation;
 
         return +(getQueryParam('page', location) || 1);
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    debounce(func, timeout = 500) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            func();
+        }, timeout);
     }
 
     render() {
