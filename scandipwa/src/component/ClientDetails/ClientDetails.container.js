@@ -36,12 +36,7 @@ export class ClientDetailsContainer extends PureComponent {
         hideActivePopup: PropTypes.func.isRequired,
         updateNotes: PropTypes.func.isRequired,
         note: PropTypes.string.isRequired,
-        internalNote: PropTypes.string.isRequired,
-        isCheckoutPage: PropTypes.bool
-    };
-
-    static defaultProps = {
-        isCheckoutPage: null
+        internalNote: PropTypes.string.isRequired
     };
 
     state = {
@@ -71,7 +66,7 @@ export class ClientDetailsContainer extends PureComponent {
 
     containerProps = () => {
         const {
-            showAddNotePopup, note, internalNote, isCheckoutPage
+            showAddNotePopup, note, internalNote
         } = this.props;
         const {
             isReadMore, noteRef, internalNoteRef
@@ -83,8 +78,7 @@ export class ClientDetailsContainer extends PureComponent {
             internalNote,
             isReadMore,
             noteRef,
-            internalNoteRef,
-            isCheckoutPage
+            internalNoteRef
         };
     };
 
