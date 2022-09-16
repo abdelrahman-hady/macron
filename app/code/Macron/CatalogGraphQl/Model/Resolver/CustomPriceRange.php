@@ -55,7 +55,7 @@ class CustomPriceRange implements ResolverInterface
      * @param $context
      * @param ResolveInfo $info
      * @param array|null $value
-     * @param array|null $args =
+     * @param array|null $args
      * @return array
      */
     public function resolve(
@@ -78,13 +78,7 @@ class CustomPriceRange implements ResolverInterface
         $endCustomer = null;
 
         if (isset($args['customer']) && $args['customer'] !== '') {
-            $collection = $this->customerCollection->create()->getItems();
-            foreach ($collection as $customer) {
-                if ($customer->getCompanyName() === $args['customer']) {
-                    $endCustomer = $customer;
-                    break;
-                }
-            }
+            $endCustomer = $this->customerCollection->create()->getItemByColumnValue('company_name', $args['customer']);
         }
 
         $returnArray = [];
@@ -103,7 +97,9 @@ class CustomPriceRange implements ResolverInterface
             ];
         $returnArray['your_wsp'] =
             [
-                'value' => $product->getPriceModel()->getYourWsp($sku, $currentCustomer,
+                'value' => $product->getPriceModel()->getYourWsp(
+                    $sku,
+                    $currentCustomer,
                     $_product->getAttributeText('mcr_product_line')),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
@@ -111,7 +107,10 @@ class CustomPriceRange implements ResolverInterface
         if ($endCustomer) {
             $returnArray['customer_rrp'] =
                 [
-                    'value' => $product->getPriceModel()->getCustomerRrp($sku, $endCustomer, $currentCustomer,
+                    'value' => $product->getPriceModel()->getCustomerRrp(
+                        $sku,
+                        $endCustomer,
+                        $currentCustomer,
                         $_product->getAttributeText('mcr_product_line')),
                     'currency' => $store->getCurrentCurrencyCode()
                 ];

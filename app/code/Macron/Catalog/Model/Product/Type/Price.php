@@ -18,6 +18,7 @@ use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
@@ -34,6 +35,11 @@ class Price extends SourcePrice
      * @var ResourceConnection
      */
     private ResourceConnection $resourceConnection;
+
+    /**
+     * @var AdapterInterface
+     */
+    protected AdapterInterface $connection;
 
     /**
      * @param RuleFactory $ruleFactory
@@ -74,6 +80,7 @@ class Price extends SourcePrice
             $tierPriceExtensionFactory
         );
         $this->resourceConnection = $resourceConnection;
+        $this->connection = $this->resourceConnection->getConnection();
     }
 
     /**
@@ -109,6 +116,7 @@ class Price extends SourcePrice
     {
         $wsp = $this->getPriceFromDb($sku, $currentCustomer, 'wholesale_price_list', 'erp_price_wholesale');
         $businessPartnerId = $currentCustomer->getBusinessPartnerId();
+
         return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $wsp);
     }
 
@@ -124,6 +132,7 @@ class Price extends SourcePrice
     {
         $rrp = $this->getPriceFromDb($sku, $currentCustomer, 'retail_price_list', 'erp_price_retail');
         $businessPartnerId = $endCustomer->getBusinessPartnerId();
+
         return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $rrp);
     }
 
@@ -137,12 +146,15 @@ class Price extends SourcePrice
     public function getPriceFromDb($sku, $currentCustomer, $field, $tableName): ?string
     {
         $priceList = $currentCustomer->getData($field);
-        $connection = $this->resourceConnection->getConnection();
-        $table = $connection->getTableName($tableName);
-        $sql = $connection->select()->from($table, 'price')->where('pricelist_id = :pricelist_id AND sku = :sku');
+        $table = $this->connection->getTableName($tableName);
+        $sql = $this->connection->select()->from(
+            $table,
+            'price'
+        )->where('pricelist_id = :pricelist_id')->where('sku = :sku');
         $bind = [':pricelist_id' => $priceList, ':sku' => $sku];
-        $result = $connection->fetchAll($sql, $bind);
-        return count($result) ? $result[0]['price'] : null;
+        $result = $this->connection->fetchOne($sql, $bind);
+
+        return count($result) ? $result['price'] : null;
     }
 
     /**
@@ -153,17 +165,19 @@ class Price extends SourcePrice
      */
     public function getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $priceType): float|int
     {
-        $connection = $this->resourceConnection->getConnection();
-        $table = $connection->getTableName('customer_entity_discounts');
-        $sql = $connection->select()->from(
+        $table = $this->connection->getTableName('customer_entity_discounts');
+        $sql = $this->connection->select()->from(
             $table,
             'discount_amount'
         )->where(
-            'business_line = :business_line AND business_partner_id = :business_partner_id',
+            'business_line = :business_line'
+        )->where(
+            'business_partner_id = :business_partner_id'
         );
         $bind = [':business_line' => $mcrProductLine, ':business_partner_id' => $businessPartnerId];
-        $result = $connection->fetchAll($sql, $bind);
-        $discount = count($result) ? $result[0]['discount_amount'] : 0;
+        $result = $this->connection->fetchOne($sql, $bind);
+        $discount = count($result) ? $result['discount_amount'] : 0;
+
         return (int)$priceType - ((int)$priceType * ((int)$discount / 100));
     }
 }
