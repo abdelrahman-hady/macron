@@ -8,4 +8,3 @@
 export const GRID_SIZE_ITEM = 'size';
 export const GRID_COLOR_ITEM = 'color';
 export const WAREHOUSE_HQ = 'HQ';
-export const EMPTY_QTY = -1;

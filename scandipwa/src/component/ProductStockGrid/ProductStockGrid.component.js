@@ -5,12 +5,12 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-/* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-conditional */
-import Loader from '@scandipwa/scandipwa/src/component/Loader';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { EMPTY_QTY, WAREHOUSE_HQ } from './ProductStockGrid.config';
+import Loader from 'Component/Loader';
+
+import { WAREHOUSE_HQ } from './ProductStockGrid.config';
 
 import './ProductStockGrid.style';
 
@@ -25,7 +25,8 @@ export class ProductStockGridComponent extends PureComponent {
         })).isRequired,
         getStockByWarehouse: PropTypes.func.isRequired,
         getArrivalsByWarehouse: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        warehouses: PropTypes.arrayOf(PropTypes.string).isRequired
     };
 
     renderStockHeadingRow() {
@@ -41,61 +42,72 @@ export class ProductStockGridComponent extends PureComponent {
         );
     }
 
-    renderHeadquarterStockRow() {
-        const { getStockByWarehouse } = this.props;
-        const headquarterStock = getStockByWarehouse(WAREHOUSE_HQ);
+    renderStockRow(warehouse) {
+        const { attributeOptions, getStockByWarehouse } = this.props;
+        const stocks = getStockByWarehouse(warehouse);
 
-        if (headquarterStock.length === 0) {
-            return this.renderDefaultRow();
-        }
+        const title = warehouse === WAREHOUSE_HQ ? __('HQ') : warehouse;
 
         return (
             <tr>
-                <th>{ __('HQ') }</th>
-                { headquarterStock.map((qty) => <th>{ qty === EMPTY_QTY ? '-' : qty }</th>) }
-            </tr>
-        );
-    }
-
-    renderDefaultRow() {
-        const { attributeOptions } = this.props;
-
-        return (
-            <tr>
-                <th>-</th>
-                { attributeOptions.map(() => (
-                    <th>-</th>
+                <th>{ title }</th>
+                { attributeOptions.map(({ value }) => (
+                    <th>{ stocks[value] ?? '-' }</th>
                 )) }
             </tr>
         );
     }
 
-    renderArrivalsRow() {
-        const { getArrivalsByWarehouse } = this.props;
-        const arrivals = getArrivalsByWarehouse(WAREHOUSE_HQ);
+    renderArrivalsRow(warehouse) {
+        const { attributeOptions, getArrivalsByWarehouse } = this.props;
+        const arrivals = getArrivalsByWarehouse(warehouse);
 
         return (
             <tr>
                 <td>{ __('Arrivals') }</td>
-                { arrivals.map((qty) => <td>{ qty === EMPTY_QTY ? '-' : qty }</td>) }
+                { attributeOptions.map(({ value }) => (
+                    <th>{ arrivals[value] ?? '-' }</th>
+                )) }
             </tr>
         );
     }
 
+    renderHeadquarterTable() {
+        return (
+            <>
+                <thead>
+                    { this.renderStockHeadingRow() }
+                    { this.renderStockRow(WAREHOUSE_HQ) }
+                </thead>
+                <tbody>
+                    { this.renderArrivalsRow(WAREHOUSE_HQ) }
+                </tbody>
+            </>
+        );
+    }
+
+    renderStoreTable(warehouse) {
+        return (
+            <>
+                <thead>
+                    { this.renderStockRow(warehouse) }
+                </thead>
+                <tbody>
+                    { this.renderArrivalsRow(warehouse) }
+                </tbody>
+            </>
+        );
+    }
+
     render() {
-        const { isLoading } = this.props;
+        const { isLoading, warehouses } = this.props;
 
         return (
             <div block="ProductStockGrid">
                 <Loader isLoading={ isLoading } />
                 <table block="ProductStockGrid" elem="Table">
-                    <thead>
-                        { this.renderStockHeadingRow() }
-                        { this.renderHeadquarterStockRow() }
-                    </thead>
-                    <tbody>
-                        { this.renderArrivalsRow() }
-                    </tbody>
+                    { this.renderStoreTable(WAREHOUSE_HQ) }
+                    { warehouses.map(this.renderStoreTable.bind(this)) }
                 </table>
             </div>
         );

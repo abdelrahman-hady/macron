@@ -8,6 +8,7 @@
 import { connect } from 'react-redux';
 
 import { WAREHOUSE_HQ } from 'Component/ProductStockGrid/ProductStockGrid.config';
+import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample_data';
 import StockQuery from 'Query/Stock.query';
 import {
     mapDispatchToProps,
@@ -67,7 +68,8 @@ export class ProductContainer extends SourceProductContainer {
         this.setState({ stockLoading: true });
 
         try {
-            const { pimStock: stock } = await fetchQuery(StockQuery.getStockQuery(SKUs, [WAREHOUSE_HQ]));
+            const warehouses = [WAREHOUSE_HQ, ...customerWarehouses];
+            const { pimStock: stock } = await fetchQuery(StockQuery.getStockQuery(SKUs, warehouses));
 
             this.setState({ stock, stockLoading: false });
         } catch (e) {

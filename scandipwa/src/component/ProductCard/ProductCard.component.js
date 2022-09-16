@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import ProductStockGrid from 'Component/ProductStockGrid';
 import { GRID_COLOR_ITEM } from 'Component/ProductStockGrid/ProductStockGrid.config';
+import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample_data';
 import {
     ProductCard as SourceProductCard
 } from 'SourceComponent/ProductCard/ProductCard.component';
@@ -74,6 +75,7 @@ export class ProductCardComponent extends SourceProductCard {
               selectedColor={ selectedColor }
               stock={ stock }
               isLoading={ stockLoading }
+              warehouses={ customerWarehouses }
             />
         );
     }
