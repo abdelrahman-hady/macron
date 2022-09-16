@@ -168,7 +168,6 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             isLoading,
             searchInput,
             orderListSearchResult: { items: searchedItems = [] }
-
         } = this.props;
 
         const orderItems = searchInput !== '' ? searchedItems : items;
