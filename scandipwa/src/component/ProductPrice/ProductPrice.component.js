@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { TYPE_CUSTOMER } from 'Component/OrderTypePopup/OrderTypePopup.config';
 import {
     ProductPrice as SourceProductPrice
 } from 'SourceComponent/ProductPrice/ProductPrice.component';
@@ -18,7 +19,8 @@ import './ProductPrice.style.override.scss';
 export class ProductPriceComponent extends SourceProductPrice {
     static propTypes = {
         ...super.propTypes,
-        priceRange: PropTypes.objectOf
+        priceRange: PropTypes.objectOf(PropTypes.objectOf(PropTypes.objectOf(PropTypes.string))),
+        orderType: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -26,22 +28,26 @@ export class ProductPriceComponent extends SourceProductPrice {
     };
 
     renderPrice(price, label) {
-        const {
-            value, currency
-        } = price;
+        if (price) {
+            const {
+                value, currency
+            } = price;
 
-        return (
-            <div block={ label }>
-                { this.renderPriceBadge(label) }
-                <br />
-                <span
-                  block="ProductPrice"
-                  elem="PriceValue"
-                >
-                    { formatPrice(value, currency) }
-                </span>
-            </div>
-        );
+            return (
+                <div block={ label }>
+                    { this.renderPriceBadge(label) }
+                    <br />
+                    <span
+                      block="ProductPrice"
+                      elem="PriceValue"
+                    >
+                        { formatPrice(value, currency) }
+                    </span>
+                </div>
+            );
+        }
+
+        return null;
     }
 
     render() {
@@ -50,9 +56,11 @@ export class ProductPriceComponent extends SourceProductPrice {
             priceRange: {
                 wholesale_price,
                 retail_price,
-                your_wsp
+                your_wsp,
+                customer_rrp
             },
-            mix
+            mix,
+            orderType
         } = this.props;
 
         if (!priceRange) {
@@ -64,9 +72,10 @@ export class ProductPriceComponent extends SourceProductPrice {
               block="ProductPrice"
               mix={ mix }
             >
-                { this.renderPrice(wholesale_price, 'RRP') }
-                { this.renderPrice(retail_price, 'WSP') }
-                { this.renderPrice(your_wsp, 'Your WSP') }
+                { this.renderPrice(retail_price, __('RRP')) }
+                { orderType === TYPE_CUSTOMER && this.renderPrice(customer_rrp, __('Customer RRP')) }
+                { this.renderPrice(wholesale_price, __('WSP')) }
+                { this.renderPrice(your_wsp, __('Your WSP')) }
             </div>
         );
     }

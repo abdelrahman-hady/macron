@@ -10,20 +10,26 @@ import { connect } from 'react-redux';
 
 import {
     mapDispatchToProps,
-    mapStateToProps,
+    mapStateToProps as sourceMapStateToProps,
     ProductPriceContainer as SourceProductPriceContainer
 } from 'SourceComponent/ProductPrice/ProductPrice.container';
 
 export {
-    mapStateToProps,
     mapDispatchToProps
 };
+
+/** @namespace Scandipwa/Component/ProductPrice/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    orderType: state.CustomCartDataReducer.orderType
+});
 
 /** @namespace Scandipwa/Component/ProductPrice/Container */
 export class ProductPriceContainer extends SourceProductPriceContainer {
     static propTypes = {
         ...super.propTypes,
-        priceRange: PropTypes.objectOf
+        priceRange: PropTypes.objectOf(PropTypes.objectOf(PropTypes.objectOf(PropTypes.string))),
+        orderType: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -31,11 +37,12 @@ export class ProductPriceContainer extends SourceProductPriceContainer {
     };
 
     containerProps() {
-        const { priceRange, mix } = this.props;
+        const { priceRange, mix, orderType } = this.props;
 
         return {
             mix,
-            priceRange
+            priceRange,
+            orderType
         };
     }
 }

@@ -27,7 +27,7 @@ export class GroupedProductsItemComponent extends SourceGroupedProductsItem {
                     <TextPlaceholder content={ name } />
                 </p>
                 <ProductPrice
-                  price={ priceRange }
+                  priceRange={ priceRange }
                   mix={ { block: 'GroupedProductsItem', elem: 'Price' } }
                 />
             </div>

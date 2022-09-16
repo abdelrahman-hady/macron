@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Macron\SalesGraphQl\Model\Resolver\CustomerOrders\Query;
 
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Api\Search\FilterGroup;
+use Magento\Framework\Exception\InputException;
 use ScandiPWA\SalesGraphQl\Model\Resolver\CustomerOrders\Query\OrderFilter as CoreOrderFilter;
 
 class OrderFilter extends CoreOrderFilter
@@ -42,7 +42,6 @@ class OrderFilter extends CoreOrderFilter
         $filterGroups[] = $this->filterGroupBuilder->create();
 
         if (isset($args['filter'])) {
-
             foreach ($args['filter'] as $field => $cond) {
                 if (isset($this->fieldTranslatorArray[$field])) {
                     $field = $this->fieldTranslatorArray[$field];

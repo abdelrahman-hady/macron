@@ -31,7 +31,8 @@ export class ProductListQuery extends SourceProductListQuery {
         return [
             this._getRetailPriceField(),
             this._getWholesalePriceField(),
-            this._getYourWspField()
+            this._getYourWspField(),
+            this._getCustomerRrpField()
         ];
     }
 
@@ -47,6 +48,11 @@ export class ProductListQuery extends SourceProductListQuery {
 
     _getYourWspField() {
         return new Field('your_wsp')
+            .addFieldList(this._getCustomPriceFields());
+    }
+
+    _getCustomerRrpField() {
+        return new Field('customer_rrp')
             .addFieldList(this._getCustomPriceFields());
     }
 
