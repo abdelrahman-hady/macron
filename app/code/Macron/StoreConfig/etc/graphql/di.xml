@@ -12,6 +12,7 @@
         <arguments>
             <argument name="extendedConfigData">
                 <item name="xperpage" xsi:type="string">xperpage/general/text</item>
+                <item name="closeout_discount" xsi:type="string">closeout/closeout_discount/discount</item>
             </argument>
         </arguments>
     </type>

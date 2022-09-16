@@ -14,5 +14,11 @@
                 <text>5,10,15,20,25</text>
             </general>
         </xperpage>
+
+        <closeout>
+            <closeout_discount>
+                <discount>30</discount>
+            </closeout_discount>
+        </closeout>
     </default>
 </config>
