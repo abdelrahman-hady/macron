@@ -20,7 +20,8 @@ export class ConfigQuery extends SourceConfigQuery {
     _getMacronStoreConfigFields() {
         return [
             'xperpage',
-            'stock_cache_lifetime'
+            'stock_cache_lifetime',
+            'closeout_discount'
         ];
     }
 }

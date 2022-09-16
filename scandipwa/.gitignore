@@ -24,8 +24,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .yarn
-<<<<<<< HEAD
-=======
-
->>>>>>> MCRB-364
 .stylelintrc
