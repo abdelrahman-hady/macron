@@ -17,10 +17,12 @@ import { Field } from 'Util/Query';
  * @class OrderQuery
  * @namespace Scandipwa/Query/Order/Query */
 export class OrderQuery extends SourceOrderQuery {
-    getOrdersByKeywordQuery(keyword) {
+    getOrdersByKeywordQuery(page, pageSize, keyword) {
         return new Field('OrdersByKeyword')
+            .addArgument('currentPage', 'String!', page)
+            .addArgument('pageSize', 'String!', pageSize)
             .addArgument('keyword', 'String!', keyword)
-            .addFieldList(this._getOrderItemsFields(false));
+            .addFieldList(this._getOrdersFields(true));
     }
 
     _getOrderItemsFields(isSingleOrder) {
@@ -53,19 +55,27 @@ export class OrderQuery extends SourceOrderQuery {
 
     _getOrdersField(options) {
         const {
-            orderId, page = 1, pageSize = ORDERS_PER_PAGE, filterOptions
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE,
+            filterOptions: {
+                dateFrom, dateTo, status, user_customer_name
+            } = {}
         } = options || {};
         const ordersField = new Field('orders');
 
+        const filter = {};
+
         if (orderId) {
-            return ordersField
-                .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
-                .addFieldList(this._getOrdersFields(true));
+            filter.entity_id = { eq: orderId };
         }
 
-        const { status, user_customer_name } = filterOptions;
+        if (dateFrom) {
+            filter.created_at = { ...filter.created_at, gteq: dateFrom };
+        }
 
-        const filter = { };
+        if (dateTo) {
+            filter.created_at = { ...filter.created_at, lteq: dateTo };
+        }
+
         if (status) {
             filter.status = { eq: status };
         }
@@ -81,7 +91,7 @@ export class OrderQuery extends SourceOrderQuery {
         return ordersField
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
-            .addFieldList(this._getOrdersFields());
+            .addFieldList(this._getOrdersFields(false));
     }
 }
 
