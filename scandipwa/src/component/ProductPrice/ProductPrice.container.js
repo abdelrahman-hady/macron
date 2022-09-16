@@ -21,7 +21,8 @@ export {
 /** @namespace Scandipwa/Component/ProductPrice/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-    orderType: state.CustomCartDataReducer.orderType
+    orderType: state.CustomCartDataReducer.orderType,
+    closeoutDiscount: state.ConfigReducer.closeout_discount
 });
 
 /** @namespace Scandipwa/Component/ProductPrice/Container */
@@ -29,7 +30,8 @@ export class ProductPriceContainer extends SourceProductPriceContainer {
     static propTypes = {
         ...super.propTypes,
         priceRange: PropTypes.objectOf(PropTypes.objectOf(PropTypes.objectOf(PropTypes.string))),
-        orderType: PropTypes.string.isRequired
+        orderType: PropTypes.string.isRequired,
+        closeoutDiscount: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -37,12 +39,15 @@ export class ProductPriceContainer extends SourceProductPriceContainer {
     };
 
     containerProps() {
-        const { priceRange, mix, orderType } = this.props;
+        const {
+            priceRange, mix, orderType, closeoutDiscount
+        } = this.props;
 
         return {
             mix,
             priceRange,
-            orderType
+            orderType,
+            closeoutDiscount
         };
     }
 }

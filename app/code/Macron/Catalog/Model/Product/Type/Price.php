@@ -103,16 +103,24 @@ class Price extends SourcePrice
      * @param $sku
      * @param $currentCustomer
      * @param $mcrProductLine
-     * @return int
+     * @return float|int
      */
-    public function getYourWsp($sku, $currentCustomer, $mcrProductLine): int
+    public function getYourWsp($sku, $currentCustomer, $mcrProductLine): float|int
     {
         $wsp = $this->getPriceFromDb($sku, $currentCustomer, 'wholesale_price_list', 'erp_price_wholesale');
         $businessPartnerId = $currentCustomer->getBusinessPartnerId();
         return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $wsp);
     }
 
-    public function getCustomerRrp($sku, $endCustomer, $currentCustomer, $mcrProductLine): int
+    /**
+     * calculate customer rrp value
+     * @param $sku
+     * @param $endCustomer
+     * @param $currentCustomer
+     * @param $mcrProductLine
+     * @return float|int
+     */
+    public function getCustomerRrp($sku, $endCustomer, $currentCustomer, $mcrProductLine): float|int
     {
         $rrp = $this->getPriceFromDb($sku, $currentCustomer, 'retail_price_list', 'erp_price_retail');
         $businessPartnerId = $endCustomer->getBusinessPartnerId();
@@ -140,10 +148,10 @@ class Price extends SourcePrice
     /**
      * @param $mcrProductLine
      * @param $businessPartnerId
-     * @param $wsp
-     * @return Int
+     * @param $priceType
+     * @return float|int
      */
-    public function getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $wsp): int
+    public function getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $priceType): float|int
     {
         $connection = $this->resourceConnection->getConnection();
         $table = $connection->getTableName('customer_entity_discounts');
@@ -156,6 +164,6 @@ class Price extends SourcePrice
         $bind = [':business_line' => $mcrProductLine, ':business_partner_id' => $businessPartnerId];
         $result = $connection->fetchAll($sql, $bind);
         $discount = count($result) ? $result[0]['discount_amount'] : 0;
-        return (int)$wsp - (int)$discount;
+        return (int)$priceType - ((int)$priceType * ((int)$discount / 100));
     }
 }

@@ -20,7 +20,8 @@ export class ProductPriceComponent extends SourceProductPrice {
     static propTypes = {
         ...super.propTypes,
         priceRange: PropTypes.objectOf(PropTypes.objectOf(PropTypes.objectOf(PropTypes.string))),
-        orderType: PropTypes.string.isRequired
+        orderType: PropTypes.string.isRequired,
+        closeoutDiscount: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -60,12 +61,17 @@ export class ProductPriceComponent extends SourceProductPrice {
                 customer_rrp
             },
             mix,
-            orderType
+            orderType,
+            closeoutDiscount
         } = this.props;
 
         if (!priceRange) {
             return this.renderPlaceholder();
         }
+
+        // eslint-disable-next-line no-magic-numbers
+        const discountAmount = parseFloat(your_wsp.value) * (parseFloat(closeoutDiscount) / 100);
+        const extraDiscount = { value: parseFloat(your_wsp.value) - discountAmount, currency: your_wsp.currency };
 
         return (
             <div
@@ -76,6 +82,7 @@ export class ProductPriceComponent extends SourceProductPrice {
                 { orderType === TYPE_CUSTOMER && this.renderPrice(customer_rrp, __('Customer RRP')) }
                 { this.renderPrice(wholesale_price, __('WSP')) }
                 { this.renderPrice(your_wsp, __('Your WSP')) }
+                { this.renderPrice(extraDiscount, __('Extra discount')) }
             </div>
         );
     }

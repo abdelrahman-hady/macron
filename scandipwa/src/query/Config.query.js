@@ -19,7 +19,8 @@ export class ConfigQuery extends SourceConfigQuery {
 
     _getMacronStoreConfigFields() {
         return [
-            'xperpage'
+            'xperpage',
+            'closeout_discount'
         ];
     }
 }
