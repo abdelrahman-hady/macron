@@ -1,5 +1,5 @@
 extend type StoreConfig {
     xperpage: String! @doc(description: "The X Per Page Configuration value")
-    stock_cache_lifetime: String! @doc(description: "Stock cache lifetime Configuration value")
+    stock_cache_lifetime: Int! @doc(description: "Stock cache lifetime Configuration value")
 
 }
