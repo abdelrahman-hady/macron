@@ -3,47 +3,49 @@ type Query {
         pageSize: Int = 10
         currentPage: Int = 1
     ): Clients
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
-    @doc(description: "Get list of clients")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
+        @doc(description: "Get list of clients")
 
-    client (
-        client_id: Int!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
-    @doc(description: "Get client by id")
+    client(client_id: Int!): ClientType
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
+        @doc(description: "Get client by id")
 
     clientsByKeyword(
         keyword: String!
     ): [ClientType]
-    @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
-    @doc(description: "Get clients by keyword")
+        @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
+        @doc(description: "Get clients by keyword")
+
+    invoices: [InvoiceType]
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+        @doc(description: "Get list of invoices")
 
     shipments(
         currentPage: Int = 1
         pageSize: Int = 10
     ): [Shipment]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
-    @doc(description: "Get shipments list")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
+        @doc(description: "Get shipments list")
 }
 
 type Mutation {
     deleteClient(
         client_id: Int!
     ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
-    @doc(description: "Delete client by id")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
+        @doc(description: "Delete client by id")
 
     createClient(
         client: CreateClientInput!
     ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
-    @doc(description: "Create a new client")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
+        @doc(description: "Create a new client")
 
     updateClient(
         client: UpdateClientInput!
     ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
-    @doc(description: "Update client")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
+        @doc(description: "Update client")
 }
 
 type Clients {
@@ -118,4 +120,22 @@ input UpdateClientInput {
     contact_person: String
     mobile: String
     email: String
+}
+
+type InvoiceType {
+    id: Int
+    invoice_number: String
+    user_sap_id: String
+    date: String
+    currency: String
+    grand_total: String
+    status: String
+    download_link: String
+    firstname: String
+    lastname: String
+    address_city: String
+    address_street: String
+    address_postcode: String
+    address_country_id: String
+    address_telephone: String
 }
