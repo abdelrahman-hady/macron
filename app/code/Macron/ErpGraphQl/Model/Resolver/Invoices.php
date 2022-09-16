@@ -56,6 +56,9 @@ class Invoices implements ResolverInterface
         }
         $customer = $this->customerModel->execute($context);
         $customerId = $customer->getId();
-        return $this->erpInvoiceRepository->getList($customerId);
+        $pageSize = $args['pageSize'];
+        $currentPage = $args['currentPage'];
+
+        return $this->erpInvoiceRepository->getList($customerId,$pageSize,$currentPage);
     }
 }

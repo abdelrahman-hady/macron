@@ -33,9 +33,11 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     /**
      * @return array|DataObject[]
      */
-    public function getList($customerId = null)
+    public function getList($customerId = null, $pageSize = 10, $currentPage = 1)
     {
-        $collection = $this->invoicesCollectionFactory;
+        $collection = $this->invoicesCollectionFactory
+            ->setPageSize($pageSize)
+            ->setCurPage($currentPage);
         $erpInvoiceCols = [
             'id',
             'invoice_number',
@@ -54,19 +56,6 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             'phone_number',
             'business_partner_id',
             'default_shipping'
-        ];
-        $customerAddressEntityCols = [
-            'entity_id',
-            'parent_id',
-            'city as address_city',
-            'company as address_company',
-            'country_id as address_country_id',
-            'fax as address_fax',
-            'firstname as address_firstname',
-            'lastname as address_lastname',
-            'postcode as address_postcode',
-            'street as address_street',
-            'telephone as address_telephone'
         ];
         $select = $collection->getSelect()->columns($erpInvoiceCols);
 

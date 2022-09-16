@@ -16,7 +16,10 @@ type Query {
         @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
         @doc(description: "Get clients by keyword")
 
-    invoices: [InvoiceType]
+    invoices(
+        pageSize: Int = 10
+        currentPage: Int = 1
+    ): [InvoiceType]
         @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
         @doc(description: "Get list of invoices")
 

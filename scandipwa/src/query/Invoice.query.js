@@ -9,8 +9,11 @@ import { Field } from 'Util/Query';
 
 /** @namespace Scandipwa/Query/Invoice/Query */
 export class InvoiceQuery {
-    getInvoicesQuery() {
+    getInvoicesQuery(options) {
+        const { page, pageSize } = options ?? {};
         return new Field('invoices')
+            .addArgument('currentPage', 'Int', page)
+            .addArgument('pageSize', 'Int', pageSize)
             .addFieldList(this._getInvoiceFields());
     }
 

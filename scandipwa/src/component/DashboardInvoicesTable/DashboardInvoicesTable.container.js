@@ -65,13 +65,11 @@ export class DashboardInvoicesTableContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         try {
-            const { invoices = [] } = await fetchQuery(InvoicesQuery.getInvoicesQuery());
-            this.setState({ isLoading: false });
-            if (invoices.length > compactLength) {
-                this.setState({ invoices: invoices.slice(0, compactLength) });
-            } else {
-                this.setState({ invoices });
-            }
+            const { invoices = [] } = await fetchQuery(
+                InvoicesQuery.getInvoicesQuery({ page: 1, pageSize: compactLength })
+            );
+
+            this.setState({ invoices, isLoading: false });
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
             this.setState({ isLoading: false });
