@@ -123,7 +123,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         return (
             <div block="MyAccountMyOrders" elem="Filters">
                 <div block="MyAccountMyOrders" elem="DateFilter">
-                    <p>{ __('Data from:') }</p>
+                    <p>{ __('Date from:') }</p>
                     <Field
                       type={ FIELD_TYPE.date }
                       attr={ {
@@ -137,7 +137,7 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                     />
                 </div>
                 <div block="MyAccountMyOrders" elem="DateFilter">
-                    <p>{ __('Data to:') }</p>
+                    <p>{ __('Date to:') }</p>
                     <Field
                       type={ FIELD_TYPE.date }
                       attr={ {
