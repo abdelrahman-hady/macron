@@ -47,9 +47,7 @@ export class CheckoutComponent extends SourceCheckout {
         }
 
         return (
-             <ClientDetails
-               isCheckoutPage
-             />
+             <ClientDetails />
         );
     }
 

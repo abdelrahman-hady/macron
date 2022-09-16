@@ -27,12 +27,7 @@ export class ClientDetailsComponent extends PureComponent {
         isReadMore: PropTypes.bool.isRequired,
         toggleIsReadMore: PropTypes.func.isRequired,
         noteRef: RefType.isRequired,
-        internalNoteRef: RefType.isRequired,
-        isCheckoutPage: PropTypes.bool
-    };
-
-    static defaultProps = {
-        isCheckoutPage: null
+        internalNoteRef: RefType.isRequired
     };
 
     renderPopUpContent() {
@@ -76,7 +71,7 @@ export class ClientDetailsComponent extends PureComponent {
 
     render() {
         const {
-            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore, isCheckoutPage
+            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore
         } = this.props;
 
         const readMoreText = isReadMore ? __('see more') : __('see less');
@@ -94,7 +89,6 @@ export class ClientDetailsComponent extends PureComponent {
                         <>
                             <div block="ClientDetails" elem="EditNote">
                                 <span><b>{ __('Note:') }</b></span>
-                                { !isCheckoutPage && (
                                 <button onClick={ showAddNotePopup }>
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +100,6 @@ export class ClientDetailsComponent extends PureComponent {
                                         <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
                                     </svg>
                                 </button>
-                                ) }
                             </div>
                             <p>{ noteText }</p>
                             { note.length > characterCount
@@ -118,7 +111,6 @@ export class ClientDetailsComponent extends PureComponent {
                         <>
                             <div block="ClientDetails" elem="EditNote">
                                 <span><b>{ __('Internal note:') }</b></span>
-                            { !isCheckoutPage && (
                                 <button onClick={ showAddNotePopup }>
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +122,6 @@ export class ClientDetailsComponent extends PureComponent {
                                         <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
                                     </svg>
                                 </button>
-                            ) }
                             </div>
                             <p>{ internalNoteText }</p>
                             { internalNote.length > characterCount
@@ -138,7 +129,7 @@ export class ClientDetailsComponent extends PureComponent {
                         </>
                     ) }
                 </div>
-                { ((!note || !internalNote) && !isCheckoutPage) && (
+                { ((!note || !internalNote)) && (
                     <button
                       onClick={ showAddNotePopup }
                       block="Button"
