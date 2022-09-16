@@ -56,7 +56,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     };
 
     componentDidMount() {
-        this.requestPatchProductsSku();
         this.requestPatchProducts();
     }
 
@@ -67,7 +66,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { product } = this.props;
 
         if (product !== prevProduct) {
-            this.requestPatchProductsSku();
             this.requestPatchProducts();
             this.setState({
                 patchList: this.getPatchListFromSku(product.sku)
@@ -141,23 +139,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
             code: '',
             line: '-'
         }];
-    }
-
-    async requestPatchProductsSku() {
-        const { showErrorNotification } = this.props;
-
-        try {
-            const {
-                patchProductCollection:
-                { allPatchProducts }
-            } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
-
-            this.setState({
-                patchCodes: allPatchProducts.map((patch) => patch.sku)
-            });
-        } catch (e) {
-            showErrorNotification(getErrorMessage(e));
-        }
     }
 
     async requestPatchProducts() {
