@@ -5,7 +5,6 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-// import PropTypes from 'prop-types';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -39,6 +38,10 @@ export class MyProfilePageComponent extends PureComponent {
             return null;
         }
         const { street, country_id, city } = address;
+        if (!street.length) {
+            return null;
+        }
+
         return `${street[0]} ${city} ${country_id} `;
     }
 
@@ -46,10 +49,15 @@ export class MyProfilePageComponent extends PureComponent {
         const {
             customer: { addresses = [] }
         } = this.props;
-        const defaultBillingAddress = addresses.filter(
-            (address) => address.default_billing
-        )[0];
 
+        const defaultBillingAddressList = addresses.filter(
+            (address) => address.default_billing
+        );
+
+        if (!defaultBillingAddressList.length) {
+            return null;
+        }
+        const defaultBillingAddress = defaultBillingAddressList[0];
         return (
             <div>
                 <h2>{ __('Invoicing address') }</h2>
