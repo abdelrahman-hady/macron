@@ -10,3 +10,19 @@
         width: 120%;
     }
 }
+
+.Tooltip {
+    position: absolute;
+    display: flex;
+    width: max-content;
+    flex-direction: column;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    background: #525252;
+    padding: 16px;
+    z-index: 5;
+
+    &-Item {
+        color: #fff;
+    }
+}
