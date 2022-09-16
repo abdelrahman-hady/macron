@@ -2,6 +2,7 @@
 <!--
 @category  Macron
 @author    Abdelhakk Bakry <abdelhakk.bakry@scandiweb.com | info@scandiweb.com>
+@author    Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
 @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
 @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
 -->
@@ -20,5 +21,11 @@
                 <discount>30</discount>
             </closeout_discount>
         </closeout>
+
+        <stock_cache_lifetime>
+            <general>
+                <text>900</text>
+            </general>
+        </stock_cache_lifetime>
     </default>
 </config>
