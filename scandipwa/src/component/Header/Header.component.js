@@ -8,6 +8,7 @@
 
 import PropTypes from 'prop-types';
 
+import CartIcon from 'Component/CartIcon';
 import {
     ORDER_CHOOSE_CUSTOMER_POPUP,
     TYPE_CUSTOMER
@@ -78,6 +79,24 @@ export class HeaderComponent extends SourceHeader {
                 { this.renderComparePageButton() }
                 { this.renderMinicart() }
             </div>
+        );
+    }
+
+    renderMinicartButton() {
+        const {
+            onMinicartButtonClick
+        } = this.props;
+
+        return (
+            <button
+              block="Header"
+              elem="MinicartButtonWrapper"
+              tabIndex="0"
+              onClick={ onMinicartButtonClick }
+              aria-label={ __('Cart') }
+            >
+                <CartIcon />
+            </button>
         );
     }
 
