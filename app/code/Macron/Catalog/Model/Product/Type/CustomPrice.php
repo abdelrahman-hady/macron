@@ -10,75 +10,22 @@ declare(strict_types=1);
 
 namespace Macron\Catalog\Model\Product\Type;
 
-use Magento\Catalog\Api\Data\ProductTierPriceExtensionFactory;
-use Magento\Catalog\Api\Data\ProductTierPriceInterfaceFactory;
-use Magento\Catalog\Model\Product\Type\Price as SourcePrice;
-use Magento\CatalogRule\Model\ResourceModel\RuleFactory;
-use Magento\Customer\Api\GroupManagementInterface;
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
-class Price extends SourcePrice
+class CustomPrice
 {
-    /**
-     * @var ProductTierPriceExtensionFactory
-     */
-    private $tierPriceExtensionFactory;
-
-    /**
-     * @var ResourceConnection
-     */
-    private ResourceConnection $resourceConnection;
-
     /**
      * @var AdapterInterface
      */
     protected AdapterInterface $connection;
 
     /**
-     * @param RuleFactory $ruleFactory
-     * @param StoreManagerInterface $storeManager
-     * @param TimezoneInterface $localeDate
-     * @param Session $customerSession
-     * @param ManagerInterface $eventManager
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param GroupManagementInterface $groupManagement
-     * @param ProductTierPriceInterfaceFactory $tierPriceFactory
-     * @param ScopeConfigInterface $config
-     * @param ProductTierPriceExtensionFactory|null $tierPriceExtensionFactory
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
-        RuleFactory $ruleFactory,
-        StoreManagerInterface $storeManager,
-        TimezoneInterface $localeDate,
-        Session $customerSession,
-        ManagerInterface $eventManager,
-        PriceCurrencyInterface $priceCurrency,
-        GroupManagementInterface $groupManagement,
-        ProductTierPriceInterfaceFactory $tierPriceFactory,
-        ScopeConfigInterface $config,
-        ProductTierPriceExtensionFactory $tierPriceExtensionFactory = null,
         ResourceConnection $resourceConnection
     ) {
-        parent::__construct(
-            $ruleFactory,
-            $storeManager,
-            $localeDate,
-            $customerSession,
-            $eventManager,
-            $priceCurrency,
-            $groupManagement,
-            $tierPriceFactory,
-            $config,
-            $tierPriceExtensionFactory
-        );
         $this->resourceConnection = $resourceConnection;
         $this->connection = $this->resourceConnection->getConnection();
     }
