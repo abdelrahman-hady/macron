@@ -17,7 +17,6 @@ import { lazy } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
 import {
-    HomePage,
     LoginAccountPage,
     withStoreRegex
 } from 'Component/Router/Router.component';
@@ -27,7 +26,8 @@ import {
     CONFIRM_ACCOUNT,
     CREATE_ACCOUNT,
     HOME,
-    LOGIN
+    LOGIN,
+    MY_ACCOUNT
 } from 'Component/Router/Router.config';
 import { appendWithStoreCode } from 'SourceUtil/Url';
 import { isSignedIn } from 'Util/Auth';
@@ -37,7 +37,8 @@ const URL_REMOVAL_LIST = [
     CREATE_ACCOUNT,
     CHANGE_PASSWORD,
     ACCOUNT_FORGOT_PASSWORD,
-    CONFIRM_ACCOUNT
+    CONFIRM_ACCOUNT,
+    MY_ACCOUNT
 ];
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "my-clients" */ '../route/MyClientsPage'));
@@ -47,6 +48,7 @@ export const ClientPage = lazy(() => import(/* webpackMode: "lazy", webpackChunk
 export const CreateClientPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "create-client" */ '../route/CreateClientPage'));
 export const StatsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "Stats" */ '../route/StatsPage'));
 export const MyProfilePage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "MyProfilePage" */ '../route/MyProfilePage'));
+export const MyAccount = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "account" */ 'Route/MyAccount'));
 
 export const MY_CLIENTS = 'MY_CLIENTS';
 export const INVOICES = 'INVOICES';
@@ -77,7 +79,7 @@ const SWITCH_ITEMS_TYPE = (originalMembers) => {
 
     return [
         {
-            component: <Route path={ withStoreRegex('/') } exact render={ (props) => (isSignedIn() ? <HomePage { ...props } /> : <LoginAccountPage { ...props } />) } />,
+            component: <Route path={ withStoreRegex('/') } exact render={ (props) => (isSignedIn() ? <MyAccount { ...props } /> : <LoginAccountPage { ...props } />) } />,
             position: 10,
             name: HOME
         },
