@@ -104,9 +104,9 @@ export class ProductStockGridComponent extends PureComponent {
         }
 
         return (
-            <div block="Tooltip">
+            <div block="ProductStockGrid" elem="Tooltip">
                  { newArrivals.map(({ qty, date }) => (
-                    <span block="Tooltip" elem="Item">
+                    <span block="ProductStockGrid" elem="TooltipItem">
                         { `${date} ${qty} ${__('pcs')}` }
                     </span>
                  )) }
