@@ -19,7 +19,6 @@ import ContentWrapper from 'Component/ContentWrapper';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
 import MyAccountOrder from 'Component/MyAccountOrder';
-import ShipmentsTable from 'Component/ShipmentsTable';
 import NoMatch from 'Route/NoMatch';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
@@ -73,7 +72,7 @@ export class MyAccountComponent extends SourceMyAccount {
     };
 
     renderUpcomingShipmentsTable() {
-        return <ShipmentsTable isCompact />;
+        return null;
     }
 
     renderContent() {

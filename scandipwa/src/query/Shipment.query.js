@@ -27,6 +27,11 @@ export class ShipmentQuery {
             .addFieldList(this._getShipmentFields());
     }
 
+    _getPageInfoField() {
+        return new Field('page_info')
+            .addFieldList(this._getPageInfoFields());
+    }
+
     _getShipmentsField() {
         return new Field('items')
             .addFieldList(this._getShipmentFields());

@@ -169,7 +169,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     formatToFieldOptions(options) {
         return options.map((option, idx) => ({
             id: idx + 1,
-            label: __(option),
+            label: option,
             value: idx + 1
         }));
     }
