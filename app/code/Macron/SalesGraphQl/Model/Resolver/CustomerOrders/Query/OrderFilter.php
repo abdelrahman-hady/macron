@@ -54,21 +54,34 @@ class OrderFilter extends CoreOrderFilter
                         }
 
                         $searchValue = str_replace('%', '', $value);
-                        $filters = $this->filterBuilder->setField($field)
+                        $filter = $this->filterBuilder->setField($field)
                             ->setValue("%{$searchValue}%")
                             ->setConditionType('like')
                             ->create();
-                        $this->filterGroupBuilder->setFilters([$filters]);
-                        $filterGroups[] = $this->filterGroupBuilder->create();
+                        if (isset($args['search'])) {
+                            $filters[] = $filter;
+                        } else {
+                            $this->filterGroupBuilder->setFilters([$filter]);
+                            $filterGroups[] = $this->filterGroupBuilder->create();
+                        }
                     } else {
-                        $filters = $this->filterBuilder->setField($field)
+                        $filter = $this->filterBuilder->setField($field)
                             ->setValue($value)
                             ->setConditionType($condType)
                             ->create();
-                        $this->filterGroupBuilder->setFilters([$filters]);
-                        $filterGroups[] = $this->filterGroupBuilder->create();
+                        if (isset($args['search'])) {
+                            $filters[] = $filter;
+                        } else {
+                            $this->filterGroupBuilder->setFilters([$filter]);
+                            $filterGroups[] = $this->filterGroupBuilder->create();
+                        }
                     }
                 }
+            }
+            
+            if (isset($args['search'])) {
+                $this->filterGroupBuilder->setFilters($filters);
+                $filterGroups[] = $this->filterGroupBuilder->create();
             }
         }
 
