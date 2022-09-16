@@ -66,20 +66,17 @@ class PatchProducts implements ResolverInterface
      */
     private function getProductsData(): array
     {
-        try {
-            $searchCriteria = $this->searchCriteriaBuilder->addFilter('is_patch', 1,'eq')->create();
-            $products = $this->productRepository->getList($searchCriteria)->getItems();
-            $productRecord['allPatchProducts'] = [];
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('is_patch', 1,'eq')->create();
+        $products = $this->productRepository->getList($searchCriteria)->getItems();
+        $productRecord = [];
 
-            foreach($products as $product) {
-                $productId = $product->getId();
-                $productRecord['allPatchProducts'][$productId]['Sku'] = $product->getSku();
-                $productRecord['allPatchProducts'][$productId]['name'] = $product->getName();
-                $productRecord['allPatchProducts'][$productId]['price'] = $product->getPrice();
-            }
-        } catch (NoSuchEntityException $e) {
-            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
+        foreach($products as $product) {
+            $productId = $product->getId();
+            $productRecord['allPatchProducts'][$productId]['sku'] = $product->getSku();
+            $productRecord['allPatchProducts'][$productId]['name'] = $product->getName();
+            $productRecord['allPatchProducts'][$productId]['price'] = $product->getPrice();
         }
+
         return $productRecord;
     }
 }

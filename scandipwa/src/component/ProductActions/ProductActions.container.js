@@ -9,7 +9,6 @@
 /* eslint-disable max-lines */
 
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import PatchProductQuery from 'Query/PatchProduct.query';
@@ -39,23 +38,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         patchCodes: [],
         patchData: [],
         patchList: []
-    };
-
-    static propTypes = {
-        ...SourceProductActionsContainer.propTypes,
-        addAnotherPatch: PropTypes.func,
-        findObjFromSku: PropTypes.func,
-        patchSelectionChange: PropTypes.func,
-        patchInputOnChange: PropTypes.func,
-        deletePatchRow: PropTypes.func,
-        updatePatchQuantityButton: PropTypes.func,
-        calculatePatchLine: PropTypes.func,
-        patchCodeInputChange: PropTypes.func,
-        openSelectPatch: PropTypes.func,
-        closeSelectPatch: PropTypes.func,
-        getFilteredPatchCodes: PropTypes.func,
-        getPatchListFromSku: PropTypes.func,
-        toggleDropDown: PropTypes.func
     };
 
     containerFunctions = {
@@ -88,7 +70,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
             this.requestPatchProductsSku();
             this.requestPatchProducts();
             this.setState({
-                patchList: this.getPatchListFromSku(product.Sku)
+                patchList: this.getPatchListFromSku(product.sku)
             });
         }
     }
@@ -113,7 +95,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { patchList, patchData } = this.state;
 
         const unSelectedData = patchData.filter((patch) => {
-            const tryToFind = patchList.find((obj) => obj.Sku === patch.Sku);
+            const tryToFind = patchList.find((obj) => obj.sku === patch.sku);
             if (typeof tryToFind !== 'undefined') {
                 return false;
             }
@@ -123,27 +105,27 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
         if (key === '-' || !key || key === '') {
             this.setState({
-                patchCodes: unSelectedData.map((patch) => patch.Sku)
+                patchCodes: unSelectedData.map((patch) => patch.sku)
             });
         } else {
-            const filteredData = unSelectedData.filter((patch) => pattern.test(patch.Sku));
+            const filteredData = unSelectedData.filter((patch) => pattern.test(patch.sku));
             this.setState({
-                patchCodes: filteredData.map((patch) => patch.Sku)
+                patchCodes: filteredData.map((patch) => patch.sku)
             });
         }
     }
 
-    getPatchListFromSku(Sku) {
+    getPatchListFromSku(sku) {
         const { patchData } = this.state;
 
-        const list = patchData.find((product) => product.Sku === Sku);
+        const list = patchData.find((product) => product.sku === sku);
         if (typeof list !== 'undefined' && list.length > 0) {
             return list.patchList.map((patch) => {
                 const newObj = patch;
                 newObj.id = nanoid();
                 newObj.quantity = 1;
                 newObj.discount = 0;
-                newObj.code = newObj.Sku;
+                newObj.code = newObj.sku;
                 newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
                 return newObj;
             });
@@ -151,7 +133,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
         return [{
             id: nanoid(),
-            Sku: '-',
+            sku: '-',
             name: '-',
             price: '-',
             quantity: '0',
@@ -171,7 +153,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
             } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
 
             this.setState({
-                patchCodes: allPatchProducts.map((patch) => patch.Sku)
+                patchCodes: allPatchProducts.map((patch) => patch.sku)
             });
         } catch (e) {
             showErrorNotification(getErrorMessage(e));
@@ -201,7 +183,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         this.setState({
             patchList: [...patchList, {
                 id: nanoid(),
-                Sku: '-',
+                sku: '-',
                 name: '-',
                 price: '-',
                 quantity: '0',
@@ -216,10 +198,10 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         return (price * quantity) - (price * quantity * (discount / 100));
     }
 
-    findObjFromSku(Sku) {
+    findObjFromSku(sku) {
         const { patchData } = this.state;
 
-        const Obj = patchData.find((patch) => patch.Sku === Sku);
+        const Obj = patchData.find((patch) => patch.sku === sku);
         if (typeof Obj !== 'undefined') {
             Obj.id = nanoid();
             Obj.quantity = 1;
@@ -230,7 +212,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
         return {
             id: nanoid(),
-            Sku: '-',
+            sku: '-',
             name: '-',
             price: '-',
             quantity: '0',
@@ -263,7 +245,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         this.setState({
             patchList: patchList.map((patch) => {
                 if (patch.id === rowId) {
-                    patchObj.code = patchObj.Sku;
+                    patchObj.code = patchObj.sku;
                     return patchObj;
                 }
 
@@ -365,9 +347,9 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         this.setState({
             patchList: patchList.map((patch) => {
                 const openRow = patch;
-                if (patch.Sku !== patch.code) {
-                    if (patch.Sku !== '-') {
-                        openRow.code = patch.Sku;
+                if (patch.sku !== patch.code) {
+                    if (patch.sku !== '-') {
+                        openRow.code = patch.sku;
                     } else {
                         openRow.code = '';
                     }

@@ -17,6 +17,7 @@ import ClickOutside from 'Component/ClickOutside';
 import PRODUCT_TYPE from 'Component/Product/Product.config';
 import { ProductActions as SourceProductActions } from 'SourceComponent/ProductActions/ProductActions.component';
 import { isCrawler, isSSR } from 'Util/Browser';
+import { formatPrice } from 'Util/Price';
 
 import './ProductActions.extension.style.scss';
 /** @namespace Scandipwa/Component/ProductActions/Component */
@@ -88,7 +89,7 @@ export class ProductActionsComponent extends SourceProductActions {
                                   elem="PatchInput"
                                   mods={ { Length: 'Long' } }
                                   name="patchCode"
-                                  placeholder="Select a patch code"
+                                  placeholder={ __('Select a patch code') }
                                   value={ patch.code }
                                   onChange={ (e) => patchCodeInputChange(e, patch.id) }
                                   onClick={ (e) => openSelectPatch(e, patch.id) }
@@ -97,16 +98,16 @@ export class ProductActionsComponent extends SourceProductActions {
                                 <div
                                   block="ProductActions"
                                   elem="PatchInput"
-                                  mods={ { IsHidden: !patch.isSelectOpen } }
+                                  mods={ { isHidden: !patch.isSelectOpen } }
                                 >
                                     { patchCodes.map((code) => (
-                                    <div
-                                      onClick={ (e) => patchSelectionChange(e, patch.id) }
-                                      onKeyDown={ (e) => patchSelectionChange(e, patch.id) }
-                                      role="presentation"
-                                    >
-                                        { code }
-                                    </div>
+                                        <div
+                                          onClick={ (e) => patchSelectionChange(e, patch.id) }
+                                          onKeyDown={ (e) => patchSelectionChange(e, patch.id) }
+                                          role="presentation"
+                                        >
+                                            { code }
+                                        </div>
                                     )) }
                                 </div>
                             </ClickOutside>
@@ -114,7 +115,7 @@ export class ProductActionsComponent extends SourceProductActions {
                     </form>
                 </td>
                 <td>{ patch.name }</td>
-                <td>{ patch.Sku !== '-' ? patch.price.toFixed(2) : '-' }</td>
+                <td>{ patch.sku !== '-' ? formatPrice(patch.price) : '-' }</td>
                 <td>
                     <div
                       block="ProductActions"
@@ -127,7 +128,7 @@ export class ProductActionsComponent extends SourceProductActions {
                           name="quantity"
                           type="text"
                           value={ patch.quantity > 0 ? patch.quantity : '' }
-                          disabled={ patch.Sku === '-' }
+                          disabled={ patch.sku === '-' }
                           onChange={ (e) => patchInputOnChange(e, patch.id) }
                         />
                         <div
@@ -136,13 +137,13 @@ export class ProductActionsComponent extends SourceProductActions {
                         >
                             <button
                               onClick={ () => updatePatchQuantityButton(1, patch.id) }
-                              disabled={ patch.Sku === '-' }
+                              disabled={ patch.sku === '-' }
                             >
                                 +
                             </button>
                             <button
                               onClick={ () => updatePatchQuantityButton(-1, patch.id) }
-                              disabled={ patch.Sku === '-' || patch.quantity < 2 }
+                              disabled={ patch.sku === '-' || patch.quantity < 2 }
                             >
                                 -
                             </button>
@@ -166,13 +167,13 @@ export class ProductActionsComponent extends SourceProductActions {
                               name="discount"
                               type="text"
                               value={ patch.discount > 0 ? patch.discount : '' }
-                              disabled={ patch.Sku === '-' }
+                              disabled={ patch.sku === '-' }
                               onChange={ (e) => patchInputOnChange(e, patch.id) }
                             />
                         </div>
                     </form>
                 </td>
-                <td>{ patch.Sku !== '-' ? patch.line : '-' }</td>
+                <td>{ patch.sku !== '-' ? patch.line : '-' }</td>
                 <td>
                     <div
                       onClick={ () => deletePatchRow(patch.id) }

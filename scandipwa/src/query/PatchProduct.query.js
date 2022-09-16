@@ -21,7 +21,7 @@ export class PatchProductQuery {
 
     _getPatchProductFields() {
         return [
-            'Sku',
+            'sku',
             'name',
             'price'
         ];

@@ -7,7 +7,7 @@ type ProductCollection @doc(description: "product collection comment") {
 }
 
 type ProductRecord {
-    Sku: String @doc(description: "Get Product sku")
+    sku: String @doc(description: "Get Product sku")
     name: String @doc(description: "Get Product name")
     price: Float @doc(description: "Get Product price")
 }

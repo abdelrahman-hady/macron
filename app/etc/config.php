@@ -450,7 +450,6 @@ return [
         'Macron_Sales' => 1,
         'ScandiPWA_SalesGraphQl' => 1,
         'ScandiPWA_StoreGraphQL' => 1,
-        'Macron_XperPage' => 1,
         'Magefan_Community' => 1,
         'Magefan_Blog' => 1,
         'Magefan_BlogGraphQl' => 1,
@@ -486,7 +485,6 @@ return [
         'ScandiPWA_UrlrewriteGraphQl' => 1,
         'ScandiPWA_WishlistGraphQl' => 1,
         'ScandiPWA_SampleData' => 1,
-        'Scandiweb_ERPInvoice' => 1,
         'Scandiweb_MagefanBlog' => 1,
         'ScandiPWA_SliderGraphQl' => 1,
         'Temando_ShippingRemover' => 1
