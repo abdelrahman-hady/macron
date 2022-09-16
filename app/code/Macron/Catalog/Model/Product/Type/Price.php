@@ -109,13 +109,22 @@ class Price extends SourcePrice
     {
         $wsp = $this->getPriceFromDb($sku, $currentCustomer, 'wholesale_price_list', 'erp_price_wholesale');
         $businessPartnerId = $currentCustomer->getBusinessPartnerId();
+        
         return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $wsp);
     }
 
+    /**
+     * @param $sku
+     * @param $endCustomer
+     * @param $currentCustomer
+     * @param $mcrProductLine
+     * @return int
+     */
     public function getCustomerRrp($sku, $endCustomer, $currentCustomer, $mcrProductLine): int
     {
         $rrp = $this->getPriceFromDb($sku, $currentCustomer, 'retail_price_list', 'erp_price_retail');
         $businessPartnerId = $endCustomer->getBusinessPartnerId();
+
         return $this->getDiscountedPriceFromDb($mcrProductLine, $businessPartnerId, $rrp);
     }
 
@@ -131,9 +140,10 @@ class Price extends SourcePrice
         $priceList = $currentCustomer->getData($field);
         $connection = $this->resourceConnection->getConnection();
         $table = $connection->getTableName($tableName);
-        $sql = $connection->select()->from($table, 'price')->where('pricelist_id = :pricelist_id AND sku = :sku');
+        $sql = $connection->select()->from($table, 'price')->where('pricelist_id = :pricelist_id')->where('sku = :sku');
         $bind = [':pricelist_id' => $priceList, ':sku' => $sku];
         $result = $connection->fetchAll($sql, $bind);
+
         return count($result) ? $result[0]['price'] : null;
     }
 
@@ -151,11 +161,14 @@ class Price extends SourcePrice
             $table,
             'discount_amount'
         )->where(
-            'business_line = :business_line AND business_partner_id = :business_partner_id',
+            'business_line = :business_line'
+        )->where(
+            'business_partner_id = :business_partner_id'
         );
         $bind = [':business_line' => $mcrProductLine, ':business_partner_id' => $businessPartnerId];
         $result = $connection->fetchAll($sql, $bind);
         $discount = count($result) ? $result[0]['discount_amount'] : 0;
+
         return (int)$wsp - (int)$discount;
     }
 }
