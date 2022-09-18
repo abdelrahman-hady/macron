@@ -12,12 +12,12 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import ShipmentsQuery from 'Query/Shipment.query';
+import { isSignedIn } from 'SourceUtil/Auth';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { LocationType } from 'Type/Router.type';
-import { isSignedIn } from 'Util/Auth';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import history from 'Util/History';
@@ -92,7 +92,7 @@ export class ShipmentsContainer extends PureComponent {
         this.requestShipments(this._getPageFromUrl(), shipmentsPerPage, filterOptions).then(
             /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/componentDidMount/requestShipments/then */
             () => {
-                // Get Available Filter Options on First Orders
+                // Get Available Filter Options on First Shipments
                 this.setState({ availableFilters: this.getAvailablefilterOptions() });
             }
         );
@@ -129,7 +129,7 @@ export class ShipmentsContainer extends PureComponent {
             || filterOptionsChanged()
             || availFiltersChanged()
         ) {
-            this.requestShipments(currentPage, shipmentsPerPage).then(
+            this.requestShipments(currentPage, shipmentsPerPage, filterOptions).then(
                 /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/componentDidUpdate/requestShipments/then */
                 () => {
                     // Should update available filters when page number is changed
@@ -159,9 +159,9 @@ export class ShipmentsContainer extends PureComponent {
         };
 
         // list available options
-        items.forEach((order) => {
+        items.forEach((shipment) => {
             // add to a hash map to avoid duplicates
-            const { status, customer_name } = order;
+            const { status, customer_name } = shipment;
             if (status) {
                 uniqueLists.status[status] = 1;
             }
@@ -186,13 +186,13 @@ export class ShipmentsContainer extends PureComponent {
         this.setState(({ filterOptions }) => ({ filterOptions: { ...filterOptions, ...option } }));
     }
 
-    async requestShipments(page, pageSize) {
+    async requestShipments(page, pageSize, filterOptions) {
         const { showErrorNotification } = this.props;
 
         this.setState({ isLoading: true });
 
         try {
-            const { shipments } = await fetchQuery(ShipmentsQuery.getShipmentsQuery({ page, pageSize }));
+            const { shipments } = await fetchQuery(ShipmentsQuery.getShipmentsQuery({ page, pageSize, filterOptions }));
 
             this.setState({ shipments, isLoading: false });
         } catch (e) {

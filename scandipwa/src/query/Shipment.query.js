@@ -12,9 +12,35 @@ import { SHIPMENTS_PER_PAGE } from '../route/Shipments/Shipments.config';
 /** @namespace Scandipwa/Query/Shipment/Query */
 export class ShipmentQuery {
     getShipmentsQuery(options) {
-        const { page = 1, pageSize = SHIPMENTS_PER_PAGE } = options ?? {};
+        const {
+            page = 1, pageSize = SHIPMENTS_PER_PAGE, filterOptions
+        } = options ?? {};
 
-        return new Field('shipments')
+        const shipmentsField = new Field('shipments');
+
+        // if (shipmentId) {
+        //     return shipmentsField
+        //         .addArgument('filter', 'ShipmentsFilterInput', { entity_id: { eq: shipmentId } })
+        //         .addFieldList(this._getShipmentFields());
+        // }
+
+        const { status, customer_name } = filterOptions;
+
+        const filter = { };
+
+        if (status) {
+            filter.status = { eq: status };
+        }
+
+        if (customer_name) {
+            filter.customer_name = { eq: customer_name };
+        }
+
+        if (Object.keys(filter).length) {
+            shipmentsField.addArgument('filter', 'ShipmentsFilterInput', filter);
+        }
+
+        return shipmentsField
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
             .addField(this._getShipmentsField())

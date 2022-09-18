@@ -21,6 +21,7 @@ type Query {
     shipments(
         pageSize: Int = 10
         currentPage: Int = 1
+        filter: ShipmentsFilterInput
     ): Shipments
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
     @doc(description: "Get shipments list")
@@ -130,4 +131,11 @@ input UpdateClientInput {
     contact_person: String
     mobile: String
     email: String
+}
+
+input ShipmentsFilterInput
+    @doc(description: "Identifies the filter to use for filtering shipments.") 
+{
+  customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
+  status: FilterStringTypeInput @doc(description: "Filters by shipment status.")
 }

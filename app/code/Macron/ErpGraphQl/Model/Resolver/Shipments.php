@@ -57,10 +57,18 @@ class Shipments implements ResolverInterface
         $customerId = $context->getUserId();
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
+        $status = isset($args['filter']) ?  $args['filter'] : null;
 
         $collection = $this->shipmentsCollection
-            ->create($customerId)
-            ->setPageSize($pageSize)
+            ->create($customerId);
+
+        if($status && $status !== null) {
+         $collection = $collection->addFieldToFilter('status',
+            ['in' => $status]
+         );
+        }
+
+        $collection = $collection->setPageSize($pageSize)
             ->setCurPage($currentPage);
 
         return [
