@@ -21,7 +21,8 @@ export class ConfigQuery extends SourceConfigQuery {
         return [
             'xperpage',
             'stock_cache_lifetime',
-            'closeout_discount'
+            'closeout_discount',
+            'accountmanageremail'
         ];
     }
 }

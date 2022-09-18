@@ -15,6 +15,7 @@
                 <item name="xperpage" xsi:type="string">xperpage/general/text</item>
                 <item name="closeout_discount" xsi:type="string">closeout/closeout_discount/discount</item>
                 <item name="stock_cache_lifetime" xsi:type="string">stock_cache_lifetime/general/text</item>
+                <item name="accountmanageremail" xsi:type="string">trans_email/ident_general/email</item>
             </argument>
         </arguments>
     </type>

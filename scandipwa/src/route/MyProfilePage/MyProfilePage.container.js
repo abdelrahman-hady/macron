@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { CustomerType } from 'Type/Account.type';
 
 import MyProfilePageComponent from './MyProfilePage.component';
 
@@ -19,9 +20,16 @@ export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
 );
+export const MyAccountDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/MyAccount/MyAccount.dispatcher'
+);
 
 /** @namespace Scandipwa/Route/MyProfilePage/Container/mapStateToProps */
-export const mapStateToProps = (_state) => ({
+export const mapStateToProps = (state) => ({
+    customer: state.MyAccountReducer.customer,
+    accountmanageremail: state.ConfigReducer.accountmanageremail
+
 });
 /** @namespace Scandipwa/Route/MyProfilePage/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
@@ -31,50 +39,70 @@ export const mapDispatchToProps = (dispatch) => ({
         BreadcrumbsDispatcher.then(
             ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
         );
-    }
+    },
+    requestCustomerData: () => MyAccountDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)
+    )
 });
 
 /** @namespace Scandipwa/Route/MyProfilePage/Container */
 export class MyProfilePageContainer extends PureComponent {
     static propTypes = {
         updateMeta: PropTypes.func.isRequired,
-        updateBreadcrumbs: PropTypes.func.isRequired
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        customer: CustomerType.isRequired,
+        requestCustomerData: PropTypes.func.isRequired,
+        accountmanageremail: PropTypes.string.isRequired
     };
 
-    componentDidMount() {
-        this.updateMeta();
-        this.updateBreadcrumbs();
-    }
+    state = { isAllAddressesShown: false };
 
-    __construct(props) {
-        super.__construct(props, 'MyProfilePageContainer');
+     containerFunctions={
+         showAllAddresses: this.showAllAddresses.bind(this)
+     };
 
-        this.updateBreadcrumbs();
-    }
+     componentDidMount() {
+         const { requestCustomerData } = this.props;
+         this.updateMeta();
+         this.updateBreadcrumbs();
+         requestCustomerData();
+     }
 
-    updateMeta() {
-        const { updateMeta } = this.props;
-        updateMeta({ title: __('My Profile') });
-    }
+     __construct(props) {
+         super.__construct(props, 'MyProfilePageContainer');
 
-    updateBreadcrumbs() {
-        const { updateBreadcrumbs } = this.props;
-        const breadcrumbs = [
-            {
-                url: '/my-profile',
-                name: __('My Profile')
-            }
-        ];
+         this.updateBreadcrumbs();
+     }
 
-        updateBreadcrumbs(breadcrumbs);
-    }
+     updateMeta() {
+         const { updateMeta } = this.props;
+         updateMeta({ title: __('My Profile') });
+     }
 
-    containerProps() {
-        return {};
-    }
+     updateBreadcrumbs() {
+         const { updateBreadcrumbs } = this.props;
+         const breadcrumbs = [
+             {
+                 url: '/my-profile',
+                 name: __('My Profile')
+             }
+         ];
 
-    render() {
-        return <MyProfilePageComponent { ...this.containerProps() } />;
-    }
+         updateBreadcrumbs(breadcrumbs);
+     }
+
+     showAllAddresses() {
+         this.setState({ isAllAddressesShown: true });
+     }
+
+     containerProps() {
+         const { customer, accountmanageremail } = this.props;
+         const { isAllAddressesShown } = this.state;
+         return { customer, isAllAddressesShown, accountmanageremail };
+     }
+
+     render() {
+         return <MyProfilePageComponent { ...this.containerProps() } { ...this.containerFunctions } />;
+     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePageContainer);
