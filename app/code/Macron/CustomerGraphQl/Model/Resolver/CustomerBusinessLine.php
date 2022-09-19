@@ -57,19 +57,20 @@ class CustomerBusinessLine implements ResolverInterface
             throw new GraphQlAuthorizationException(__('The current customer isn\'t authorized.'));
         }
 
-        $customerId = $this->getCustomer->execute($context)->getId();
-        $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
-        $businessLine = '';
-        $b2bProfileId = '';
-        if ($currentCustomer) {
-            $businessId = $currentCustomer->getBusinessPartnerId();
-            $businessLine = $currentCustomer->getBusinessLine();
-            $b2bProfileId = $currentCustomer->getB2BProfileId();
+        if (isset($args['businessId'])) {
+            $activeCustomer = $this->customerCollection->create()
+            ->addAttributeToSelect('*')
+            ->getItemByColumnValue('business_partner_id',$args['businessId']);
+
+            return [
+                'businessLine' => $activeCustomer->getData('business_line'),
+                'b2bProfileId' => $activeCustomer->getData('b2b_profile_id')
+            ];
         }
 
         return [
-            'businessLine' => $businessLine,
-            'b2bProfileId' => $b2bProfileId
+            'businessLine' => '',
+            'b2bProfileId' => ''
         ];
     }
 }

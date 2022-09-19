@@ -20,9 +20,9 @@ export class CustomerQuery {
             .addFieldList(['companyName', 'companyId']);
     }
 
-    // eslint-disable-next-line no-unused-vars
     getBusinessLineQuery(businessId) {
         return new Field('getCustomerBusinessLine')
+            .addArgument('businessId', 'String!', businessId)
             .addFieldList(['businessLine', 'b2bProfileId']);
     }
 }
