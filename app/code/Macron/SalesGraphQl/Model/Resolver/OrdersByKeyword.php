@@ -97,6 +97,8 @@ class OrdersByKeyword implements ResolverInterface
             'sales_business_pool_id',
             'sales_business_pool_name',
             'internal_note',
+            'status',
+            'user_customer_name',
             'reference_note',
             'grand_total'
         ];
