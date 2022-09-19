@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import { lazy, Suspense } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import DashboardShipmentsTable from 'Component/DashboardShipmentsTable';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
 import MyAccountOrder from 'Component/MyAccountOrder';
@@ -49,6 +50,8 @@ export const MyAccountMyOrders = lazy(() => import(
 
 /** @namespace Scandipwa/Route/MyAccount/Component */
 export class MyAccountComponent extends SourceMyAccount {
+    DASHBOARD = 'dashboard';
+
     static propTypes = {
         isEditingActive: PropTypes.bool.isRequired,
         subHeading: PropTypes.string,
@@ -72,7 +75,15 @@ export class MyAccountComponent extends SourceMyAccount {
     };
 
     renderUpcomingShipmentsTable() {
-        return null;
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === this.DASHBOARD) {
+            return <DashboardShipmentsTable />;
+        }
+
+        return '';
     }
 
     renderContent() {
