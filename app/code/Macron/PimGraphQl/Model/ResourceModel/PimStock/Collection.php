@@ -45,4 +45,23 @@ class Collection extends AbstractCollection
 
         return $result;
     }
+
+    /**
+     * @return $this
+     */
+    protected function _afterLoadData(): static
+    {
+        parent::_afterLoadData();
+
+        $collection = clone $this;
+
+        if (count($collection)) {
+            $this->_eventManager->dispatch(
+                'macron_pimgraphql_pimstock_collection_load_after',
+                ['collection' => $collection]
+            );
+        }
+
+        return $this;
+    }
 }

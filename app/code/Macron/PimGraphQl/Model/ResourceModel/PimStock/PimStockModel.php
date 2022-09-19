@@ -10,15 +10,40 @@ declare(strict_types=1);
 namespace Macron\PimGraphQl\Model\ResourceModel\PimStock;
 
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Api\ExtensibleDataInterface;
+use Magento\Framework\DataObject\IdentityInterface;
 
-class PimStockModel extends AbstractModel
+class PimStockModel extends AbstractModel implements IdentityInterface
 {
+    /**
+     * Cache tag
+     */
+    const CACHE_TAG = 'pm_stock';
+
+    /**
+     * @var string
+     */
+    protected $_cacheTag = self::CACHE_TAG;
+
+    /**
+     * @var string
+     */
+    protected $_eventPrefix = 'macron_pimgraphql_pimstock';
+
     /**
      * @return void
      */
     protected function _construct(): void
     {
         $this->_init(PimStockCollection::class);
+    }
+
+    /**
+     * Return all involved cache identities
+     *
+     * @return string[]
+     */
+    public function getIdentities(): array
+    {
+        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 }
