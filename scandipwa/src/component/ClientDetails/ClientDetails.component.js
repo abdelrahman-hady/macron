@@ -24,6 +24,7 @@ export class ClientDetailsComponent extends PureComponent {
         onNoteSave: PropTypes.func.isRequired,
         note: PropTypes.string.isRequired,
         internalNote: PropTypes.string.isRequired,
+        selectedCustomer: PropTypes.string.isRequired,
         isReadMore: PropTypes.bool.isRequired,
         toggleIsReadMore: PropTypes.func.isRequired,
         noteRef: RefType.isRequired,
@@ -71,7 +72,7 @@ export class ClientDetailsComponent extends PureComponent {
 
     render() {
         const {
-            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore
+            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore, selectedCustomer
         } = this.props;
 
         const readMoreText = isReadMore ? __('see more') : __('see less');
@@ -84,6 +85,13 @@ export class ClientDetailsComponent extends PureComponent {
 
         return (
             <div block="ClientDetails">
+                <h3 block="ClientDetails" elem="Heading">{ __('Client details:') }</h3>
+                <div block="ClientDetails" elem="Info">
+                    { /* eslint-disable-next-line max-len */ }
+                    <div block="ClientDetails" elem="Customer">{ `${__('Customer:')} ${selectedCustomer}` }</div>
+                    <div block="ClientDetails" elem="Address">{ __('Address:') }</div>
+                    <div block="ClientDetails" elem="OrderType">{ __('Order type:') }</div>
+                </div>
                 <div block="ClientDetails" elem="NoteContainer">
                     { note && (
                         <>

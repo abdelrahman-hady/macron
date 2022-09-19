@@ -19,7 +19,8 @@ import { ADD_NOTE_POPUP } from './ClientDetails.config';
 /** @namespace Scandipwa/Component/ClientDetails/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     note: state.CustomCartDataReducer.note,
-    internalNote: state.CustomCartDataReducer.internalNote
+    internalNote: state.CustomCartDataReducer.internalNote,
+    selectedCustomer: state.CustomCartDataReducer.selectedCustomer
 });
 
 /** @namespace Scandipwa/Component/ClientDetails/Container/mapDispatchToProps */
@@ -36,7 +37,8 @@ export class ClientDetailsContainer extends PureComponent {
         hideActivePopup: PropTypes.func.isRequired,
         updateNotes: PropTypes.func.isRequired,
         note: PropTypes.string.isRequired,
-        internalNote: PropTypes.string.isRequired
+        internalNote: PropTypes.string.isRequired,
+        selectedCustomer: PropTypes.string.isRequired
     };
 
     state = {
@@ -66,7 +68,7 @@ export class ClientDetailsContainer extends PureComponent {
 
     containerProps = () => {
         const {
-            showAddNotePopup, note, internalNote
+            showAddNotePopup, note, internalNote, selectedCustomer
         } = this.props;
         const {
             isReadMore, noteRef, internalNoteRef
@@ -76,6 +78,7 @@ export class ClientDetailsContainer extends PureComponent {
             showAddNotePopup,
             note,
             internalNote,
+            selectedCustomer,
             isReadMore,
             noteRef,
             internalNoteRef
