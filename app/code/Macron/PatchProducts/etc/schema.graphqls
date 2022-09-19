@@ -1,5 +1,8 @@
 type Query {
-    patchProductCollection: ProductCollection @resolver(class: "Macron\\PatchProducts\\Model\\Resolver\\PatchProducts") @doc(description: "Get Product collection of a store")
+    patchProductCollection(
+        pageSize: String,
+        keyword: String!
+    ): ProductCollection @resolver(class: "Macron\\PatchProducts\\Model\\Resolver\\PatchProducts") @doc(description: "Get Product collection of a store")
 }
 
 type ProductCollection @doc(description: "product collection comment") {

@@ -14,6 +14,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
+use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -47,7 +48,14 @@ class PatchProducts implements ResolverInterface
     }
 
     /**
-     * @inheritdoc
+     * @param Field $field
+     * @param $context
+     * @param ResolveInfo $info
+     * @param array|null $value
+     * @param array|null $args
+     * @return array|Value|mixed|null
+     * @throws GraphQlInputException
+     * @throws InputException
      */
     public function resolve(
         Field $field,
@@ -66,7 +74,10 @@ class PatchProducts implements ResolverInterface
      */
     private function getProductsData(): array
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('is_patch', 1,'eq')->create();
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('is_patch', 1,'eq')
+        ->addFilter('sku', $args['keyword'],'eq')
+        ->setPageSize($args['pageSize'])
+        ->create();
         $products = $this->productRepository->getList($searchCriteria)->getItems();
         $productRecord = [];
 
