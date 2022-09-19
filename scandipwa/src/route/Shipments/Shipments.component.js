@@ -30,17 +30,18 @@ import './Shipments.style';
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
-        shipments: PropTypes.arrayOf(ShipmentsType).isRequired,
+        shipments: ShipmentsType.isRequired,
         shipmentsPerPageList: PropTypes.string.isRequired,
         shipmentsPerPage: PropTypes.number.isRequired,
-        onShipmentPerPageChange: PropTypes.func.isRequired,
+        onShipmentsPerPageChange: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
         shipmentsSearchResult: PropTypes.arrayOf(ShipmentType).isRequired,
         filterOptions: PropTypes.object.isRequired,
         updateOptions: PropTypes.func.isRequired,
         availableFilters: PropTypes.object.isRequired,
-        formatToFieldOptions: PropTypes.func.isRequired
+        formatToFieldOptions: PropTypes.func.isRequired,
+        onDateSelectorChange: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -48,6 +49,51 @@ export class ShipmentsComponent extends PureComponent {
     };
 
     title = __('Shipments');
+
+    renderDateFilters() {
+        const {
+            onDateSelectorChange,
+            filterOptions
+        } = this.props;
+
+        const {
+            dateFrom,
+            dateTo
+        } = filterOptions;
+
+        return (
+            <div block="Shipments" elem="Filters">
+                <div block="Shipments" elem="DateFilter">
+                    <p>{ __('Date from:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateFrom',
+                          name: 'dateFrom',
+                          value: dateFrom
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+                <div block="Shipments" elem="DateFilter">
+                    <p>{ __('Date to:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateTo',
+                          name: 'dateTo',
+                          value: dateTo
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+            </div>
+        );
+    }
 
     renderTitle() {
         return (
@@ -90,7 +136,7 @@ export class ShipmentsComponent extends PureComponent {
     }
 
     renderShipmentsPerPage() {
-        const { shipmentsPerPageList, shipmentsPerPage, onShipmentPerPageChange } = this.props;
+        const { shipmentsPerPageList, shipmentsPerPage, onShipmentsPerPageChange } = this.props;
 
         const shipmentsPerPageOptions = getListViewAllowedOptions(shipmentsPerPageList, shipmentsPerPage);
 
@@ -105,7 +151,7 @@ export class ShipmentsComponent extends PureComponent {
                       noPlaceholder: true
                   } }
                   events={ {
-                      onChange: onShipmentPerPageChange
+                      onChange: onShipmentsPerPageChange
                   } }
                   options={ shipmentsPerPageOptions }
                 />
@@ -163,6 +209,7 @@ export class ShipmentsComponent extends PureComponent {
         return (
             <ContentWrapper label="Shipments">
                 { this.renderTitle() }
+                { this.renderDateFilters() }
                 { this.renderSearchBar() }
                 { this.renderShipmentsPerPage() }
                 { this.renderPagination() }

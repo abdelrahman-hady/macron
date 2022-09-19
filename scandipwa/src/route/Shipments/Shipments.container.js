@@ -62,13 +62,15 @@ export class ShipmentsContainer extends PureComponent {
 
     state = {
         shipmentsPerPage: +(BrowserDatabase.getItem(SHIPMENTS_PER_PAGE_ITEM) ?? SHIPMENTS_PER_PAGE),
-        shipments: [],
+        shipments: {},
         isLoading: false,
         searchInput: '',
         shipmentsSearchResult: [],
         filterOptions: {
             status: null,
-            customer_name: null
+            customer_name: null,
+            dateFrom: '',
+            dateTo: ''
         },
         availableFilters: {
             status: [],
@@ -82,7 +84,8 @@ export class ShipmentsContainer extends PureComponent {
         onInputChange: this.onInputChange.bind(this),
         updateOptions: this.updateOptions.bind(this),
         onShipmentsPerPageChange: this.onShipmentsPerPageChange.bind(this),
-        formatToFieldOptions: this.formatToFieldOptions.bind(this)
+        formatToFieldOptions: this.formatToFieldOptions.bind(this),
+        onDateSelectorChange: this.onDateSelectorChange.bind(this)
     };
 
     componentDidMount() {
@@ -92,6 +95,7 @@ export class ShipmentsContainer extends PureComponent {
         this.updateBreadcrumbs();
         this.requestShipments(this._getPageFromUrl(), shipmentsPerPage, filterOptions).then(
             /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/componentDidMount/requestShipments/then */
+
             () => {
                 // Get Available Filter Options on First Shipments
                 this.setState({ availableFilters: this.getAvailablefilterOptions() });
@@ -205,7 +209,13 @@ export class ShipmentsContainer extends PureComponent {
     containerProps = () => {
         const { shipmentsPerPageList } = this.props;
         const {
-            shipments, isLoading, searchInput, shipmentsPerPage, shipmentsSearchResult, filterOptions, availableFilters
+            shipments,
+            isLoading,
+            searchInput,
+            shipmentsPerPage,
+            shipmentsSearchResult,
+            filterOptions,
+            availableFilters
         } = this.state;
 
         return {
@@ -241,6 +251,21 @@ export class ShipmentsContainer extends PureComponent {
         ];
 
         updateBreadcrumbs(breadcrumbs);
+    }
+
+    onDateSelectorChange(e) {
+        const { name, value } = e.target;
+        const { filterOptions } = this.state;
+        // eslint-disable-next-line fp/no-let
+        let date = value;
+        if (name === 'dateTo') {
+            const valueArr = value.split('-');
+            const day = parseFloat(valueArr[2]) + 1;
+            // eslint-disable-next-line no-magic-numbers
+            valueArr[2] = String(`0${ day}`).slice(-2);
+            date = valueArr.join('-');
+        }
+        this.setState({ filterOptions: { ...filterOptions, [name]: date } });
     }
 
     onInputChange(e) {

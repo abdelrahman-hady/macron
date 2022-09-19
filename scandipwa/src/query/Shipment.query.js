@@ -24,7 +24,9 @@ export class ShipmentQuery {
         //         .addFieldList(this._getShipmentFields());
         // }
 
-        const { status, customer_name } = filterOptions;
+        const {
+            status, customer_name, dateFrom, dateTo
+        } = filterOptions;
 
         const filter = { };
 
@@ -34,6 +36,14 @@ export class ShipmentQuery {
 
         if (customer_name) {
             filter.customer_name = { eq: customer_name };
+        }
+
+        if (dateFrom) {
+            filter.created_at = { ...filter.created_at, gteq: dateFrom };
+        }
+
+        if (dateTo) {
+            filter.created_at = { ...filter.created_at, lteq: dateTo };
         }
 
         if (Object.keys(filter).length) {

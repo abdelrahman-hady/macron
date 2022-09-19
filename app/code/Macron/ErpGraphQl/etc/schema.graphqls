@@ -141,6 +141,7 @@ input ShipmentsFilterInput
 {
   customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
   status: FilterStringTypeInput @doc(description: "Filters by shipment status.")
+  created_at: FilterTypeInput @doc(description: "Filters by date.")
 }
 
 type InvoiceType {

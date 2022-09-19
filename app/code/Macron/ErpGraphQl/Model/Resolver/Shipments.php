@@ -57,10 +57,18 @@ class Shipments implements ResolverInterface
         $customerId = $context->getUserId();
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
+        $date = isset($args['filter']) && isset($args['filter']['created_at']) ?  $args['filter']['created_at'] : null;
         $status = isset($args['filter']) ?  $args['filter'] : null;
 
         $collection = $this->shipmentsCollection
             ->create($customerId);
+
+        if($date !== null) {
+          $collection = $collection->addFieldToFilter(
+             'date',
+             ['in' => $date]
+          );
+        }
 
         if($status !== null) {
          $collection = $collection->addFieldToFilter(
