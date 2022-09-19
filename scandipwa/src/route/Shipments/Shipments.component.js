@@ -147,6 +147,27 @@ export class ShipmentsComponent extends PureComponent {
         );
     }
 
+    renderSortByCustomer() {
+        const {
+            filterOptions: { customer_name }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by customer') }
+              mix={ { block: 'Shipments', elem: 'SortByCustomer' } }
+              options={ formatToFieldOptions(availableFilters.customer_name) }
+              value={ customer_name }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ customer_name: +val === 0 ? null : availableFilters.customer_name[+val - 1] });
+                  }
+              } }
+            />
+        );
+    }
+
     renderTable() {
         const {
             isLoading, shipments: { items = [] }, searchInput, shipmentsSearchResult
@@ -167,6 +188,7 @@ export class ShipmentsComponent extends PureComponent {
                 { this.renderShipmentsPerPage() }
                 { this.renderPagination() }
                 { this.renderSortByStatus() }
+                { this.renderSortByCustomer() }
                 { this.renderTable() }
                 { this.renderShipmentsPerPage() }
                 { this.renderPagination() }
