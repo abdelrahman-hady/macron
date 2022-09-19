@@ -97,6 +97,8 @@ class OrdersByKeyword implements ResolverInterface
             'sales_business_pool_id',
             'sales_business_pool_name',
             'internal_note',
+            'status',
+            'user_customer_name',
             'reference_note',
             'grand_total'
         ];
@@ -105,6 +107,7 @@ class OrdersByKeyword implements ResolverInterface
         foreach ($fields as $fieldName) {
             $filterCondition['filter'][$fieldName] = ['match' => $args['keyword']];
         }
+        $filterCondition['search'] = 'search';
         $filterGroups = $this->orderFilter->createFilterGroups($filterCondition, $userId, (int)$store->getId());
         $this->searchCriteriaBuilder->setFilterGroups($filterGroups);
         $this->searchCriteriaBuilder->setCurrentPage($args['currentPage']);
