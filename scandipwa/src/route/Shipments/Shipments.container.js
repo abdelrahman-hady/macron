@@ -5,19 +5,22 @@
  * @copyright  Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+/* eslint-disable max-lines */
+
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import ShipmentsQuery from 'Query/Shipment.query';
+import { isSignedIn } from 'SourceUtil/Auth';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { LocationType } from 'Type/Router.type';
-import { isSignedIn } from 'Util/Auth';
 import { scrollToTop } from 'Util/Browser';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { transformListViewAllowedValues } from 'Util/Config';
 import history from 'Util/History';
 import { fetchQuery, getErrorMessage } from 'Util/Request';
 import { appendWithStoreCode, getQueryParam } from 'Util/Url';
@@ -32,7 +35,7 @@ export const BreadcrumbsDispatcher = import(
 
 /** @namespace Scandipwa/Route/Shipments/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
-    shipmentsPerPageList: state.ConfigReducer.xperpage
+    shipmentsPerPageList: transformListViewAllowedValues(state.ConfigReducer.xperpage)
 });
 
 /** @namespace Scandipwa/Route/Shipments/Container/mapDispatchToProps */
@@ -62,20 +65,36 @@ export class ShipmentsContainer extends PureComponent {
         shipments: [],
         isLoading: false,
         searchInput: '',
-        shipmentsSearchResult: []
+        shipmentsSearchResult: [],
+        filterOptions: {
+            status: null,
+            customer_name: null
+        },
+        availableFilters: {
+            status: [],
+            customer_name: []
+        }
     };
 
     containerFunctions = {
         onInputChange: this.onInputChange.bind(this),
-        onShipmentsPerPageChange: this.onShipmentsPerPageChange.bind(this)
+        updateOptions: this.updateOptions.bind(this),
+        onShipmentsPerPageChange: this.onShipmentsPerPageChange.bind(this),
+        formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
     componentDidMount() {
-        const { shipmentsPerPage } = this.state;
+        const { shipmentsPerPage, filterOptions } = this.state;
 
         this.updateMeta();
         this.updateBreadcrumbs();
-        this.requestShipments(this._getPageFromUrl(), shipmentsPerPage);
+        this.requestShipments(this._getPageFromUrl(), shipmentsPerPage, filterOptions).then(
+            /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/componentDidMount/requestShipments/then */
+            () => {
+                // Get Available Filter Options on First Shipments
+                this.setState({ availableFilters: this.getAvailablefilterOptions() });
+            }
+        );
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -84,23 +103,76 @@ export class ShipmentsContainer extends PureComponent {
                 page_info: {
                     total_pages = 0
                 } = {}
-            }
+            }, filterOptions, availableFilters
         } = this.state;
-        const { shipmentsPerPage: prevShipmentsPerPage } = prevState;
+        const {
+            shipmentsPerPage: prevShipmentsPerPage,
+            filterOptions: prevfilterOptions,
+            availableFilters: prevAvailableFilters
+        } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevfilterOptions));
+        const availFiltersChanged = () => !(JSON.stringify(availableFilters) === JSON.stringify(prevAvailableFilters));
 
         if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
             const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
             history.replace(`${SHIPMENT_URL}${pageParam}`);
         }
 
-        if (currentPage !== prevPage || shipmentsPerPage !== prevShipmentsPerPage) {
-            this.requestShipments(currentPage, shipmentsPerPage);
+        if (currentPage !== prevPage
+            || shipmentsPerPage !== prevShipmentsPerPage
+            || filterOptionsChanged()
+            || availFiltersChanged()
+        ) {
+            this.requestShipments(currentPage, shipmentsPerPage, filterOptions).then(
+                /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/componentDidUpdate/requestShipments/then */
+                () => {
+                    // Should update available filters when page number is changed
+                    if (currentPage !== prevPage) {
+                        this.setState({ availableFilters: this.getAvailablefilterOptions() });
+                    }
+                }
+            );
             scrollToTop();
         }
+    }
+
+    formatToFieldOptions(options) {
+        return options.map((option, idx) => ({
+            id: idx + 1,
+            label: option,
+            value: idx + 1
+        }));
+    }
+
+    getAvailablefilterOptions() {
+        const { shipments: { items = [] } } = this.state;
+
+        const uniqueLists = {
+            status: {},
+            customer_name: {}
+        };
+
+        // list available options
+        items.forEach((shipment) => {
+            // add to a hash map to avoid duplicates
+            const { status, customer_name } = shipment;
+            if (status) {
+                uniqueLists.status[status] = 1;
+            }
+            if (customer_name) {
+                uniqueLists.customer_name[customer_name] = 1;
+            }
+        });
+
+        return {
+            status: Object.keys(uniqueLists.status),
+            customer_name: Object.keys(uniqueLists.customer_name)
+        };
     }
 
     __construct(props) {
@@ -109,13 +181,17 @@ export class ShipmentsContainer extends PureComponent {
         this.updateBreadcrumbs();
     }
 
-    async requestShipments(page, pageSize) {
+    updateOptions(option) {
+        this.setState(({ filterOptions }) => ({ filterOptions: { ...filterOptions, ...option } }));
+    }
+
+    async requestShipments(page, pageSize, filterOptions) {
         const { showErrorNotification } = this.props;
 
         this.setState({ isLoading: true });
 
         try {
-            const { shipments } = await fetchQuery(ShipmentsQuery.getShipmentsQuery({ page, pageSize }));
+            const { shipments } = await fetchQuery(ShipmentsQuery.getShipmentsQuery({ page, pageSize, filterOptions }));
 
             this.setState({ shipments, isLoading: false });
         } catch (e) {
@@ -127,11 +203,18 @@ export class ShipmentsContainer extends PureComponent {
     containerProps = () => {
         const { shipmentsPerPageList } = this.props;
         const {
-            shipments, isLoading, searchInput, shipmentsPerPage, shipmentsSearchResult
+            shipments, isLoading, searchInput, shipmentsPerPage, shipmentsSearchResult, filterOptions, availableFilters
         } = this.state;
 
         return {
-            shipments, isLoading, shipmentsPerPageList, shipmentsPerPage, searchInput, shipmentsSearchResult
+            shipments,
+            isLoading,
+            shipmentsPerPageList,
+            shipmentsPerPage,
+            searchInput,
+            shipmentsSearchResult,
+            filterOptions,
+            availableFilters
         };
     };
 

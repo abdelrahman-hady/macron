@@ -9,6 +9,7 @@
 /* eslint-disable @scandipwa/scandipwa-guidelines/no-jsx-variables */
 /* eslint-disable max-len */
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
+/* eslint-disable react/forbid-prop-types */
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -21,6 +22,7 @@ import Pagination from 'Component/Pagination';
 import SearchIcon from 'Component/SearchIcon';
 import ShipmentsTable from 'Component/ShipmentsTable';
 import { ShipmentsType, ShipmentType } from 'Type/Shipment.type';
+import { getListViewAllowedOptions } from 'Util/Config';
 
 import './Shipments.style';
 
@@ -28,13 +30,17 @@ import './Shipments.style';
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
-        shipments: ShipmentsType.isRequired,
+        shipments: PropTypes.arrayOf(ShipmentsType).isRequired,
         shipmentsPerPageList: PropTypes.string.isRequired,
         shipmentsPerPage: PropTypes.number.isRequired,
         onShipmentPerPageChange: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
-        shipmentsSearchResult: PropTypes.arrayOf(ShipmentType).isRequired
+        shipmentsSearchResult: PropTypes.arrayOf(ShipmentType).isRequired,
+        filterOptions: PropTypes.object.isRequired,
+        updateOptions: PropTypes.func.isRequired,
+        availableFilters: PropTypes.object.isRequired,
+        formatToFieldOptions: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -86,16 +92,7 @@ export class ShipmentsComponent extends PureComponent {
     renderShipmentsPerPage() {
         const { shipmentsPerPageList, shipmentsPerPage, onShipmentPerPageChange } = this.props;
 
-        const shipmentsPerPageOptions = [];
-
-        if (shipmentsPerPageList) {
-            shipmentsPerPageList.split(',').forEach((value) => {
-                const perPage = +value;
-                shipmentsPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
-            });
-        } else {
-            shipmentsPerPageOptions.push({ label: shipmentsPerPage, value: shipmentsPerPage });
-        }
+        const shipmentsPerPageOptions = getListViewAllowedOptions(shipmentsPerPageList, shipmentsPerPage);
 
         return (
             <div block="ShipmentsTable" elem="PerPageDropdown">
@@ -129,7 +126,28 @@ export class ShipmentsComponent extends PureComponent {
         );
     }
 
-    renderContent() {
+    renderSortByStatus() {
+        const {
+            filterOptions: { status }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'Shipments', elem: 'SortByStatus' } }
+              options={ formatToFieldOptions(availableFilters.status) }
+              value={ status }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ status: +val === 0 ? null : availableFilters.status[+val - 1] });
+                  }
+              } }
+            />
+        );
+    }
+
+    renderTable() {
         const {
             isLoading, shipments: { items = [] }, searchInput, shipmentsSearchResult
         } = this.props;
@@ -137,14 +155,21 @@ export class ShipmentsComponent extends PureComponent {
         const shipments = searchInput !== '' ? shipmentsSearchResult : items;
 
         return (
+         <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
+        );
+    }
+
+    renderContent() {
+        return (
             <ContentWrapper label="Shipments">
-             { this.renderTitle() }
-             { this.renderSearchBar() }
-             { this.renderShipmentsPerPage() }
-             { this.renderPagination() }
-            <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
-             { this.renderShipmentsPerPage() }
-             { this.renderPagination() }
+                { this.renderTitle() }
+                { this.renderSearchBar() }
+                { this.renderShipmentsPerPage() }
+                { this.renderPagination() }
+                { this.renderSortByStatus() }
+                { this.renderTable() }
+                { this.renderShipmentsPerPage() }
+                { this.renderPagination() }
             </ContentWrapper>
         );
     }
