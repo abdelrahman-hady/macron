@@ -157,11 +157,11 @@ export class ShipmentsComponent extends PureComponent {
               type={ FIELD_TYPE.select }
               label={ __('Sort by customer') }
               mix={ { block: 'Shipments', elem: 'SortByCustomer' } }
-              options={ formatToFieldOptions(availableFilters.customer_name) }
+              options={ formatToFieldOptions(availableFilters.customers) }
               value={ customer_name }
               events={ {
                   onChange: (val) => {
-                      updateOptions({ customer_name: +val === 0 ? null : availableFilters.customer_name[+val - 1] });
+                      updateOptions({ customer_name: +val === 0 ? null : availableFilters.customers[+val - 1] });
                   }
               } }
             />
