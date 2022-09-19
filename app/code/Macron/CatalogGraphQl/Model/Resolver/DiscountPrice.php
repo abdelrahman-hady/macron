@@ -10,12 +10,11 @@ declare(strict_types=1);
 namespace Macron\CatalogGraphQl\Model\Resolver;
 
 use Macron\Catalog\Model\Product\Type\CustomPrice;
-use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\GraphQl\Config\Element\Field;
+use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
@@ -74,13 +73,11 @@ class DiscountPrice implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        if (!isset($value['model'])) {
-            throw new LocalizedException(__('"model" value should be specified'));
+        if (!isset($args['id'])) {
+            throw new GraphQlAuthorizationException(__("Please specify product id"));
         }
 
         $store = $context->getExtensionAttributes()->getStore();
-        /** @var Product $product */
-        $product = $value['model'];
 
         $customerId = $this->getCustomer->execute($context)->getId();
         $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
@@ -91,15 +88,15 @@ class DiscountPrice implements ResolverInterface
         }
 
         $returnArray = [];
+        $product = $this->productRepository->getById($args['id']);
         $sku = $product->getSku();
-        $_product = $this->productRepository->getById($product->getId());
 
         $returnArray['your_wsp'] =
             [
                 'value' => $this->customPriceModel->getYourWsp(
                     $sku,
                     $currentCustomer,
-                    $_product->getAttributeText('mcr_product_line')
+                    $product->getAttributeText('mcr_product_line')
                 ),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
@@ -111,7 +108,7 @@ class DiscountPrice implements ResolverInterface
                         $sku,
                         $endCustomer,
                         $currentCustomer,
-                        $_product->getAttributeText('mcr_product_line')
+                        $product->getAttributeText('mcr_product_line')
                     ),
                     'currency' => $store->getCurrentCurrencyCode()
                 ];

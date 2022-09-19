@@ -21,7 +21,8 @@ export class ProductPriceComponent extends SourceProductPrice {
         ...super.propTypes,
         priceRange: PropTypes.objectOf(PropTypes.objectOf(PropTypes.objectOf(PropTypes.string))),
         orderType: PropTypes.string.isRequired,
-        closeoutDiscount: PropTypes.string.isRequired
+        closeoutDiscount: PropTypes.string.isRequired,
+        discountPrices: PropTypes.objectOf.isRequired
     };
 
     static defaultProps = {
@@ -56,16 +57,18 @@ export class ProductPriceComponent extends SourceProductPrice {
             priceRange,
             priceRange: {
                 wholesale_price,
-                retail_price,
+                retail_price
+            },
+            mix,
+            discountPrices: {
                 your_wsp,
                 customer_rrp
             },
-            mix,
             orderType,
             closeoutDiscount
         } = this.props;
 
-        if (!priceRange) {
+        if (!priceRange || !your_wsp) {
             return this.renderPlaceholder();
         }
 

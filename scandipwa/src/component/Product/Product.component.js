@@ -20,7 +20,8 @@ export class Product extends SourceProduct {
         const product = getActiveProduct();
 
         const {
-            price_range: priceRange
+            price_range: priceRange,
+            id
         } = product;
 
         if (!priceRange) {
@@ -35,6 +36,7 @@ export class Product extends SourceProduct {
                 <ProductPrice
                   meta
                   priceRange={ priceRange }
+                  productId={ id }
                   isPreview={ isPreview }
                   mix={ { block: this.className, elem: 'Price' } }
                 />

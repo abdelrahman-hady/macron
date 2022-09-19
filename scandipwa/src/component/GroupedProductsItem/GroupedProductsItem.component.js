@@ -17,7 +17,8 @@ export class GroupedProductsItemComponent extends SourceGroupedProductsItem {
         const {
             product: {
                 name,
-                price_range: priceRange
+                price_range: priceRange,
+                id
             }
         } = this.props;
 
@@ -28,6 +29,7 @@ export class GroupedProductsItemComponent extends SourceGroupedProductsItem {
                 </p>
                 <ProductPrice
                   priceRange={ priceRange }
+                  productId={ id }
                   mix={ { block: 'GroupedProductsItem', elem: 'Price' } }
                 />
             </div>
