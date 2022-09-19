@@ -30,6 +30,7 @@ export class ProductCompareComponent extends SourceProductCompare {
         return (
             <ProductPrice
               priceRange={ price_range }
+              productId={ id }
               key={ id }
               priceType={ type_id }
               mix={ { block: 'ProductCompareAttributeRow', elem: 'Price' } }
