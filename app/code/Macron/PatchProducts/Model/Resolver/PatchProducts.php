@@ -64,16 +64,6 @@ class PatchProducts implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $productsData = $this->getProductsData($args);
-        return $productsData;
-    }
-
-    /**
-     * @return array
-     * @throws GraphQlNoSuchEntityException
-     */
-    private function getProductsData($args): array
-    {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('is_patch', 1,'eq')
         ->addFilter('sku', "%{$args['keyword']}%",'like')
         ->setPageSize($args['keyword'])

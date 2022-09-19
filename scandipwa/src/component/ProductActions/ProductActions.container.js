@@ -152,16 +152,28 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         const { showErrorNotification } = this.props;
         const { keyword } = this.state;
 
-        try {
-            const {
-                patchProductCollection:
-                { allPatchProducts }
-            } = await fetchQuery(PatchProductQuery.getPatchProductQuery(keyword));
+        this.debounce(
+            async () => {
+                try {
+                    const {
+                        patchProductCollection:
+                        { allPatchProducts }
+                    } = await fetchQuery(PatchProductQuery.getPatchProductQuery(keyword));
 
-            this.setState({ patchData: allPatchProducts });
-        } catch (e) {
-            showErrorNotification(getErrorMessage(e));
-        }
+                    this.setState({ patchData: allPatchProducts });
+                } catch (e) {
+                    showErrorNotification(getErrorMessage(e));
+                }
+            }
+        );
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    debounce(func, timeout = 500) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            func();
+        }, timeout);
     }
 
     addAnotherPatch() {
