@@ -164,6 +164,13 @@ type Option {
     label: String
 }
 
+input ShipmentsFilterInput
+    @doc(description: "Identifies the filter to use for filtering shipments.")
+{
+  customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
+  status: FilterStringTypeInput @doc(description: "Filters by shipment status.")
+}
+
 type InvoiceType {
     id: Int
     invoice_number: String
@@ -176,11 +183,4 @@ type InvoiceType {
     download_link: String
     firstname: String
     lastname: String
-}
-
-input ShipmentsFilterInput
-    @doc(description: "Identifies the filter to use for filtering shipments.") 
-{
-  customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
-  status: FilterStringTypeInput @doc(description: "Filters by shipment status.")
 }
