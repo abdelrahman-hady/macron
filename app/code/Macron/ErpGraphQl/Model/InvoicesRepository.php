@@ -33,9 +33,11 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     /**
      * @return array|DataObject[]
      */
-    public function getList($customerId = null): array
+    public function getList($customerId = null, $pageSize = 10, $currentPage = 1)
     {
-        $collection = $this->invoicesCollectionFactory;
+        $collection = $this->invoicesCollectionFactory
+            ->setPageSize($pageSize)
+            ->setCurPage($currentPage);
         $erpInvoiceCols = [
             'id',
             'invoice_number',
@@ -64,6 +66,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
         $select->joinLeft(
             ['ceTable' => $collection->getTable('customer_entity')],
             'main_table.user_sap_id = ceTable.business_partner_id', $customerEntityCols);
+        $collection->setOrder('id', 'DESC');
 
         return $collection->getItems();
     }

@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import { lazy, Suspense } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import DashboardInvoicesTable from 'Component/DashboardInvoicesTable';
 import DashboardShipmentsTable from 'Component/DashboardShipmentsTable';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
@@ -86,6 +87,18 @@ export class MyAccountComponent extends SourceMyAccount {
         return '';
     }
 
+    renderInvoicesTable() {
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === this.DASHBOARD) {
+            return <DashboardInvoicesTable />;
+        }
+
+        return '';
+    }
+
     renderContent() {
         const {
             activeTab,
@@ -119,7 +132,8 @@ export class MyAccountComponent extends SourceMyAccount {
                   elem="TabContent"
                   mods={ { activeTab } }
                 >
-                     { this.renderUpcomingShipmentsTable() }
+                    { this.renderUpcomingShipmentsTable() }
+                    { this.renderInvoicesTable() }
                     <h2 block="MyAccount" elem="Heading">
                         { title || tabName }
                         { this.renderSubHeading() }

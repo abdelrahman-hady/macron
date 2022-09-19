@@ -52,6 +52,11 @@ class Invoices implements ResolverInterface
         if (!$customerId) {
             throw new GraphQlAuthorizationException(__('The current customer is not authorized.'));
         }
-        return $this->erpInvoiceRepository->getList($customerId);
+        $customer = $this->customerModel->execute($context);
+        $customerId = $customer->getId();
+        $pageSize = $args['pageSize'];
+        $currentPage = $args['currentPage'];
+
+        return $this->erpInvoiceRepository->getList($customerId,$pageSize,$currentPage);
     }
 }
