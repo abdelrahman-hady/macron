@@ -98,6 +98,8 @@ export class OrderTypePopupContainer extends PureComponent {
             updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart, selectedCustomer, showPopup
         } = this.props;
 
+        const { companies: { partnerCompanies } } = this.state;
+
         if (selectedCustomer !== '' && selectedCustomer !== fields[0].value) {
             this.setState({ fieldValue: fields[0].value });
             showPopup(CUSTOMER_CHANGE_CONFIRMATION_POPUP);
@@ -105,6 +107,10 @@ export class OrderTypePopupContainer extends PureComponent {
         }
 
         updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fields[0].value });
+
+        const { companyId } = partnerCompanies.find((customer) => customer.companyName === fields[0].value);
+        this.getActiveCustomerBusinessLine(companyId);
+
         hideActiveOverlay();
 
         if (addProductToCart) {
@@ -113,16 +119,32 @@ export class OrderTypePopupContainer extends PureComponent {
     }
 
     onConfirm() {
-        const { fieldValue } = this.state;
+        const { fieldValue, companies: { partnerCompanies } } = this.state;
         const { updateTypeAndCustomerSelect, hideActiveOverlay } = this.props;
         updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fieldValue });
+
+        const { companyId } = partnerCompanies.find((customer) => customer.companyName === fieldValue);
+        this.getActiveCustomerBusinessLine(companyId);
+
         hideActiveOverlay();
+    }
+
+    getActiveCustomerBusinessLine(companyId) {
+        const query = CustomerQuery.getBusinessLineQuery(companyId);
+        fetchQuery(query).then(
+            /** @namespace Scandipwa/Component/OrderTypePopup/Container/OrderTypePopupContainer/getActiveCustomerBusinessLine/fetchQuery/then */
+            (d) => {
+                console.log(d);
+            }
+        );
     }
 
     handleReplenishmentClick() {
         const { updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart } = this.props;
-        const { companies } = this.state;
-        updateTypeAndCustomerSelect({ orderType: TYPE_REPLENISHMENT, selectedCustomer: companies.currentCustomerId });
+        const { companies: { currentCustomerId } } = this.state;
+        updateTypeAndCustomerSelect({ orderType: TYPE_REPLENISHMENT, selectedCustomer: currentCustomerId });
+
+        this.getActiveCustomerBusinessLine(currentCustomerId);
         hideActiveOverlay();
 
         if (addProductToCart) {

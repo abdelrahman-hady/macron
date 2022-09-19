@@ -19,6 +19,12 @@ export class CustomerQuery {
         return new Field('partnerCompanies')
             .addFieldList(['companyName', 'companyId']);
     }
+
+    // eslint-disable-next-line no-unused-vars
+    getBusinessLineQuery(businessId) {
+        return new Field('getCustomerBusinessLine')
+            .addFieldList(['businessLine', 'b2bProfileId']);
+    }
 }
 
 export default new CustomerQuery();
