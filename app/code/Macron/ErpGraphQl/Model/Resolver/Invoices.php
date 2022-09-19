@@ -70,6 +70,8 @@ class Invoices implements ResolverInterface
         }
         $loggedInCustomer = $this->customerCollection->create()->getItemById($customerId);
         $businessPartnerId = $loggedInCustomer->getBusinessPartnerId();
-        return $this->erpInvoiceRepository->getList($businessPartnerId);
+        $pageSize = $args['pageSize'];
+        $currentPage = $args['currentPage'];
+        return $this->erpInvoiceRepository->getList($businessPartnerId,$pageSize,$currentPage);
     }
 }

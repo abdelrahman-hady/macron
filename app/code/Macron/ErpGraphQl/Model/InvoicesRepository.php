@@ -34,9 +34,11 @@ class InvoicesRepository implements InvoicesRepositoryInterface
     /**
      * @return array|DataObject[]
      */
-    public function getList($businessPartnerId = null): array
+    public function getList($businessPartnerId = null, $pageSize = 10, $currentPage = 1): array
     {
-        $collection = $this->invoicesCollectionFactory;
+        $collection = $this->invoicesCollectionFactory
+            ->setPageSize($pageSize)
+            ->setCurPage($currentPage);
         $erpInvoiceCols = [
             'id',
             'invoice_number',
