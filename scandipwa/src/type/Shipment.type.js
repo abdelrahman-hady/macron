@@ -16,3 +16,14 @@ export const ShipmentType = PropTypes.shape({
     customer_name: PropTypes.string,
     address: PropTypes.string
 });
+
+export const PageInfoType = PropTypes.shape({
+    current_page: PropTypes.number,
+    page_size: PropTypes.number,
+    total_pages: PropTypes.number
+});
+
+export const ShipmentsType = PropTypes.shape({
+    items: PropTypes.arrayOf(ShipmentType),
+    page_info: PageInfoType
+});
