@@ -62,8 +62,9 @@ class Shipments implements ResolverInterface
         $collection = $this->shipmentsCollection
             ->create($customerId);
 
-        if($status && $status !== null) {
-         $collection = $collection->addFieldToFilter('status',
+        if($status !== null) {
+         $collection = $collection->addFieldToFilter(
+            'status',
             ['in' => $status]
          );
         }
