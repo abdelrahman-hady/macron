@@ -62,7 +62,7 @@ export class MyAccountComponent extends SourceMyAccount {
         tabName: PropTypes.string,
         setTabSubheading: PropTypes.func.isRequired,
         isTabEnabled: PropTypes.func.isRequired,
-        IsSapID: PropTypes.arrayOf(PropTypes.string)
+        isSapID: PropTypes.arrayOf(PropTypes.string)
     };
 
     renderMap = {
@@ -93,10 +93,10 @@ export class MyAccountComponent extends SourceMyAccount {
             tabName,
             setTabSubheading,
             isTabEnabled,
-            IsSapID
+            isSapID
         } = this.props;
 
-        const orders = IsSapID !== undefined ? IsSapID : null;
+        const hasSapId = isSapID !== undefined ? isSapID : null;
 
         if (!isSignedIn()) {
             return this.renderLoginOverlay();
@@ -131,7 +131,7 @@ export class MyAccountComponent extends SourceMyAccount {
                           changeTabName={ changeTabName }
                           tabMap={ tabMap }
                           setTabSubheading={ setTabSubheading }
-                          IsSapID={ orders }
+                          isSapID={ hasSapId }
                         />
                     </Suspense>
                 </div>

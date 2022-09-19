@@ -46,7 +46,7 @@ export { mapDispatchToProps };
 /** @namespace Scandipwa/Route/MyAccount/Container/mapStateToProps */
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-    IsSapID: state.OrderReducer.orderList.items
+    isSapID: state.OrderReducer.orderList.items
 });
 
 /** @namespace Scandipwa/Route/MyAccount/Container */
@@ -57,16 +57,16 @@ export class MyAccountContainer extends SourceMyAccountContainer {
 
     static propTypes = {
         ...super.propTypes,
-        IsSapID: PropTypes.arrayOf(PropTypes.string)
+        isSapID: PropTypes.arrayOf(PropTypes.string)
     };
 
     containerProps() {
         const {
-            IsSapID
+            isSapID
         } = this.props;
 
         return {
-            IsSapID,
+            isSapID,
             ...super.containerProps()
         };
     }

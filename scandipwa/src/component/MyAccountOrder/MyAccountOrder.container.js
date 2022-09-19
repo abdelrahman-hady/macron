@@ -46,10 +46,10 @@ export class MyAccountOrderContainer extends SourceMyAccountOrderContainer {
             getOrderById,
             changeTabName,
             setTabSubheading,
-            IsSapID
+            isSapID
         } = this.props;
 
-        const idType = IsSapID.filter((obj) => obj.sap_order_id === orderId || obj.id === orderId);
+        const idType = isSapID.filter((obj) => obj.sap_order_id === orderId || obj.id === orderId);
 
         const isSapOrderId = idType[0].sap_order_id !== null;
 
