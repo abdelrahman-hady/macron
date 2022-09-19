@@ -2,11 +2,18 @@ interface ProductInterface {
     price_range(customer: String): PriceRange! @resolver(class: "Macron\\CatalogGraphQl\\Model\\Resolver\\CustomPriceRange")
 }
 
+query DiscountPrice {
+    getDiscountPrices: DiscountPrices @resolver(class: "Macron\\CatalogGraphQl\\Model\\Resolver\\DiscountPrice")
+}
+
+type DiscountPrices {
+    your_wsp: CustomPrice @doc(description:  "Product wholesale price with discount.")
+    customer_rrp: CustomPrice  @doc(description:  "Product retail price with discount.")
+}
+
 type PriceRange {
     wholesale_price: CustomPrice @doc(description: "Product wholesale price.")
     retail_price: CustomPrice @doc(description:  "Product retail price.")
-    your_wsp: CustomPrice @doc(description:  "Product wholesale price with discount.")
-    customer_rrp: CustomPrice  @doc(description:  "Product retail price with discount.")
 }
 
 type CustomPrice {

@@ -11,6 +11,7 @@ namespace Macron\CatalogGraphQl\Model\Resolver;
 
 use Macron\Catalog\Model\Product\Type\CustomPrice;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ProductRepository;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\Exception\LocalizedException;
@@ -18,8 +19,13 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
-class CustomPriceRange implements ResolverInterface
+class DiscountPrice implements ResolverInterface
 {
+    /**
+     * @var ProductRepository
+     */
+    private ProductRepository $productRepository;
+
     /**
      * @var CollectionFactory
      */
@@ -36,15 +42,18 @@ class CustomPriceRange implements ResolverInterface
     private CustomPrice $customPriceModel;
 
     /**
+     * @param ProductRepository $productRepository
      * @param CollectionFactory $customerCollection
      * @param GetCustomer $getCustomer
      * @param CustomPrice $customPriceModel
      */
     public function __construct(
+        ProductRepository $productRepository,
         CollectionFactory $customerCollection,
         GetCustomer $getCustomer,
         CustomPrice $customPriceModel
     ) {
+        $this->productRepository = $productRepository;
         $this->customerCollection = $customerCollection;
         $this->getCustomer = $getCustomer;
         $this->customPriceModel = $customPriceModel;
@@ -64,7 +73,7 @@ class CustomPriceRange implements ResolverInterface
         ResolveInfo $info,
         array $value = null,
         array $args = null
-    ): array {
+    ) {
         if (!isset($value['model'])) {
             throw new LocalizedException(__('"model" value should be specified'));
         }
@@ -75,20 +84,38 @@ class CustomPriceRange implements ResolverInterface
 
         $customerId = $this->getCustomer->execute($context)->getId();
         $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
+        $endCustomer = null;
+
+        if (isset($args['customer']) && $args['customer'] !== '') {
+            $endCustomer = $this->customerCollection->create()->getItemByColumnValue('company_name', $args['customer']);
+        }
 
         $returnArray = [];
         $sku = $product->getSku();
+        $_product = $this->productRepository->getById($product->getId());
 
-        $returnArray['wholesale_price'] =
+        $returnArray['your_wsp'] =
             [
-                'value' => (int)$this->customPriceModel->getWholesalePrice($sku, $currentCustomer),
+                'value' => $this->customPriceModel->getYourWsp(
+                    $sku,
+                    $currentCustomer,
+                    $_product->getAttributeText('mcr_product_line')
+                ),
                 'currency' => $store->getCurrentCurrencyCode()
             ];
-        $returnArray['retail_price'] =
-            [
-                'value' => (int)$this->customPriceModel->getRetailPrice($sku, $currentCustomer),
-                'currency' => $store->getCurrentCurrencyCode()
-            ];
+
+        if ($endCustomer) {
+            $returnArray['customer_rrp'] =
+                [
+                    'value' => $this->customPriceModel->getCustomerRrp(
+                        $sku,
+                        $endCustomer,
+                        $currentCustomer,
+                        $_product->getAttributeText('mcr_product_line')
+                    ),
+                    'currency' => $store->getCurrentCurrencyCode()
+                ];
+        }
 
         return $returnArray;
     }
