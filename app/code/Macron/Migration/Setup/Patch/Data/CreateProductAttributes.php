@@ -130,6 +130,7 @@ class CreateProductAttributes implements DataPatchInterface
     ];
 
     /**
+     * @param ModuleDataSetupInterface $moduleDataSetup
      * @param EavSetupFactory $eavSetupFactory
      * @param CategorySetupFactory $categorySetupFactory
      */
@@ -179,7 +180,6 @@ class CreateProductAttributes implements DataPatchInterface
     /**
      * @param string $name
      * @return void
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function createAttributeGroup(string $name)
     {
