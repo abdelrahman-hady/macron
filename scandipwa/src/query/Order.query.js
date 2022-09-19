@@ -56,17 +56,25 @@ export class OrderQuery extends SourceOrderQuery {
 
     _getOrdersField(options) {
         const {
-            orderId, page = 1, pageSize = ORDERS_PER_PAGE,
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, isSapOrderId,
             filterOptions: {
                 dateFrom, dateTo, status, user_customer_name
             } = {}
-        } = options || {};
+        } = options;
+
         const ordersField = new Field('orders');
         const filter = {};
 
-        if (orderId !== undefined ? orderId.includes('sap') : null) {
-            // 'sap' might have to be replaced with something else when real sap_order_id format will be known.
-            filter.sap_order_id = { eq: orderId };
+        if (isSapOrderId) {
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { sap_order_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
+        }
+
+        if (orderId) {
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
         }
 
         if (dateFrom) {
