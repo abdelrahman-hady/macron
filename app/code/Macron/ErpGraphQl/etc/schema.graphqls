@@ -21,9 +21,10 @@ type Query {
     @doc(description: "Get list of invoices for the current logged in customer")
 
     shipments(
-        currentPage: Int = 1
         pageSize: Int = 10
-    ): [Shipment]
+        currentPage: Int = 1
+        filter: ShipmentsFilterInput
+    ): Shipments
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
     @doc(description: "Get shipments list")
 
@@ -81,12 +82,18 @@ type ClientType {
 
 type Shipment {
     entity_id: Int
-    shipment_number: String,
-    status: String,
-    tracking_number: String,
-    date: String,
-    customer_name: String,
-    address: String
+    shipment_number: String
+    status: String
+    tracking_number: String
+    date: String
+    customer_name: String
+    address: String,
+    packing_list_link: String
+}
+
+type Shipments {
+    items: [Shipment]
+    page_info: SearchResultPageInfo
 }
 
 input CreateClientInput {
@@ -126,6 +133,14 @@ input UpdateClientInput {
     contact_person: String
     mobile: String
     email: String
+}
+
+
+input ShipmentsFilterInput
+    @doc(description: "Identifies the filter to use for filtering shipments.") 
+{
+  customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
+  status: FilterStringTypeInput @doc(description: "Filters by shipment status.")
 }
 
 type InvoiceType {
