@@ -36,6 +36,12 @@ export const mapDispatchToProps = (dispatch) => ({
 
 /** @namespace Scandipwa/Component/DashboardOrdersTable/Container */
 export class DashboardOrdersTableContainer extends PureComponent {
+    static propTypes = {
+        getOrderList: PropTypes.func.isRequired,
+        orderList: OrdersListType.isRequired,
+        isLoading: PropTypes.bool.isRequired
+    };
+
     state={
         filterOptions: {
             status: null,
@@ -45,13 +51,6 @@ export class DashboardOrdersTableContainer extends PureComponent {
         },
         page: 1,
         compactLength: 5
-    };
-
-    static propTypes = {
-        getOrderList: PropTypes.func.isRequired,
-        orderList: OrdersListType.isRequired,
-        isLoading: PropTypes.bool.isRequired,
-        onViewAllButtonClick: PropTypes.func.isRequired
     };
 
     containerFunctions={

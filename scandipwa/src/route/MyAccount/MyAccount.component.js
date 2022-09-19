@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import { lazy, Suspense } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import DashboardOrdersTable from 'Component/DashboardOrdersTable';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
 import MyAccountOrder from 'Component/MyAccountOrder';
@@ -31,8 +32,6 @@ import {
 } from 'Type/Account.type';
 import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
-
-import DashboardOrdersTable from '../../component/DashboardOrdersTable';
 
 export const MyAccountAddressBook = lazy(() => import(
     /* webpackMode: "lazy", webpackChunkName: "account-address" */

@@ -86,15 +86,15 @@ export class DashboardOrdersTableComponent extends PureComponent {
                     <tbody>
                         { orderList.items.map((orderItem) => (
                             <tr key={ orderItem.id }>
-                            <td>{ orderItem.id }</td>
-                            <td>{ orderItem.user_customer_name }</td>
-                            <td>{ orderItem.order_date }</td>
-                            <td>
-                                { `${orderItem.total.grand_total.value}
-                                ${formatCurrency(orderItem.total.grand_total.currency)}` }
-                            </td>
-                            <td>{ orderItem.status }</td>
-                            <td>{ this.renderCompactActionButtons(orderItem.id) }</td>
+                                <td>{ orderItem.id }</td>
+                                <td>{ orderItem.user_customer_name }</td>
+                                <td>{ orderItem.order_date }</td>
+                                <td>
+                                    { `${orderItem.total.grand_total.value}
+                                    ${formatCurrency(orderItem.total.grand_total.currency)}` }
+                                </td>
+                                <td>{ orderItem.status }</td>
+                                <td>{ this.renderCompactActionButtons(orderItem.id) }</td>
                             </tr>
                         )) }
                     </tbody>
