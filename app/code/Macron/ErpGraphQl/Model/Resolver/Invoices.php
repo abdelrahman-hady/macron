@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Macron\ErpGraphQl\Model\Resolver;
 
 use Macron\ErpGraphQl\Model\InvoicesRepository;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
@@ -20,13 +22,27 @@ use Magento\GraphQl\Model\Query\ContextInterface;
 
 class Invoices implements ResolverInterface
 {
+    /**
+     * @var GetCustomer
+     */
+    private GetCustomer $getCustomer;
+
+    /**
+     * @var CollectionFactory
+     */
+    private CollectionFactory $customerCollection;
+
     protected InvoicesRepository $erpInvoiceRepository;
 
     /**
      * @param InvoicesRepository $erpInvoiceRepository
      */
-    public function __construct(InvoicesRepository $erpInvoiceRepository)
-    {
+    public function __construct(
+        CollectionFactory $customerCollection,
+        InvoicesRepository $erpInvoiceRepository,
+
+    ) {
+        $this->customerCollection = $customerCollection;
         $this->erpInvoiceRepository = $erpInvoiceRepository;
     }
 
@@ -52,11 +68,10 @@ class Invoices implements ResolverInterface
         if (!$customerId) {
             throw new GraphQlAuthorizationException(__('The current customer is not authorized.'));
         }
-        $customer = $this->customerModel->execute($context);
-        $customerId = $customer->getId();
+        $loggedInCustomer = $this->customerCollection->create()->getItemById($customerId);
+        $businessPartnerId = $loggedInCustomer->getBusinessPartnerId();
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
-
-        return $this->erpInvoiceRepository->getList($customerId,$pageSize,$currentPage);
+        return $this->erpInvoiceRepository->getList($businessPartnerId,$pageSize,$currentPage);
     }
 }

@@ -83,7 +83,8 @@
         },
         "constraint": {
             "PRIMARY": true,
-            "ERP_INVOICE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+            "ERP_INVOICE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "ERP_INVOICE_USER_SAP_ID_CUSTOMER_ENTITY_BUSINESS_PARTNER_ID": true
         }
     },
     "erp_price_wholesale": {
