@@ -22,6 +22,7 @@ import Pagination from 'Component/Pagination';
 import SearchIcon from 'Component/SearchIcon';
 import ShipmentsTable from 'Component/ShipmentsTable';
 import { ShipmentsType, ShipmentType } from 'Type/Shipment.type';
+import { getListViewAllowedOptions } from 'Util/Config';
 
 import './Shipments.style';
 
@@ -91,16 +92,7 @@ export class ShipmentsComponent extends PureComponent {
     renderShipmentsPerPage() {
         const { shipmentsPerPageList, shipmentsPerPage, onShipmentPerPageChange } = this.props;
 
-        const shipmentsPerPageOptions = [];
-
-        if (shipmentsPerPageList) {
-            shipmentsPerPageList.split(',').forEach((value) => {
-                const perPage = +value;
-                shipmentsPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
-            });
-        } else {
-            shipmentsPerPageOptions.push({ label: shipmentsPerPage, value: shipmentsPerPage });
-        }
+        const shipmentsPerPageOptions = getListViewAllowedOptions(shipmentsPerPageList, shipmentsPerPage);
 
         return (
             <div block="ShipmentsTable" elem="PerPageDropdown">
