@@ -72,7 +72,7 @@ export class ShipmentsContainer extends PureComponent {
         },
         availableFilters: {
             status: [],
-            customer_name: []
+            customers: []
         }
     };
 
@@ -154,7 +154,7 @@ export class ShipmentsContainer extends PureComponent {
 
         const uniqueLists = {
             status: {},
-            customer_name: {}
+            customers: {}
         };
 
         // list available options
@@ -165,13 +165,13 @@ export class ShipmentsContainer extends PureComponent {
                 uniqueLists.status[status] = 1;
             }
             if (customer_name) {
-                uniqueLists.customer_name[customer_name] = 1;
+                uniqueLists.customers[customer_name] = 1;
             }
         });
 
         return {
             status: Object.keys(uniqueLists.status),
-            customer_name: Object.keys(uniqueLists.customer_name)
+            customers: Object.keys(uniqueLists.customers)
         };
     }
 
