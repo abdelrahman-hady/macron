@@ -37,7 +37,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         isAddPatchDropOpen: false,
         patchCodes: [],
         patchData: [],
-        patchList: []
+        patchList: [],
+        keyword: ''
     };
 
     containerFunctions = {
@@ -64,6 +65,12 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
         const { product: prevProduct } = prevProps;
         const { product } = this.props;
+        const { keyword } = this.state;
+        const { keyword: prevKeyword } = prevState;
+
+        if (keyword !== prevKeyword) {
+            this.requestPatchProducts();
+        }
 
         if (product !== prevProduct) {
             this.requestPatchProducts();
@@ -143,12 +150,13 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     async requestPatchProducts() {
         const { showErrorNotification } = this.props;
+        const { keyword } = this.state;
 
         try {
             const {
                 patchProductCollection:
                 { allPatchProducts }
-            } = await fetchQuery(PatchProductQuery.getPatchProductQuery());
+            } = await fetchQuery(PatchProductQuery.getPatchProductQuery(keyword));
 
             this.setState({ patchData: allPatchProducts });
         } catch (e) {
@@ -205,6 +213,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     patchCodeInputChange(e, rowId) {
         e.preventDefault();
         const { patchList } = this.state;
+
+        this.setState({ keyword: e.target.value });
 
         this.setState({
             patchList: patchList.map((patch) => {

@@ -1,7 +1,7 @@
 type Query {
     patchProductCollection(
-        pageSize: String,
         keyword: String!
+        pageSize: String
     ): ProductCollection @resolver(class: "Macron\\PatchProducts\\Model\\Resolver\\PatchProducts") @doc(description: "Get Product collection of a store")
 }
 
