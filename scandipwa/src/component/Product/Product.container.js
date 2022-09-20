@@ -5,6 +5,7 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import { prepareQuery } from '@scandipwa/scandipwa/src/util/Query';
 import { connect } from 'react-redux';
 
 import { WAREHOUSE_HQ } from 'Component/ProductStockGrid/ProductStockGrid.config';
@@ -16,7 +17,7 @@ import {
     ProductContainer as SourceProductContainer
 } from 'SourceComponent/Product/Product.container';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
-import { fetchQuery, getErrorMessage } from 'Util/Request';
+import { executeGet, getErrorMessage } from 'Util/Request';
 
 import { ONE_MILLISECOND } from './Product.config';
 
@@ -84,7 +85,11 @@ export class ProductContainer extends SourceProductContainer {
 
         try {
             const warehouses = [WAREHOUSE_HQ, ...customerWarehouses];
-            const { pimStock: stock } = await fetchQuery(StockQuery.getStockQuery(SKUs, warehouses));
+            const cacheLifetime = 86400;
+
+            const { pimStock: stock } = await executeGet(
+                prepareQuery(StockQuery.getStockQuery(SKUs, warehouses)), 'Stock', cacheLifetime
+            );
 
             this.setState({ stock, stockLoading: false });
 
