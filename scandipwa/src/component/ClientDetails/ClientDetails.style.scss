@@ -1,7 +1,36 @@
 .ClientDetails {
-    margin: 10px;
-    width: 300px;
+    padding: 20px;
     word-wrap: break-word;
+    width: 320px;
+    min-height: 274px;
+    background: #E9E9EB;
+    border-radius: 5px;
+    margin-block-end: 40px;
+
+    &-Heading {
+        font-weight: 700;
+        font-size: 16px;
+        margin: 0 0 26px 0;
+    }
+
+    &-Customer, &-Address, &-OrderType {
+        font-size: 14px;
+        margin-block-end: 11px;
+    }
+
+    &-CustomerText, &-AddressText, &-OrderTypeText {
+        font-weight: 600;
+        font-size: 14px;
+        margin-inline-end: 10px;
+    }
+
+    &-CustomerValue {
+        font-size: 14px;
+    }
+
+    &-AddressText, &-OrderTypeText, &-AddressValue {
+        font-size: 12px;
+    }
 
     &-Note {
         input {
@@ -19,14 +48,17 @@
     }
 
     &-NoteContainer {
+        margin-block-start: 26px;
+
         p {
             margin-block-end: 0px;
+            font-size: 12px;
         }
 
         button {
             cursor: pointer;
             text-decoration: underline;
-            margin-block-end: 10px;
+            margin-block-end: 5px;
         }
     }
 
