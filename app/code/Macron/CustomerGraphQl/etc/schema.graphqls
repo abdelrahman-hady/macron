@@ -1,5 +1,8 @@
 type Query {
     getPartnerCompanies: partnerCompanies @resolver(class:"\\Macron\\CustomerGraphQl\\Model\\Resolver\\PartnerCompanyNames")
+    getCustomerBusinessLine (
+        businessId: String!
+    ): customerBusinessLine @resolver(class:"\\Macron\\CustomerGraphQl\\Model\\Resolver\\CustomerBusinessLine")
 }
 
 type partnerCompanies {
@@ -15,4 +18,9 @@ type partnerCompany {
 type Customer {
     company_name: String
     phone_number: String
+}
+
+type customerBusinessLine { 
+    businessLine: String,
+    b2bProfileId: String
 }

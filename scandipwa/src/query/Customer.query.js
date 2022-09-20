@@ -19,6 +19,12 @@ export class CustomerQuery {
         return new Field('partnerCompanies')
             .addFieldList(['companyName', 'companyId']);
     }
+
+    getBusinessLineQuery(businessId) {
+        return new Field('getCustomerBusinessLine')
+            .addArgument('businessId', 'String!', businessId)
+            .addFieldList(['businessLine', 'b2bProfileId']);
+    }
 }
 
 export default new CustomerQuery();
