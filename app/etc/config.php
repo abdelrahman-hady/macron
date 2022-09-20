@@ -446,6 +446,7 @@ return [
         'Macron_ErpGraphQl' => 1,
         'Macron_Erp' => 1,
         'Macron_Migration' => 1,
+        'Macron_PatchProducts' => 1,
         'Macron_Pim' => 1,
         'Macron_PimGraphQl' => 1,
         'Macron_QuoteGraphQl' => 1,

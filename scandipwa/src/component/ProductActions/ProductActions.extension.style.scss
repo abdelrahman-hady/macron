@@ -42,10 +42,35 @@
                         inset-inline-end: 8px;
                         pointer-events: none;
                     }
+
+                    div {
+                        width: 160px;
+                        height: fit-content;
+                        max-height: 180px;
+                        overflow: scroll;
+                        z-index: 20;
+                        position: absolute;
+                        background-color: #F6F5F5;
+                        border: 1px solid #C4C4C4;
+
+                        div {
+                            position: static;
+                            height: 36px;
+                            padding: 8px;
+                            border: none;
+                        }
+
+                        div:hover {
+                            background-color: #C4C4C4;
+                            cursor: pointer;
+                        }
+                    }
                 }
             }
         }
+    }
 
+    &-PatchInput {
         &_Length_Long {
             width: 160px;
         }
@@ -56,6 +81,10 @@
 
         &_MarginTop {
             inset-block-start: 10px;
+        }
+
+        &_isHidden {
+            visibility: hidden;
         }
     }
 
