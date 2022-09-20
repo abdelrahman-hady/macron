@@ -92,7 +92,7 @@ export class ProductStockGridContainer extends PureComponent {
         if (!variants || variants.length === 0) {
             return;
         }
-        console.log(variants);
+
         const SKUs = [];
         variants.forEach(({ sku, attributes: { [GRID_COLOR_ITEM]: { attribute_value } } }) => {
             if (selectedColor && attribute_value !== selectedColor) {

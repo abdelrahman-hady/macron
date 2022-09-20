@@ -65,7 +65,6 @@ export class ProductCardComponent extends SourceProductCard {
             product, parameters: { [GRID_COLOR_ITEM]: selectedColor } = {}
         } = this.props;
 
-        console.log(product);
         return (
             <ProductStockGrid
               product={ product }
