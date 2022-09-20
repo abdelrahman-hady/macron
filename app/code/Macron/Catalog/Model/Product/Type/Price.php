@@ -167,7 +167,7 @@ class Price extends SourcePrice
         $currentCustomer = $this->customerCollection->create()->getItemById($customerId);
         $priceList = $currentCustomer->getData($field);
         $connection = $this->resourceConnection->getConnection();
-        $sql = "Select price FROM {$tableName} WHERE pricelist_id = {$priceList} AND sku like '{$sku}'";
+        $sql = "Select price FROM {$tableName} WHERE pricelist_id = '{$priceList}' AND sku like '{$sku}'";
         $result = $connection->fetchAll($sql);
         return count($result) ? $result[0]['price'] : null;
     }
