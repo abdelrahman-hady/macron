@@ -56,13 +56,18 @@ class PimStock implements ResolverInterface
             throw new GraphQlAuthorizationException(__("The current customer isn't authorized."));
         }
 
-        $sku = $args['SKU'];
-        $warehouse = $args['Warehouse'];
+        $SKUs = $args['SKU'];
+        $warehouses = $args['Warehouse'];
+
+        $skuFilters = [];
+        foreach ($SKUs as $SKU) {
+            $skuFilters[] = ['like' => '%' . $SKU . '%'];
+        }
 
         $collection = $this->stockCollection
             ->create()
-            ->addFieldToFilter('sku', ['in' => $sku])
-            ->addFieldToFilter('warehouse', ['in' => $warehouse]);
+            ->addFieldToFilter('sku', $skuFilters)
+            ->addFieldToFilter('warehouse', ['in' => $warehouses]);
 
         return $collection->getFormattedData();
     }
