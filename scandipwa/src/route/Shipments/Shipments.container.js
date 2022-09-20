@@ -258,13 +258,6 @@ export class ShipmentsContainer extends PureComponent {
         const { filterOptions } = this.state;
         // eslint-disable-next-line fp/no-let
         let date = value;
-        if (name === 'dateTo') {
-            const valueArr = value.split('-');
-            const day = parseFloat(valueArr[2]);
-            // eslint-disable-next-line no-magic-numbers
-            valueArr[2] = String(`0${ day}`).slice(-2);
-            date = valueArr.join('-');
-        }
 
         if (date === '--aN') {
             date = '';
