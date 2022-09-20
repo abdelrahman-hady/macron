@@ -7,9 +7,10 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  **/
 -->
+
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="customer_entity">
-        <column xsi:type="text" name="business_partner_id" comment="Business partner ID"/>
+        <column xsi:type="varchar" name="business_partner_id" length="250" comment="Business partner ID"/>
         <column xsi:type="text" name="phone_number" comment="Phone number"/>
         <column xsi:type="text" name="type" comment="Type"/>
         <column xsi:type="text" name="status" comment="Status"/>
@@ -20,6 +21,10 @@
         <column xsi:type="text" name="retail_price_list" comment="Retail Price List"/>
         <column xsi:type="text" name="wholesale_price_list" comment="Wholesale Price List"/>
         <column xsi:type="text" name="company_name" comment="Company Name"/>
+
+        <constraint xsi:type="unique" referenceId="CUSTOMER_ENTITY_UNIQUE_CONSTRAINT">
+            <column name="business_partner_id"/>
+        </constraint>
     </table>
 
     <table name="customer_entity_discounts" resource="default" engine="innodb" comment="Customer Discounts">
