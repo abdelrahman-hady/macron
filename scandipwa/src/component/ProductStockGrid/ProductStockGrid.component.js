@@ -9,6 +9,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Field from 'Component/Field';
+import FIELD_TYPE from 'Component/Field/Field.config';
 import Loader from 'Component/Loader';
 
 import { WAREHOUSE_HQ } from './ProductStockGrid.config';
@@ -27,7 +29,8 @@ export class ProductStockGridComponent extends PureComponent {
         getStockByWarehouse: PropTypes.func.isRequired,
         getArrivalsByWarehouse: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        warehouses: PropTypes.arrayOf(PropTypes.string).isRequired
+        warehouses: PropTypes.arrayOf(PropTypes.string).isRequired,
+        isOrder: PropTypes.bool.isRequired
     };
 
     state = {
@@ -55,11 +58,11 @@ export class ProductStockGridComponent extends PureComponent {
 
         return (
             <tr>
-                <th>{ title }</th>
+                <td>{ title }</td>
                 { attributeOptions.map(({ value: size }) => (
-                    <th key={ `${size}-${stocks[size]}-${warehouse}` }>
+                    <td key={ `${size}-${stocks[size]}-${warehouse}` }>
                         { stocks[size] ?? '-' }
-                    </th>
+                    </td>
                 )) }
             </tr>
         );
@@ -76,7 +79,7 @@ export class ProductStockGridComponent extends PureComponent {
                     const { total, newArrivals } = arrivals[size] ?? {};
 
                     return (
-                        <th
+                        <td
                           key={ `${size}-${total}-${warehouse}-arrival` }
                           onMouseOver={ () => this.handleMouseOver(size, warehouse, newArrivals) }
                           onFocus={ () => this.handleMouseOver(size, warehouse, newArrivals) }
@@ -84,7 +87,38 @@ export class ProductStockGridComponent extends PureComponent {
                         >
                             { total ?? '-' }
                             { this.renderTooltip(size, warehouse) }
-                        </th>
+                        </td>
+                    );
+                }) }
+            </tr>
+        );
+    }
+
+    renderOrdersRow(warehouse) {
+        const { attributeOptions, getArrivalsByWarehouse, getStockByWarehouse } = this.props;
+        const arrivals = getArrivalsByWarehouse(warehouse);
+        const stocks = getStockByWarehouse(warehouse);
+
+        return (
+            <tr>
+                <td>{ `${__('Order')} ${warehouse}` }</td>
+                { attributeOptions.map(({ value: size }) => {
+                    const { total = 0 } = arrivals[size] ?? {};
+                    const qty = stocks[size] ?? 0;
+
+                    const isOutOfStock = total + qty === 0;
+
+                    return (
+                        <td>
+                            <Field
+                              type={ FIELD_TYPE.number }
+                              isDisabled={ isOutOfStock }
+                              attr={ {
+                                  placeholder: isOutOfStock && '-',
+                                  min: 0
+                              } }
+                            />
+                        </td>
                     );
                 }) }
             </tr>
@@ -115,6 +149,8 @@ export class ProductStockGridComponent extends PureComponent {
     }
 
     renderHeadquarterTable() {
+        const { isOrder } = this.props;
+
         return (
             <>
                 <thead>
@@ -123,12 +159,15 @@ export class ProductStockGridComponent extends PureComponent {
                 </thead>
                 <tbody>
                     { this.renderArrivalsRow(WAREHOUSE_HQ) }
+                    { isOrder && this.renderOrdersRow(WAREHOUSE_HQ) }
                 </tbody>
             </>
         );
     }
 
     renderStoreTable(warehouse) {
+        const { isOrder } = this.props;
+
         return (
             <>
                 <thead>
@@ -136,6 +175,7 @@ export class ProductStockGridComponent extends PureComponent {
                 </thead>
                 <tbody>
                     { this.renderArrivalsRow(warehouse) }
+                    { isOrder && this.renderOrdersRow(warehouse) }
                 </tbody>
             </>
         );

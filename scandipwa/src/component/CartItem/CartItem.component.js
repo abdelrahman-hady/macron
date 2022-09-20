@@ -81,21 +81,13 @@ export class CartItemComponent extends SourceCartItem {
         );
     }
 
-    renderDesktopContent() {
+    render() {
+        const { isEditing, isCartOverlay } = this.props;
+
         return (
-            <div block="CartItem" elem="Wrapper" mods={ { isCart: true } }>
-                <div block="CartItem" elem="ProductInfo">
-                    { this.renderImage() }
-                    { this.renderTitle() }
-                </div>
-                <div
-                  block="CartItem"
-                  elem="ProductActions"
-                >
-                    { this.renderQuantityChangeField() }
-                    { this.renderDeleteButton() }
-                </div>
-                { this.renderProductPrice() }
+            <div block="CartItem" mods={ { isEditing, isCartOverlay } }>
+                { this.renderLoader() }
+                { this.renderContent() }
                 { this.renderStockGrid() }
             </div>
         );
@@ -123,6 +115,7 @@ export class CartItemComponent extends SourceCartItem {
               product={ product }
               warehouses={ customerWarehouses }
               selectedColor={ selectedColor }
+              isOrder
             />
         );
     }

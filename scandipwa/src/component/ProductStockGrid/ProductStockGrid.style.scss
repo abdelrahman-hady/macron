@@ -8,6 +8,15 @@
 .ProductStockGrid {
     &-Table {
         width: 120%;
+
+        .Field {
+            margin-block-start: 0;
+
+            input {
+                height: 100%;
+                width: 100%;
+            }
+        }
     }
 
     &-Tooltip {
