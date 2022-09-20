@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @author    Abdelrahman Hady <abdelrahman.hady@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -9,9 +10,11 @@ import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import CustomerQuery from 'Query/Customer.query';
 import { updateNotes } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActivePopup } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
+import { fetchQuery } from 'Util/Request';
 
 import ClientDetails from './ClientDetails.component';
 import { ADD_NOTE_POPUP } from './ClientDetails.config';
@@ -44,13 +47,24 @@ export class ClientDetailsContainer extends PureComponent {
     state = {
         noteRef: createRef(),
         internalNoteRef: createRef(),
-        isReadMore: true
+        isReadMore: true,
+        defaultShippingAddress: {}
     };
 
     containerFunctions = {
         onNoteSave: this.onNoteSave.bind(this),
         toggleIsReadMore: this.toggleIsReadMore.bind(this)
     };
+
+    componentDidMount() {
+        const query = CustomerQuery.getDefaultShippingAddressQuery();
+        fetchQuery(query).then(
+            /** @namespace Scandipwa/Component/ClientDetails/Container/ClientDetailsContainer/componentDidMount/fetchQuery/then */
+            ({ getDefaultShippingAddress }) => {
+                this.setState({ defaultShippingAddress: getDefaultShippingAddress });
+            }
+        );
+    }
 
     toggleIsReadMore() {
         const { isReadMore } = this.state;
@@ -71,7 +85,7 @@ export class ClientDetailsContainer extends PureComponent {
             showAddNotePopup, note, internalNote, selectedCustomer
         } = this.props;
         const {
-            isReadMore, noteRef, internalNoteRef
+            isReadMore, noteRef, internalNoteRef, defaultShippingAddress
         } = this.state;
 
         return {
@@ -81,7 +95,8 @@ export class ClientDetailsContainer extends PureComponent {
             selectedCustomer,
             isReadMore,
             noteRef,
-            internalNoteRef
+            internalNoteRef,
+            defaultShippingAddress
         };
     };
 

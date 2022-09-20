@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Mariam Zakareishvili <mariam.zakareishvili@scandiweb.com | info@scandiweb.com>
+ * @author    Abdelrahman Hady <abdelrahman.hady@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -28,7 +29,8 @@ export class ClientDetailsComponent extends PureComponent {
         isReadMore: PropTypes.bool.isRequired,
         toggleIsReadMore: PropTypes.func.isRequired,
         noteRef: RefType.isRequired,
-        internalNoteRef: RefType.isRequired
+        internalNoteRef: RefType.isRequired,
+        defaultShippingAddress: PropTypes.objectOf.isRequired
     };
 
     renderPopUpContent() {
@@ -72,7 +74,7 @@ export class ClientDetailsComponent extends PureComponent {
 
     render() {
         const {
-            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore, selectedCustomer
+            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore, selectedCustomer, defaultShippingAddress
         } = this.props;
 
         const readMoreText = isReadMore ? __('see more') : __('see less');
@@ -89,7 +91,8 @@ export class ClientDetailsComponent extends PureComponent {
                 <div block="ClientDetails" elem="Info">
                     { /* eslint-disable-next-line max-len */ }
                     <div block="ClientDetails" elem="Customer">{ `${__('Customer:')} ${selectedCustomer}` }</div>
-                    <div block="ClientDetails" elem="Address">{ __('Address:') }</div>
+                    { /* eslint-disable-next-line max-len */ }
+                    <div block="ClientDetails" elem="Address">{ `${__('Address:')} ${defaultShippingAddress.address}` }</div>
                     <div block="ClientDetails" elem="OrderType">{ __('Order type:') }</div>
                 </div>
                 <div block="ClientDetails" elem="NoteContainer">
