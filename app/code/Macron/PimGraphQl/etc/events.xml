@@ -12,7 +12,7 @@
     <event name="macron_pimgraphql_pimstock_collection_load_after">
         <observer name="pq_cc_pimstock" instance="ScandiPWA\Cache\Observer\Response\TagEntityResponse"/>
     </event>
-    <event name="macron_pimgraphql_pimstock_collection_save_after">
+    <event name="macron_pimgraphql_pimstock_save_after">
         <observer name="pq_cc_pimstock" instance="ScandiPWA\Cache\Observer\FlushVarnishObserver"/>
     </event>
 </config>
