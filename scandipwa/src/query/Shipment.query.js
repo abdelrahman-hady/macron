@@ -39,11 +39,11 @@ export class ShipmentQuery {
         }
 
         if (dateFrom) {
-            filter.created_at = { ...filter.created_at, gteq: dateFrom };
+            filter.date = { ...filter.date, from: dateFrom };
         }
 
         if (dateTo) {
-            filter.created_at = { ...filter.created_at, lteq: dateTo };
+            filter.date = { ...filter.date, to: dateTo };
         }
 
         if (Object.keys(filter).length) {
