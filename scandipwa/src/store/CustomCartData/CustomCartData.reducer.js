@@ -5,14 +5,16 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-import { UPDATE_NOTES, UPDATE_ORDER_TYPE } from './CustomCartData.action';
+import { UPDATE_BUSINESS_LINE, UPDATE_NOTES, UPDATE_ORDER_TYPE } from './CustomCartData.action';
 
 /** @namespace Scandipwa/Store/CustomCartData/Reducer/getInitialState */
 export const getInitialState = () => ({
     note: '',
     internalNote: '',
     orderType: '',
-    selectedCustomer: ''
+    selectedCustomer: '',
+    businessLine: '',
+    b2bProfileId: ''
 });
 
 /** @namespace Scandipwa/Store/CustomCartData/Reducer/CustomCartDataReducer */
@@ -33,6 +35,14 @@ export const CustomCartDataReducer = (state = getInitialState(), action) => {
             ...state,
             orderType,
             selectedCustomer
+        };
+    case UPDATE_BUSINESS_LINE:
+        const { payload: { businessLine, b2bProfileId } } = action;
+
+        return {
+            ...state,
+            businessLine,
+            b2bProfileId
         };
     default:
         return state;
