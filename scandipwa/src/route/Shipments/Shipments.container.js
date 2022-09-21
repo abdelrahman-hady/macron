@@ -26,7 +26,7 @@ import { fetchQuery, getErrorMessage } from 'Util/Request';
 import { appendWithStoreCode, getQueryParam } from 'Util/Url';
 
 import Shipments from './Shipments.component';
-import { SHIPMENT_URL, SHIPMENTS_PER_PAGE, SHIPMENTS_PER_PAGE_ITEM, SHIPMENTS_PER_PAGE_ITEM } from './Shipments.config';
+import { SHIPMENT_URL, SHIPMENTS_PER_PAGE, SHIPMENTS_PER_PAGE_ITEM } from './Shipments.config';
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
