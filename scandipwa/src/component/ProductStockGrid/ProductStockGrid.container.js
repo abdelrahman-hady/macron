@@ -37,12 +37,14 @@ export class ProductStockGridContainer extends PureComponent {
         selectedColor: PropTypes.string,
         warehouses: PropTypes.arrayOf(PropTypes.string),
         showError: PropTypes.func.isRequired,
-        stockCacheLifetime: PropTypes.number.isRequired
+        stockCacheLifetime: PropTypes.number.isRequired,
+        isOrder: PropTypes.bool
     };
 
     static defaultProps = {
         selectedColor: null,
-        warehouses: []
+        warehouses: [],
+        isOrder: false
     };
 
     state = {
@@ -70,9 +72,12 @@ export class ProductStockGridContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { attributeOptions, isLoading } = this.state;
         const {
-            product, selectedColor, warehouses
+            attributeOptions, isLoading
+        } = this.state;
+
+        const {
+            product, selectedColor, warehouses, isOrder
         } = this.props;
 
         return {
@@ -80,7 +85,8 @@ export class ProductStockGridContainer extends PureComponent {
             product,
             selectedColor,
             isLoading,
-            warehouses
+            warehouses,
+            isOrder
         };
     };
 
