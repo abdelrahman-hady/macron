@@ -53,7 +53,7 @@ export const mapDispatchToProps = (dispatch) => ({
 /** @namespace Scandipwa/Route/Shipments/Container */
 export class ShipmentsContainer extends PureComponent {
     static propTypes = {
-        shipmentsPerPageList: PropTypes.string.isRequired,
+        shipmentsPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         updateMeta: PropTypes.func.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         location: LocationType.isRequired,

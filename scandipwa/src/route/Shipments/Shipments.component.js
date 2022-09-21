@@ -31,7 +31,7 @@ export class ShipmentsComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
         shipments: ShipmentsType.isRequired,
-        shipmentsPerPageList: PropTypes.string.isRequired,
+        shipmentsPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         shipmentsPerPage: PropTypes.number.isRequired,
         onShipmentsPerPageChange: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
