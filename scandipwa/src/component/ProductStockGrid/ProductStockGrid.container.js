@@ -5,24 +5,39 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import { prepareQuery } from '@scandipwa/scandipwa/src/util/Query';
+import { executeGet, getErrorMessage } from '@scandipwa/scandipwa/src/util/Request';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
-import { AttributesType, ProductType } from 'Type/ProductList.type';
-import { StockType } from 'Type/Stock.type';
+import StockQuery from 'Query/Stock.query';
+import { showNotification } from 'Store/Notification/Notification.action';
+import { ProductType } from 'Type/ProductList.type';
 
 import ProductStockGrid from './ProductStockGrid.component';
-import { GRID_COLOR_ITEM, GRID_SIZE_ITEM } from './ProductStockGrid.config';
+import {
+    CACHE_LIFETIME, GRID_COLOR_ITEM, GRID_SIZE_ITEM, ONE_MILLISECOND, WAREHOUSE_HQ
+} from './ProductStockGrid.config';
+
+/** @namespace Scandipwa/Component/ProductStockGrid/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    stockCacheLifetime: state.ConfigReducer.stock_cache_lifetime
+});
+
+/** @namespace Scandipwa/Component/ProductStockGrid/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    showError: (message) => dispatch(showNotification('error', message))
+});
 
 /** @namespace Scandipwa/Component/ProductStockGrid/Container */
 export class ProductStockGridContainer extends PureComponent {
     static propTypes = {
-        configurationOptions: AttributesType.isRequired,
         product: ProductType.isRequired,
         selectedColor: PropTypes.string,
-        stock: PropTypes.arrayOf(StockType).isRequired,
-        isLoading: PropTypes.bool.isRequired,
-        warehouses: PropTypes.arrayOf(PropTypes.string)
+        warehouses: PropTypes.arrayOf(PropTypes.string),
+        showError: PropTypes.func.isRequired,
+        stockCacheLifetime: PropTypes.number.isRequired
     };
 
     static defaultProps = {
@@ -31,7 +46,9 @@ export class ProductStockGridContainer extends PureComponent {
     };
 
     state = {
-        attributeOptions: []
+        attributeOptions: [],
+        stock: [],
+        isLoading: false
     };
 
     containerFunctions = {
@@ -39,29 +56,72 @@ export class ProductStockGridContainer extends PureComponent {
         getArrivalsByWarehouse: this.getArrivalsByWarehouse.bind(this)
     };
 
+    timeout = null;
+
     componentDidMount() {
         this.initAttributeOptions();
+        this.requestStock();
+    }
+
+    componentWillUnmount() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
     }
 
     containerProps = () => {
-        const { attributeOptions } = this.state;
+        const { attributeOptions, isLoading } = this.state;
         const {
-            product, selectedColor, stock, isLoading, warehouses
+            product, selectedColor, warehouses
         } = this.props;
 
         return {
             attributeOptions,
             product,
             selectedColor,
-            stock,
             isLoading,
             warehouses
         };
     };
 
+    async requestStock() {
+        const {
+            product: { variants }, showError, stockCacheLifetime, warehouses, selectedColor
+        } = this.props;
+
+        if (!variants || variants.length === 0) {
+            return;
+        }
+
+        const SKUs = [];
+        variants.forEach(({ sku, attributes: { [GRID_COLOR_ITEM]: { attribute_value } } }) => {
+            if (selectedColor && attribute_value !== selectedColor) {
+                return;
+            }
+            SKUs.push(sku);
+        });
+
+        this.setState({ isLoading: true });
+
+        try {
+            const { pimStock: stock } = await executeGet(
+                prepareQuery(StockQuery.getStockQuery(SKUs, [WAREHOUSE_HQ, ...warehouses])), 'pim_stock', CACHE_LIFETIME
+            );
+
+            this.setState({ stock, isLoading: false });
+
+            if (stockCacheLifetime) {
+                this.timeout = setTimeout(this.requestStock.bind(this), stockCacheLifetime * ONE_MILLISECOND);
+            }
+        } catch (e) {
+            showError(getErrorMessage(e));
+            this.setState({ isLoading: false });
+        }
+    }
+
     initAttributeOptions() {
-        const { configurationOptions } = this.props;
-        const configurationOption = Object.values(configurationOptions).find(
+        const { product: { configurable_options: configurableOptions = {} } } = this.props;
+        const configurationOption = Object.values(configurableOptions).find(
             ({ attribute_code }) => attribute_code === GRID_SIZE_ITEM
         );
 
@@ -109,8 +169,8 @@ export class ProductStockGridContainer extends PureComponent {
     }
 
     _getCurrentStockItems(warehouse) {
-        const { attributeOptions } = this.state;
-        const { product: { variants } = {}, selectedColor, stock } = this.props;
+        const { attributeOptions, stock } = this.state;
+        const { product: { variants } = {}, selectedColor } = this.props;
 
         if (!variants || stock.length === 0) {
             return [];
@@ -157,4 +217,4 @@ export class ProductStockGridContainer extends PureComponent {
     }
 }
 
-export default ProductStockGridContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(ProductStockGridContainer);

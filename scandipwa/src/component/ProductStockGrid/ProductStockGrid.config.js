@@ -8,3 +8,5 @@
 export const GRID_SIZE_ITEM = 'size';
 export const GRID_COLOR_ITEM = 'color';
 export const WAREHOUSE_HQ = 'HQ';
+export const CACHE_LIFETIME = 86400;
+export const ONE_MILLISECOND = 1000;

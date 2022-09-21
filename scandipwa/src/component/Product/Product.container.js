@@ -5,21 +5,14 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
-import { prepareQuery } from '@scandipwa/scandipwa/src/util/Query';
 import { connect } from 'react-redux';
 
-import { WAREHOUSE_HQ } from 'Component/ProductStockGrid/ProductStockGrid.config';
-import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample_data';
-import StockQuery from 'Query/Stock.query';
 import {
     mapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
     ProductContainer as SourceProductContainer
 } from 'SourceComponent/Product/Product.container';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
-import { executeGet, getErrorMessage } from 'Util/Request';
-
-import { ONE_MILLISECOND } from './Product.config';
 
 export {
     mapDispatchToProps
@@ -49,57 +42,12 @@ export class ProductContainer extends SourceProductContainer {
         // Used for configurable product - it can be ether parent or variant
         selectedProduct: null,
         // eslint-disable-next-line react/destructuring-assignment
-        parameters: this.props.parameters,
-
-        stock: [],
-        stockLoading: false
+        parameters: this.props.parameters
     };
 
     componentDidMount() {
         this.updateSelectedValues();
         this.updateAdjustedPrice();
-        this.requestStock();
-    }
-
-    componentWillUnmount() {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
-    }
-
-    timeout = null;
-
-    async requestStock() {
-        const { product: { variants }, showError, stockCacheLifetime } = this.props;
-
-        if (!variants || variants.length === 0) {
-            return;
-        }
-
-        const SKUs = [];
-        variants.forEach(({ sku }) => {
-            SKUs.push(sku);
-        });
-
-        this.setState({ stockLoading: true });
-
-        try {
-            const warehouses = [WAREHOUSE_HQ, ...customerWarehouses];
-            const cacheLifetime = 86400;
-
-            const { pimStock: stock } = await executeGet(
-                prepareQuery(StockQuery.getStockQuery(SKUs, warehouses)), 'Stock', cacheLifetime
-            );
-
-            this.setState({ stock, stockLoading: false });
-
-            if (stockCacheLifetime) {
-                this.timeout = setTimeout(this.requestStock.bind(this), stockCacheLifetime * ONE_MILLISECOND);
-            }
-        } catch (e) {
-            showError(getErrorMessage(e));
-            this.setState({ stockLoading: false });
-        }
     }
 
     async addToCart() {

@@ -13,15 +13,12 @@ import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample
 import {
     ProductCard as SourceProductCard
 } from 'SourceComponent/ProductCard/ProductCard.component';
-import { StockType } from 'Type/Stock.type';
 
 /** @namespace Scandipwa/Component/ProductCard/Component */
 export class ProductCardComponent extends SourceProductCard {
     static propTypes = {
         ...super.propTypes,
-        parameters: PropTypes.objectOf(PropTypes.string).isRequired,
-        stock: PropTypes.arrayOf(StockType).isRequired,
-        stockLoading: PropTypes.bool.isRequired
+        parameters: PropTypes.objectOf(PropTypes.string).isRequired
     };
 
     renderCardListContent() {
@@ -65,17 +62,14 @@ export class ProductCardComponent extends SourceProductCard {
 
     renderStockGrid() {
         const {
-            product, parameters: { [GRID_COLOR_ITEM]: selectedColor } = {}, stock, stockLoading
+            product, parameters: { [GRID_COLOR_ITEM]: selectedColor } = {}
         } = this.props;
 
         return (
             <ProductStockGrid
-              configurationOptions={ this.getConfigurableAttributes() }
               product={ product }
-              selectedColor={ selectedColor }
-              stock={ stock }
-              isLoading={ stockLoading }
               warehouses={ customerWarehouses }
+              selectedColor={ selectedColor }
             />
         );
     }

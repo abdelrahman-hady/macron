@@ -41,7 +41,7 @@ export class ProductStockGridComponent extends PureComponent {
             <tr>
                 <th>{ __('Size') }</th>
                 { attributeOptions.map(({ swatch_data: { value } }) => (
-                    <th>{ value }</th>
+                    <th key={ value }>{ value }</th>
                 )) }
             </tr>
         );
@@ -106,7 +106,7 @@ export class ProductStockGridComponent extends PureComponent {
         return (
             <div block="ProductStockGrid" elem="Tooltip">
                  { newArrivals.map(({ qty, date }) => (
-                    <span block="ProductStockGrid" elem="TooltipItem">
+                    <span block="ProductStockGrid" elem="TooltipItem" key={ `${qty}-${date}` }>
                         { `${date} ${qty} ${__('pcs')}` }
                     </span>
                  )) }

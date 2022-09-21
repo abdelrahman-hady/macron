@@ -6,7 +6,6 @@
  */
 
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-conditional */
-import { GRID_SIZE_ITEM } from 'Component/ProductStockGrid/ProductStockGrid.config';
 import {
     ProductConfigurableAttributes as SourceProductConfigurableAttributes
 } from 'SourceComponent/ProductConfigurableAttributes/ProductConfigurableAttributes.component';
@@ -43,9 +42,9 @@ export class ProductConfigurableAttributesComponent extends SourceProductConfigu
                 return null;
             }
 
-            if (attribute_code === GRID_SIZE_ITEM) {
-                return null;
-            }
+            // if (attribute_code === GRID_SIZE_ITEM) {
+            //     return null;
+            // }
 
             const selectedOption = parameters[attribute_code];
             const selectedOptionLabel = selectedOption ? attribute_options[selectedOption]?.label : '';
