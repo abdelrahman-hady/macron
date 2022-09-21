@@ -15,7 +15,6 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Macron\ErpGraphQl\Model\ResourceModel\Shipments\CollectionFactory;
 
 class Shipments implements ResolverInterface
@@ -25,18 +24,12 @@ class Shipments implements ResolverInterface
      */
     protected CollectionFactory $shipmentsCollection;
 
-     /**
-     * @var TimezoneInterface
-     */
-    protected TimezoneInterface $timezoneInterface;
-
     /**
      * @param CollectionFactory $shipmentsCollection
      */
-    public function __construct(CollectionFactory $shipmentsCollection, TimezoneInterface $timezoneInterface)
+    public function __construct(CollectionFactory $shipmentsCollection)
     {
         $this->shipmentsCollection = $shipmentsCollection;
-        $this->timezoneInterface = $timezoneInterface;
     }
 
      /**
