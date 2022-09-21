@@ -10,11 +10,9 @@ import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import CustomerQuery from 'Query/Customer.query';
 import { updateNotes } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActivePopup } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
-import { fetchQuery } from 'Util/Request';
 
 import ClientDetails from './ClientDetails.component';
 import { ADD_NOTE_POPUP } from './ClientDetails.config';
@@ -47,23 +45,27 @@ export class ClientDetailsContainer extends PureComponent {
     state = {
         noteRef: createRef(),
         internalNoteRef: createRef(),
-        isReadMore: true,
-        defaultShippingAddress: {}
+        isReadMore: true
     };
 
     containerFunctions = {
         onNoteSave: this.onNoteSave.bind(this),
-        toggleIsReadMore: this.toggleIsReadMore.bind(this)
+        toggleIsReadMore: this.toggleIsReadMore.bind(this),
+        getDefaultShippingAddress: this.getDefaultShippingAddress.bind(this)
     };
 
-    componentDidMount() {
-        const query = CustomerQuery.getDefaultShippingAddressQuery();
-        fetchQuery(query).then(
-            /** @namespace Scandipwa/Component/ClientDetails/Container/ClientDetailsContainer/componentDidMount/fetchQuery/then */
-            ({ getDefaultShippingAddress }) => {
-                this.setState({ defaultShippingAddress: getDefaultShippingAddress });
-            }
-        );
+    getDefaultShippingAddress() {
+        const customer = JSON.parse(localStorage.getItem('customer'));
+        const address = customer.data.addresses[0];
+        if (address.default_shipping) {
+            const street = address.street[0];
+            const { city, region, country_id } = address;
+            const defaultShippingAddress = `${street}, ${region.region}, ${city}, ${country_id}`;
+
+            return defaultShippingAddress;
+        }
+
+        return '';
     }
 
     toggleIsReadMore() {
@@ -85,7 +87,7 @@ export class ClientDetailsContainer extends PureComponent {
             showAddNotePopup, note, internalNote, selectedCustomer
         } = this.props;
         const {
-            isReadMore, noteRef, internalNoteRef, defaultShippingAddress
+            isReadMore, noteRef, internalNoteRef
         } = this.state;
 
         return {
@@ -95,8 +97,7 @@ export class ClientDetailsContainer extends PureComponent {
             selectedCustomer,
             isReadMore,
             noteRef,
-            internalNoteRef,
-            defaultShippingAddress
+            internalNoteRef
         };
     };
 

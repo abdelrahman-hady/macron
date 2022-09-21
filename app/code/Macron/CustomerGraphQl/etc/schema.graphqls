@@ -1,6 +1,5 @@
 type Query {
     getPartnerCompanies: partnerCompanies @resolver(class:"\\Macron\\CustomerGraphQl\\Model\\Resolver\\PartnerCompanyNames")
-    getDefaultShippingAddress: defaultShippingAddress @resolver(class:"\\Macron\\CustomerGraphQl\\Model\\Resolver\\DefaultShippingAddress")
 }
 
 type partnerCompanies {
@@ -11,8 +10,4 @@ type partnerCompanies {
 type partnerCompany {
     companyName: String,
     companyId: String
-}
-
-type defaultShippingAddress {
-    address: String
 }

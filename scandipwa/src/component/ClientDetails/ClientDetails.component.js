@@ -30,7 +30,7 @@ export class ClientDetailsComponent extends PureComponent {
         toggleIsReadMore: PropTypes.func.isRequired,
         noteRef: RefType.isRequired,
         internalNoteRef: RefType.isRequired,
-        defaultShippingAddress: PropTypes.objectOf.isRequired
+        getDefaultShippingAddress: PropTypes.func.isRequired
     };
 
     renderPopUpContent() {
@@ -74,7 +74,12 @@ export class ClientDetailsComponent extends PureComponent {
 
     render() {
         const {
-            showAddNotePopup, note, internalNote, isReadMore, toggleIsReadMore, selectedCustomer, defaultShippingAddress
+            showAddNotePopup,
+            note, internalNote,
+            isReadMore,
+            toggleIsReadMore,
+            selectedCustomer,
+            getDefaultShippingAddress
         } = this.props;
 
         const readMoreText = isReadMore ? __('see more') : __('see less');
@@ -97,7 +102,7 @@ export class ClientDetailsComponent extends PureComponent {
                     { /* eslint-disable-next-line max-len */ }
                     <div block="ClientDetails" elem="Address">
                         <span block="ClientDetails" elem="AddressText">{ __('Address:') }</span>
-                        <span block="ClientDetails" elem="AddressValue">{ defaultShippingAddress.address }</span>
+                        <span block="ClientDetails" elem="AddressValue">{ getDefaultShippingAddress() }</span>
                     </div>
                     <div block="ClientDetails" elem="OrderType">
                         <span block="ClientDetails" elem="OrderTypeText">{ __('Order type:') }</span>

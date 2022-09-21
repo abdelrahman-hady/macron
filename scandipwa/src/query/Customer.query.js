@@ -16,11 +16,6 @@ export class CustomerQuery {
             .addField(this._getPartnerFiled());
     }
 
-    getDefaultShippingAddressQuery() {
-        return new Field('getDefaultShippingAddress')
-            .addField('address');
-    }
-
     _getPartnerFiled() {
         return new Field('partnerCompanies')
             .addFieldList(['companyName', 'companyId']);
