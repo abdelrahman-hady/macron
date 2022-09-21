@@ -94,12 +94,10 @@ export class ClientDetailsComponent extends PureComponent {
             <div block="ClientDetails">
                 <h3 block="ClientDetails" elem="Heading">{ __('Client details:') }</h3>
                 <div block="ClientDetails" elem="Info">
-                    { /* eslint-disable-next-line max-len */ }
                     <div block="ClientDetails" elem="Customer">
                         <span block="ClientDetails" elem="CustomerText">{ __('Customer:') }</span>
                         <span block="ClientDetails" elem="CustomerValue">{ selectedCustomer }</span>
                     </div>
-                    { /* eslint-disable-next-line max-len */ }
                     <div block="ClientDetails" elem="Address">
                         <span block="ClientDetails" elem="AddressText">{ __('Address:') }</span>
                         <span block="ClientDetails" elem="AddressValue">{ getDefaultShippingAddress() }</span>
