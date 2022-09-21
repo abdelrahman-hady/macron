@@ -5,6 +5,9 @@
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import ProductStockGrid from 'Component/ProductStockGrid';
+import { GRID_COLOR_ITEM } from 'Component/ProductStockGrid/ProductStockGrid.config';
+import { customerWarehouses } from 'Component/ProductStockGrid/warehouses_sample_data';
 import {
     CartItem as SourceCartItem
 } from 'SourceComponent/CartItem/CartItem.component';
@@ -75,6 +78,45 @@ export class CartItemComponent extends SourceCartItem {
                   mix={ { block: 'CartItem', elem: 'Qty' } }
                 />
             </div>
+        );
+    }
+
+    render() {
+        const { isEditing, isCartOverlay } = this.props;
+
+        return (
+            <div block="CartItem" mods={ { isEditing, isCartOverlay } }>
+                { this.renderLoader() }
+                { this.renderContent() }
+                { this.renderStockGrid() }
+            </div>
+        );
+    }
+
+    renderStockGrid() {
+        const {
+            item: {
+                sku: cartSku,
+                product = {},
+                product: { variants } = {}
+            } = {}
+        } = this.props;
+
+        const variant = variants.find(({ sku }) => sku === cartSku);
+
+        if (!variant) {
+            return null;
+        }
+
+        const { attributes: { [GRID_COLOR_ITEM]: { attribute_value: selectedColor } } = {} } = variant;
+
+        return (
+            <ProductStockGrid
+              product={ product }
+              warehouses={ customerWarehouses }
+              selectedColor={ selectedColor }
+              isOrder
+            />
         );
     }
 }

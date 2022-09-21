@@ -3,6 +3,7 @@
 /**
  * @category    Macron
  * @author      Deniss Dubinins <denissd@scandiweb.com | info@scandiweb.com>
+ * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
  * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
  * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  */
@@ -13,6 +14,8 @@
             <argument name="extendedConfigData">
                 <item name="xperpage" xsi:type="string">xperpage/general/text</item>
                 <item name="closeout_discount" xsi:type="string">closeout/closeout_discount/discount</item>
+                <item name="stock_cache_lifetime" xsi:type="string">stock_cache_lifetime/general/text</item>
+                <item name="accountmanageremail" xsi:type="string">trans_email/ident_general/email</item>
             </argument>
         </arguments>
     </type>

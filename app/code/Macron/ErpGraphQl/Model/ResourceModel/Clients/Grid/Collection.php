@@ -62,6 +62,7 @@ class Collection extends ClientsCollection implements SearchResultInterface
         $this->_eventObject = $eventObject;
         $this->_init($model, $resourceModel);
         $this->setMainTable($mainTable);
+        $this->joinTables();
     }
 
     /**

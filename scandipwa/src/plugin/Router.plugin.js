@@ -26,20 +26,11 @@ import {
     CONFIRM_ACCOUNT,
     CREATE_ACCOUNT,
     HOME,
-    LOGIN,
-    MY_ACCOUNT
+    LOGIN
 } from 'Component/Router/Router.config';
 import { appendWithStoreCode } from 'SourceUtil/Url';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
-
-const URL_REMOVAL_LIST = [
-    CREATE_ACCOUNT,
-    CHANGE_PASSWORD,
-    ACCOUNT_FORGOT_PASSWORD,
-    CONFIRM_ACCOUNT,
-    MY_ACCOUNT
-];
 
 export const MyClientsPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "my-clients" */ '../route/MyClientsPage'));
 export const InvoicesPage = lazy(() => import(/* webpackMode: "lazy", webpackChunkName: "invoices" */ '../route/InvoicesPage'));
@@ -58,6 +49,13 @@ export const CLIENT = 'CLIENT';
 export const STATS_PAGE = 'STATS_PAGE';
 export const MY_PROFILE = 'MY_PROFILE';
 export const EDIT_CLIENT = 'EDIT_CLIENT';
+
+const URL_REMOVAL_LIST = [
+    CREATE_ACCOUNT,
+    CHANGE_PASSWORD,
+    ACCOUNT_FORGOT_PASSWORD,
+    CONFIRM_ACCOUNT
+];
 
 const BEFORE_ITEMS_TYPE = (originalMember) => [
     ...originalMember,
@@ -135,8 +133,8 @@ const SWITCH_ITEMS_TYPE = (originalMembers) => {
 export default {
     'Component/Router/Component': {
         'member-property': {
-            BEFORE_ITEMS_TYPE,
-            SWITCH_ITEMS_TYPE
+            SWITCH_ITEMS_TYPE,
+            BEFORE_ITEMS_TYPE
         }
     }
 };

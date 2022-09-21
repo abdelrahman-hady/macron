@@ -11,10 +11,10 @@ import { VALIDATION_INPUT_TYPE } from 'Util/Validator/Config';
 import { CONTACTS_FIELDS, DETAILS_FIELDS } from './CreateClientPage.config';
 
 /** @namespace Scandipwa/Route/CreateClientPage/Form/transformSelectOptions */
-export const transformSelectOptions = (items, defaultValue) => {
+export const transformSelectOptions = (items = [], defaultValue) => {
     const selectItemsOptions = [];
-    items.forEach(({ name, id }) => {
-        selectItemsOptions.push({ label: name, value: id, isPlaceholder: id === defaultValue });
+    items.forEach(({ id, label }) => {
+        selectItemsOptions.push({ label, value: id, isPlaceholder: id === defaultValue });
     });
 
     return selectItemsOptions;
@@ -23,31 +23,42 @@ export const transformSelectOptions = (items, defaultValue) => {
 /** @namespace Scandipwa/Route/CreateClientPage/Form/createClientForm */
 export const createClientForm = (props, _events = {}) => {
     const {
-        selectItems,
+        clientOptions: {
+            affiliations,
+            current_brands,
+            dates,
+            sports,
+            colors,
+            distances
+        },
         client: {
             company_name: companyName,
             address,
             vat_number: vatNumber,
-            contract_expiracy_date: date,
-            affiliation,
-            sport,
+            date_id: dateId,
+            affiliation_id: affiliationId,
+            sport_id: sportId,
             category,
-            primary_color: primaryColor,
-            secondary_color: secondaryСolor,
-            current_brand: currentBrand,
+            primary_color_id: primaryColorId,
+            secondary_color_id: secondaryСolorId,
+            current_brand_id: currentBrandId,
             coni_id: coniId,
             membership_no: membershipNo,
-            distance,
+            distance_id: distanceId,
             contact_person: contactPerson,
             mobile,
-            email
+            email,
+            is_contract_signed: isContractSigned
         }
     } = props;
 
-    const sportOptions = transformSelectOptions(selectItems, sport);
-    const categoryOptions = transformSelectOptions(selectItems, category);
-    const primaryColorOptions = transformSelectOptions(selectItems, primaryColor);
-    const secondaryСolorOptions = transformSelectOptions(selectItems, secondaryСolor);
+    const dateOptions = transformSelectOptions(dates, dateId);
+    const affiliationOptions = transformSelectOptions(affiliations, affiliationId);
+    const sportOptions = transformSelectOptions(sports, sportId);
+    const primaryColorOptions = transformSelectOptions(colors, primaryColorId);
+    const secondaryСolorOptions = transformSelectOptions(colors, secondaryСolorId);
+    const currentBrandOptions = transformSelectOptions(current_brands, currentBrandId);
+    const distanceOptions = transformSelectOptions(distances, distanceId);
 
     return {
         [DETAILS_FIELDS]: {
@@ -83,47 +94,50 @@ export const createClientForm = (props, _events = {}) => {
                     }
                 },
                 {
-                    type: FIELD_TYPE.date,
-                    label: __('Contract expiracy date'),
+                    type: FIELD_TYPE.checkbox,
+                    label: __('Signed Contract'),
                     attr: {
-                        name: 'contract_expiracy_date',
-                        defaultValue: date
-                    },
-                    validateOn: ['onChange'],
-                    validationRule: {
-                        inputType: VALIDATION_INPUT_TYPE.date
+                        name: 'is_contract_signed',
+                        defaultChecked: isContractSigned
                     }
                 },
                 {
-                    type: FIELD_TYPE.text,
+                    type: FIELD_TYPE.select,
+                    label: __('Contract expiracy date'),
+                    attr: {
+                        name: 'date_id'
+                    },
+                    options: dateOptions
+                },
+                {
+                    type: FIELD_TYPE.select,
                     label: __('Affiliation'),
                     attr: {
-                        name: 'affiliation',
-                        defaultValue: affiliation
+                        name: 'affiliation_id'
                     },
-                    validateOn: ['onChange']
+                    options: affiliationOptions
                 },
                 {
                     type: FIELD_TYPE.select,
                     label: __('Sport'),
                     attr: {
-                        name: 'sport'
+                        name: 'sport_id'
                     },
                     options: sportOptions
                 },
                 {
-                    type: FIELD_TYPE.select,
+                    type: FIELD_TYPE.text,
                     label: __('Category'),
                     attr: {
-                        name: 'category'
-                    },
-                    options: categoryOptions
+                        name: 'category',
+                        defaultValue: category
+                    }
                 },
                 {
                     type: FIELD_TYPE.select,
                     label: __('Primary color'),
                     attr: {
-                        name: 'primary_color'
+                        name: 'primary_color_id'
                     },
                     options: primaryColorOptions
                 },
@@ -131,17 +145,17 @@ export const createClientForm = (props, _events = {}) => {
                     type: FIELD_TYPE.select,
                     label: __('Secondary color'),
                     attr: {
-                        name: 'secondary_color'
+                        name: 'secondary_color_id'
                     },
                     options: secondaryСolorOptions
                 },
                 {
-                    type: FIELD_TYPE.text,
+                    type: FIELD_TYPE.select,
                     label: __('Current brand'),
                     attr: {
-                        name: 'current_brand',
-                        defaultValue: currentBrand
-                    }
+                        name: 'current_brand_id'
+                    },
+                    options: currentBrandOptions
                 },
                 {
                     type: FIELD_TYPE.number,
@@ -160,12 +174,12 @@ export const createClientForm = (props, _events = {}) => {
                     }
                 },
                 {
-                    type: FIELD_TYPE.number,
+                    type: FIELD_TYPE.select,
                     label: __('Distance from MS'),
                     attr: {
-                        name: 'distance',
-                        defaultValue: distance
-                    }
+                        name: 'distance_id'
+                    },
+                    options: distanceOptions
                 }
             ]
         },

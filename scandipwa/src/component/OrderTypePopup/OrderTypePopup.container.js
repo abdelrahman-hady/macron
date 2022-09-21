@@ -10,7 +10,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import CustomerQuery from 'Query/Customer.query';
-import { updateTypeAndCustomerSelect } from 'Store/CustomCartData/CustomCartData.action';
+import { updateBusinessLine, updateTypeAndCustomerSelect } from 'Store/CustomCartData/CustomCartData.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { fetchQuery } from 'Util/Request';
@@ -31,6 +31,7 @@ export const mapStateToProps = (state) => ({
 /** @namespace Scandipwa/Component/OrderTypePopup/Container/mapDispatchToProps */
 export const mapDispatchToProps = (dispatch) => ({
     updateTypeAndCustomerSelect: (payload) => dispatch(updateTypeAndCustomerSelect(payload)),
+    updateBusinessLine: (payload) => dispatch(updateBusinessLine(payload)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     showPopup: (type, payload) => dispatch(showPopup(type, payload))
 });
@@ -39,6 +40,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export class OrderTypePopupContainer extends PureComponent {
     static propTypes = {
         updateTypeAndCustomerSelect: PropTypes.func.isRequired,
+        updateBusinessLine: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         addProductToCart: PropTypes.func,
         showPopup: PropTypes.func.isRequired,
@@ -68,6 +70,8 @@ export class OrderTypePopupContainer extends PureComponent {
             /** @namespace Scandipwa/Component/OrderTypePopup/Container/OrderTypePopupContainer/componentDidMount/fetchQuery/then */
             ({ getPartnerCompanies }) => {
                 this.setState({ companies: getPartnerCompanies });
+                // get business line for current customer
+                this.getActiveCustomerBusinessLine(getPartnerCompanies.currentCustomerId);
             }
         );
     }
@@ -98,6 +102,8 @@ export class OrderTypePopupContainer extends PureComponent {
             updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart, selectedCustomer, showPopup
         } = this.props;
 
+        const { companies: { partnerCompanies } } = this.state;
+
         if (selectedCustomer !== '' && selectedCustomer !== fields[0].value) {
             this.setState({ fieldValue: fields[0].value });
             showPopup(CUSTOMER_CHANGE_CONFIRMATION_POPUP);
@@ -105,6 +111,10 @@ export class OrderTypePopupContainer extends PureComponent {
         }
 
         updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fields[0].value });
+
+        const { companyId } = partnerCompanies.find((customer) => customer.companyName === fields[0].value);
+        this.getActiveCustomerBusinessLine(companyId);
+
         hideActiveOverlay();
 
         if (addProductToCart) {
@@ -113,16 +123,33 @@ export class OrderTypePopupContainer extends PureComponent {
     }
 
     onConfirm() {
-        const { fieldValue } = this.state;
+        const { fieldValue, companies: { partnerCompanies } } = this.state;
         const { updateTypeAndCustomerSelect, hideActiveOverlay } = this.props;
         updateTypeAndCustomerSelect({ orderType: TYPE_CUSTOMER, selectedCustomer: fieldValue });
+
+        const { companyId } = partnerCompanies.find((customer) => customer.companyName === fieldValue);
+        this.getActiveCustomerBusinessLine(companyId);
+
         hideActiveOverlay();
+    }
+
+    getActiveCustomerBusinessLine(companyId) {
+        const query = CustomerQuery.getBusinessLineQuery(companyId);
+        const { updateBusinessLine } = this.props;
+        fetchQuery(query).then(
+            /** @namespace Scandipwa/Component/OrderTypePopup/Container/OrderTypePopupContainer/getActiveCustomerBusinessLine/fetchQuery/then */
+            ({ getCustomerBusinessLine }) => {
+                updateBusinessLine(getCustomerBusinessLine);
+            }
+        );
     }
 
     handleReplenishmentClick() {
         const { updateTypeAndCustomerSelect, hideActiveOverlay, addProductToCart } = this.props;
-        const { companies } = this.state;
-        updateTypeAndCustomerSelect({ orderType: TYPE_REPLENISHMENT, selectedCustomer: companies.currentCustomerId });
+        const { companies: { currentCustomerId } } = this.state;
+        updateTypeAndCustomerSelect({ orderType: TYPE_REPLENISHMENT, selectedCustomer: currentCustomerId });
+
+        this.getActiveCustomerBusinessLine(currentCustomerId);
         hideActiveOverlay();
 
         if (addProductToCart) {

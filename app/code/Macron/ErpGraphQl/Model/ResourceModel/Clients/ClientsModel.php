@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Macron\ErpGraphQl\Model\ResourceModel\Clients;
 
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Api\ExtensibleDataInterface;
 
 class ClientsModel extends AbstractModel
 {

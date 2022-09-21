@@ -1,6 +1,7 @@
 /*
  * @category  Macron
  * @author    Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
+ * @author    Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -15,6 +16,9 @@ import PropTypes from 'prop-types';
 import { lazy, Suspense } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper';
+import DashboardInvoicesTable from 'Component/DashboardInvoicesTable';
+import DashboardOrdersTable from 'Component/DashboardOrdersTable';
+import DashboardShipmentsTable from 'Component/DashboardShipmentsTable';
 import Loader from 'Component/Loader/Loader.component';
 import MyAccountInformation from 'Component/MyAccountInformation';
 import MyAccountOrder from 'Component/MyAccountOrder';
@@ -32,6 +36,8 @@ import {
 import { LocationType, MatchType } from 'Type/Router.type';
 import { isSignedIn } from 'Util/Auth';
 
+import { ACCOUNT_ORDER_URL } from './MyAccount.config';
+
 export const MyAccountAddressBook = lazy(() => import(
     /* webpackMode: "lazy", webpackChunkName: "account-address" */
     'Component/MyAccountAddressBook'
@@ -48,6 +54,8 @@ export const MyAccountMyOrders = lazy(() => import(
 
 /** @namespace Scandipwa/Route/MyAccount/Component */
 export class MyAccountComponent extends SourceMyAccount {
+    DASHBOARD = 'dashboard';
+
     static propTypes = {
         isEditingActive: PropTypes.bool.isRequired,
         subHeading: PropTypes.string,
@@ -59,7 +67,8 @@ export class MyAccountComponent extends SourceMyAccount {
         changeTabName: PropTypes.func.isRequired,
         tabName: PropTypes.string,
         setTabSubheading: PropTypes.func.isRequired,
-        isTabEnabled: PropTypes.func.isRequired
+        isTabEnabled: PropTypes.func.isRequired,
+        isSapID: PropTypes.arrayOf(PropTypes.string)
     };
 
     renderMap = {
@@ -70,6 +79,52 @@ export class MyAccountComponent extends SourceMyAccount {
         [ACCOUNT_INFORMATION]: MyAccountInformation
     };
 
+    renderUpcomingShipmentsTable() {
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === this.DASHBOARD) {
+            return <DashboardShipmentsTable />;
+        }
+
+        return '';
+    }
+
+    renderOrdersTable() {
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === this.DASHBOARD) {
+            return <DashboardOrdersTable />;
+        }
+
+        return '';
+    }
+
+    renderInvoicesTable() {
+        const {
+            activeTab
+        } = this.props;
+
+        if (activeTab === this.DASHBOARD) {
+            return <DashboardInvoicesTable />;
+        }
+
+        return '';
+    }
+
+    getTabContent() {
+        const { activeTab, location: { pathname } } = this.props;
+
+        if (activeTab === MY_ORDERS && pathname.includes(ACCOUNT_ORDER_URL)) {
+            return this.renderMap[MY_ORDER];
+        }
+
+        return this.renderMap[activeTab];
+    }
+
     renderContent() {
         const {
             activeTab,
@@ -79,8 +134,11 @@ export class MyAccountComponent extends SourceMyAccount {
             changeTabName,
             tabName,
             setTabSubheading,
-            isTabEnabled
+            isTabEnabled,
+            isSapID
         } = this.props;
+
+        const hasSapId = isSapID !== undefined ? isSapID : null;
 
         if (!isSignedIn()) {
             return this.renderLoginOverlay();
@@ -98,12 +156,14 @@ export class MyAccountComponent extends SourceMyAccount {
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
-
                 <div
                   block="MyAccount"
                   elem="TabContent"
                   mods={ { activeTab } }
                 >
+                    { this.renderUpcomingShipmentsTable() }
+                    { this.renderInvoicesTable() }
+                    { this.renderOrdersTable() }
                     <h2 block="MyAccount" elem="Heading">
                         { title || tabName }
                         { this.renderSubHeading() }
@@ -115,6 +175,7 @@ export class MyAccountComponent extends SourceMyAccount {
                           changeTabName={ changeTabName }
                           tabMap={ tabMap }
                           setTabSubheading={ setTabSubheading }
+                          isSapID={ hasSapId }
                         />
                     </Suspense>
                 </div>

@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Macron\SalesGraphQl\Model\Resolver\CustomerOrders\Query;
 
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Api\Search\FilterGroup;
+use Magento\Framework\Exception\InputException;
 use ScandiPWA\SalesGraphQl\Model\Resolver\CustomerOrders\Query\OrderFilter as CoreOrderFilter;
 
 class OrderFilter extends CoreOrderFilter
@@ -42,7 +42,6 @@ class OrderFilter extends CoreOrderFilter
         $filterGroups[] = $this->filterGroupBuilder->create();
 
         if (isset($args['filter'])) {
-
             foreach ($args['filter'] as $field => $cond) {
                 if (isset($this->fieldTranslatorArray[$field])) {
                     $field = $this->fieldTranslatorArray[$field];
@@ -55,21 +54,34 @@ class OrderFilter extends CoreOrderFilter
                         }
 
                         $searchValue = str_replace('%', '', $value);
-                        $filters = $this->filterBuilder->setField($field)
+                        $filter = $this->filterBuilder->setField($field)
                             ->setValue("%{$searchValue}%")
                             ->setConditionType('like')
                             ->create();
-                        $this->filterGroupBuilder->setFilters([$filters]);
-                        $filterGroups[] = $this->filterGroupBuilder->create();
+                        if (isset($args['search'])) {
+                            $filters[] = $filter;
+                        } else {
+                            $this->filterGroupBuilder->setFilters([$filter]);
+                            $filterGroups[] = $this->filterGroupBuilder->create();
+                        }
                     } else {
-                        $filters = $this->filterBuilder->setField($field)
+                        $filter = $this->filterBuilder->setField($field)
                             ->setValue($value)
                             ->setConditionType($condType)
                             ->create();
-                        $this->filterGroupBuilder->setFilters([$filters]);
-                        $filterGroups[] = $this->filterGroupBuilder->create();
+                        if (isset($args['search'])) {
+                            $filters[] = $filter;
+                        } else {
+                            $this->filterGroupBuilder->setFilters([$filter]);
+                            $filterGroups[] = $this->filterGroupBuilder->create();
+                        }
                     }
                 }
+            }
+            
+            if (isset($args['search'])) {
+                $this->filterGroupBuilder->setFilters($filters);
+                $filterGroups[] = $this->filterGroupBuilder->create();
             }
         }
 

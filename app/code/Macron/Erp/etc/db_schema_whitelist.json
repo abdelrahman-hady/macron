@@ -39,14 +39,31 @@
             "contact_person": true,
             "mobile": true,
             "email": true,
-            "customer_id": true
+            "customer_id": true,
+            "affiliation_id": true,
+            "date_id": true,
+            "current_brand_id": true,
+            "sport_id": true,
+            "primary_color_id": true,
+            "secondary_color_id": true,
+            "is_contract_signed": true,
+            "distance_id": true
         },
         "constraint": {
             "PRIMARY": true,
-            "ERP_CLIENT_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+            "ERP_CLIENT_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "ERP_CLIENT_AFFILIATION_ID_ERP_AFFILIATION_ID": true,
+            "ERP_CLIENT_DATE_ID_ERP_CONTRACT_EXPIRACY_DATE_ID": true,
+            "ERP_CLIENT_CURRENT_BRAND_ID_ERP_CURRENT_BRAND_ID": true,
+            "ERP_CLIENT_SPORT_ID_ERP_SPORT_ID": true,
+            "ERP_CLIENT_PRIMARY_COLOR_ID_ERP_COLOR_ID": true,
+            "ERP_CLIENT_SECONDARY_COLOR_ID_ERP_COLOR_ID": true,
+            "ERP_CLIENT_DISTANCE_ID_ERP_DISTANCE_ID": true
         },
         "index": {
-            "FTI_59490360024370E13366C2BFFADB1EF5": true
+            "FTI_59490360024370E13366C2BFFADB1EF5": true,
+            "ERP_CLIENT_COMPANY_NAME_ADDRESS_CONTACT_PERSON_MOBILE": true,
+            "ERP_CLIENT_COMPANY_NAME_ADDRESS_CONTACT_PERSON_MOBILE_CATEGORY": true
         }
     },
     "erp_invoice": {
@@ -66,7 +83,8 @@
         },
         "constraint": {
             "PRIMARY": true,
-            "ERP_INVOICE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+            "ERP_INVOICE_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "ERP_INVOICE_USER_SAP_ID_CUSTOMER_ENTITY_BUSINESS_PARTNER_ID": true
         }
     },
     "erp_price_wholesale": {
@@ -95,6 +113,90 @@
         },
         "constraint": {
             "PRIMARY": true
+        }
+    },
+    "erp_affiliation": {
+        "column": {
+            "id": true,
+            "label": true,
+            "store_id": true
+        },
+        "index": {
+            "ERP_AFFILIATION_LABEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_AFFILIATION_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "erp_contract_expiracy_date": {
+        "column": {
+            "id": true,
+            "label": true,
+            "store_id": true
+        },
+        "index": {
+            "ERP_CONTRACT_EXPIRACY_DATE_LABEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_CONTRACT_EXPIRACY_DATE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "erp_current_brand": {
+        "column": {
+            "id": true,
+            "label": true,
+            "store_id": true
+        },
+        "index": {
+            "ERP_CURRENT_BRAND_LABEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_CURRENT_BRAND_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "erp_sport": {
+        "column": {
+            "id": true,
+            "label": true,
+            "store_id": true
+        },
+        "index": {
+            "ERP_SPORT_LABEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_SPORT_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "erp_color": {
+        "column": {
+            "id": true,
+            "label": true,
+            "store_id": true
+        },
+        "index": {
+            "ERP_COLOR_LABEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_COLOR_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "erp_distance": {
+        "column": {
+            "id": true,
+            "label": true,
+            "store_id": true
+        },
+        "index": {
+            "ERP_DISTANCE_LABEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERP_DISTANCE_STORE_ID_STORE_STORE_ID": true
         }
     }
 }

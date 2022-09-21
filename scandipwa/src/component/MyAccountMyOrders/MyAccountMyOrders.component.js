@@ -33,37 +33,11 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         statusOptions: PropTypes.array.isRequired,
         updateOptions: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
+        onDateSelectorChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
         orderListSearchResult: PropTypes.arrayOf.isRequired,
-        filterOptions: PropTypes.object.isRequired,
-        onDateSelectorChange: PropTypes.func.isRequired
+        filterOptions: PropTypes.object.isRequired
     };
-
-    renderToolbar() {
-        return (
-            <div className="MyAccountMyOrders-Toolbar">
-                { this.renderSortByStatus() }
-            </div>
-        );
-    }
-
-    renderSortByStatus() {
-        const { sortOptions: { orderStatus }, updateOptions, statusOptions } = this.props;
-        return (
-            <Field
-              type={ FIELD_TYPE.select }
-              label={ __('Sort by status') }
-              mix={ { block: 'MyAccountMyOrders', elem: 'SortByStatus' } }
-              options={ statusOptions }
-              value={ orderStatus }
-              events={ {
-                  onChange: (val) => {
-                      updateOptions({ orderStatus: val });
-                  }
-              } }
-            />
-        );
-    }
 
     // eslint-disable-next-line @scandipwa/scandipwa-guidelines/only-render-in-component
     shouldComponentUpdate(nextProps) {
@@ -81,6 +55,40 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         || orderList !== nextOrderList
         || isLoading !== nextIsLoading
         || orderListSearchResult !== nextOrderListSearchResult;
+    }
+
+    renderOrdersPerPage() {
+        const { ordersPerPageList, ordersPerPage, onOrderPerPageChange } = this.props;
+
+        const ordersPerPageOptions = [];
+
+        if (ordersPerPageList) {
+            ordersPerPageList.split(',').forEach((value) => {
+                const perPage = +value;
+                ordersPerPageOptions.push({ id: perPage, label: perPage, value: perPage });
+            });
+        } else {
+            ordersPerPageOptions.push({ label: ordersPerPage, value: ordersPerPage });
+        }
+
+        return (
+            <div block="MyAccountMyOrders" elem="PerPageDropdown">
+                <Field
+                  type={ FIELD_TYPE.select }
+                  attr={ {
+                      id: 'orders-per-page-dropdown',
+                      name: 'orders-per-page-dropdown',
+                      value: ordersPerPage,
+                      noPlaceholder: true
+                  } }
+                  events={ {
+                      onChange: onOrderPerPageChange
+                  } }
+                  options={ ordersPerPageOptions }
+                />
+                <span>{ __('per page') }</span>
+            </div>
+        );
     }
 
     renderSearchBar() {
@@ -158,8 +166,6 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
         const {
             orderList: { items = [] },
             isLoading,
-            sortOptions: { orderStatus },
-            statusOptions,
             searchInput,
             orderListSearchResult: { items: searchedItems = [] }
         } = this.props;
@@ -169,24 +175,8 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
             return this.renderNoOrders();
         }
 
-        if (orderStatus === 0) {
-            // no filters selected -> render all orders
-            return orderItems.reduceRight(
-                (acc, order) => [...acc, this.renderOrderRow(order)],
-                []
-            );
-        }
-
-        // Filter Orders By Status
-        const [filterOption = {}] = statusOptions.filter((option) => option.id === orderStatus);
         return orderItems.reduceRight(
-            (acc, order) => {
-                if (filterOption.label?.value === order.status) {
-                    return [...acc, this.renderOrderRow(order)];
-                }
-
-                return Array.from(acc);
-            },
+            (acc, e) => [...acc, this.renderOrderRow(e)],
             []
         );
     }
@@ -270,7 +260,6 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
               events={ {
                   onChange: (val) => {
                       updateOptions({
-                          // eslint-disable-next-line max-len
                           user_customer_name: +val === 0 ? null : availableFilters.user_customer_name[+val - 1]
                       });
                   }
@@ -308,10 +297,10 @@ export class MyAccountMyOrdersComponent extends SourceMyAccountMyOrders {
                 <Loader isLoading={ isLoading } />
                 { this.renderFilters() }
                 { this.renderSearchBar() }
-                { this.renderPerPageDropdown() }
-                { this.renderPagination() }
                 { this.renderSortByOrderStatus() }
                 { this.renderSortByCustomerName() }
+                { this.renderPerPageDropdown() }
+                { this.renderPagination() }
                 { this.renderTable() }
                 { this.renderPagination() }
                 { this.renderPerPageDropdown() }

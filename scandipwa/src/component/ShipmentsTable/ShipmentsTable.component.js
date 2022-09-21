@@ -12,8 +12,6 @@ import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { ShipmentType } from 'Type/Shipment.type';
 
-import './ShipmentsTable.style';
-
 /** @namespace Scandipwa/Component/ShipmentsTable/Component */
 export class ShipmentsTableComponent extends PureComponent {
     static propTypes = {

@@ -20,7 +20,7 @@ export class ClientInfoTableComponent extends KeyValueTable {
                 label: PropTypes.string
             })
         ).isRequired,
-        client: PropTypes.objectOf(ClientType).isRequired
+        client: ClientType.isRequired
     };
 
     static defaultProps = {

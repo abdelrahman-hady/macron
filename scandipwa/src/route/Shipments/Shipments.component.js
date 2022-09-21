@@ -2,13 +2,15 @@
  * @category  Macron
  * @author    Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
- * @copyright  Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable @scandipwa/scandipwa-guidelines/no-jsx-variables */
 /* eslint-disable max-len */
 /* eslint-disable @scandipwa/scandipwa-guidelines/jsx-no-props-destruction */
+/* eslint-disable react/forbid-prop-types */
+/* eslint-disable max-lines */
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -21,17 +23,26 @@ import Pagination from 'Component/Pagination';
 import SearchIcon from 'Component/SearchIcon';
 import ShipmentsTable from 'Component/ShipmentsTable';
 import { ShipmentsType, ShipmentType } from 'Type/Shipment.type';
+import { getListViewAllowedOptions } from 'Util/Config';
 
 import './Shipments.style';
 
 /** @namespace Scandipwa/Route/Shipments/Component */
 export class ShipmentsComponent extends PureComponent {
     static propTypes = {
-        shipments: PropTypes.arrayOf(ShipmentsType).isRequired,
         isLoading: PropTypes.bool,
+        shipments: ShipmentsType.isRequired,
+        shipmentsPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
+        shipmentsPerPage: PropTypes.number.isRequired,
+        onShipmentsPerPageChange: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
         searchInput: PropTypes.string.isRequired,
-        shipmentsSearchResult: PropTypes.arrayOf(ShipmentType).isRequired
+        shipmentsSearchResult: PropTypes.arrayOf(ShipmentType).isRequired,
+        filterOptions: PropTypes.object.isRequired,
+        updateOptions: PropTypes.func.isRequired,
+        availableFilters: PropTypes.object.isRequired,
+        formatToFieldOptions: PropTypes.func.isRequired,
+        onDateSelectorChange: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -39,6 +50,51 @@ export class ShipmentsComponent extends PureComponent {
     };
 
     title = __('Shipments');
+
+    renderDateFilters() {
+        const {
+            onDateSelectorChange,
+            filterOptions
+        } = this.props;
+
+        const {
+            dateFrom,
+            dateTo
+        } = filterOptions;
+
+        return (
+            <div block="Shipments" elem="Filters">
+                <div block="Shipments" elem="DateFilter">
+                    <p>{ __('Date from:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateFrom',
+                          name: 'dateFrom',
+                          value: dateFrom
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+                <div block="Shipments" elem="DateFilter">
+                    <p>{ __('Date to:') }</p>
+                    <Field
+                      type={ FIELD_TYPE.date }
+                      attr={ {
+                          id: 'dateTo',
+                          name: 'dateTo',
+                          value: dateTo
+                      } }
+                      events={ {
+                          onChange: onDateSelectorChange
+                      } }
+                    />
+                </div>
+            </div>
+        );
+    }
 
     renderTitle() {
         return (
@@ -80,8 +136,33 @@ export class ShipmentsComponent extends PureComponent {
         );
     }
 
+    renderShipmentsPerPage() {
+        const { shipmentsPerPageList, shipmentsPerPage, onShipmentsPerPageChange } = this.props;
+
+        const shipmentsPerPageOptions = getListViewAllowedOptions(shipmentsPerPageList, shipmentsPerPage);
+
+        return (
+            <div block="ShipmentsTable" elem="PerPageDropdown">
+                <Field
+                  type={ FIELD_TYPE.select }
+                  attr={ {
+                      id: 'shipments-per-page-dropdown',
+                      name: 'shipments-per-page-dropdown',
+                      value: shipmentsPerPage,
+                      noPlaceholder: true
+                  } }
+                  events={ {
+                      onChange: onShipmentsPerPageChange
+                  } }
+                  options={ shipmentsPerPageOptions }
+                />
+                <span>{ __('per page') }</span>
+            </div>
+        );
+    }
+
     renderPagination() {
-        const { isLoading, shipments: { pageInfo: { total_pages = 2 } = {} }, searchInput } = this.props;
+        const { isLoading, shipments: { page_info: { total_pages = 0 } = {} }, searchInput } = this.props;
 
         if (searchInput !== '') {
             return null;
@@ -92,18 +173,73 @@ export class ShipmentsComponent extends PureComponent {
         );
     }
 
-    renderContent() {
+    renderSortByStatus() {
         const {
-            isLoading, shipments: items, searchInput, shipmentsSearchResult
+            filterOptions: { status }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by status') }
+              mix={ { block: 'Shipments', elem: 'SortByStatus' } }
+              options={ formatToFieldOptions(availableFilters.status) }
+              value={ status }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ status: +val === 0 ? null : availableFilters.status[+val - 1] });
+                  }
+              } }
+            />
+        );
+    }
+
+    renderSortByCustomer() {
+        const {
+            filterOptions: { customer_name }, availableFilters, formatToFieldOptions, updateOptions
+        } = this.props;
+
+        return (
+            <Field
+              type={ FIELD_TYPE.select }
+              label={ __('Sort by customer') }
+              mix={ { block: 'Shipments', elem: 'SortByCustomer' } }
+              options={ formatToFieldOptions(availableFilters.customers) }
+              value={ customer_name }
+              events={ {
+                  onChange: (val) => {
+                      updateOptions({ customer_name: +val === 0 ? null : availableFilters.customers[+val - 1] });
+                  }
+              } }
+            />
+        );
+    }
+
+    renderTable() {
+        const {
+            isLoading, shipments: { items = [] }, searchInput, shipmentsSearchResult
         } = this.props;
 
         const shipments = searchInput !== '' ? shipmentsSearchResult : items;
 
         return (
+         <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
+        );
+    }
+
+    renderContent() {
+        return (
             <ContentWrapper label="Shipments">
                 { this.renderTitle() }
+                { this.renderDateFilters() }
                 { this.renderSearchBar() }
-                <ShipmentsTable shipments={ shipments } isLoading={ isLoading } />
+                { this.renderShipmentsPerPage() }
+                { this.renderPagination() }
+                { this.renderSortByStatus() }
+                { this.renderSortByCustomer() }
+                { this.renderTable() }
+                { this.renderShipmentsPerPage() }
+                { this.renderPagination() }
             </ContentWrapper>
         );
     }

@@ -1,52 +1,45 @@
 /**
   * @category    Macron
   * @author      Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+  * @author      Vladyslav Ivashchenko <vladyslav.ivashchenko@scandiweb.com | info@scandiweb.com>
+  * @author      Juris Kucinskis <juris.kucinskis@scandiweb.com | info@scandiweb.com>
   * @copyright   Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com)
   * @license     http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
   */
 
+/* eslint-disable max-lines */
+
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import PatchProductQuery from 'Query/PatchProduct.query';
 import {
-    mapDispatchToProps
+    mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceComponent/Product/Product.container';
 import { mapStateToProps, ProductActionsContainer as SourceProductActionsContainer }
 from 'SourceComponent/ProductActions/ProductActions.container';
-
-import { data as patchData } from './patch_sample_data';
+import { showNotification } from 'Store/Notification/Notification.action';
+import { fetchQuery, getErrorMessage } from 'Util/Request';
 
 export {
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 };
+
+/** @namespace Scandipwa/Component/ProductActions/Container/mapDispatchToProps */
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
+});
 
 /** @namespace Scandipwa/Component/ProductActions/Container */
 export class ProductActionsContainer extends SourceProductActionsContainer {
     state = {
         ...this.state,
         isAddPatchDropOpen: false,
-        patchData,
-        patchList: [{
-            id: nanoid(),
-            Sku: '-',
-            name: '-',
-            price: '-',
-            quantity: '0',
-            discount: '0',
-            line: '-'
-        }]
-    };
-
-    static propTypes = {
-        ...SourceProductActionsContainer.propTypes,
-        addAnotherPatch: PropTypes.func.isRequired,
-        findObjFromSku: PropTypes.func.isRequired,
-        patchSelectionChange: PropTypes.func.isRequired,
-        patchInputOnChange: PropTypes.func.isRequired,
-        deletePatchRow: PropTypes.func.isRequired,
-        updatePatchQuantityButton: PropTypes.func.isRequired
+        patchCodes: [],
+        patchData: [],
+        patchList: [],
+        keyword: ''
     };
 
     containerFunctions = {
@@ -56,29 +49,151 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         patchSelectionChange: this.patchSelectionChange.bind(this),
         deletePatchRow: this.deletePatchRow.bind(this),
         updatePatchQuantityButton: this.updatePatchQuantityButton.bind(this),
-        patchInputOnChange: this.patchInputOnChange.bind(this)
+        patchInputOnChange: this.patchInputOnChange.bind(this),
+        patchCodeInputChange: this.patchCodeInputChange.bind(this),
+        openSelectPatch: this.openSelectPatch.bind(this),
+        closeSelectPatch: this.closeSelectPatch.bind(this),
+        getFilteredPatchCodes: this.getFilteredPatchCodes.bind(this),
+        getPatchListFromSku: this.getPatchListFromSku.bind(this)
     };
+
+    componentDidMount() {
+        this.requestPatchProducts();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+
+        const { product: prevProduct } = prevProps;
+        const { product } = this.props;
+        const { keyword } = this.state;
+        const { keyword: prevKeyword } = prevState;
+
+        if (keyword !== prevKeyword) {
+            this.requestPatchProducts();
+        }
+
+        if (product !== prevProduct) {
+            this.requestPatchProducts();
+            this.setState({
+                patchList: this.getPatchListFromSku(product.sku)
+            });
+        }
+    }
 
     containerProps() {
         const {
             isAddPatchDropOpen,
-            patchList
+            patchList,
+            parameters,
+            stock,
+            stockLoading,
+            patchCodes,
+            patchData
         } = this.state;
 
         return {
             ...super.containerProps(),
             isAddPatchDropOpen,
             patchData,
-            patchList
+            patchList,
+            parameters,
+            stock,
+            stockLoading,
+            patchCodes
         };
+    }
+
+    getFilteredPatchCodes(key = '') {
+        const pattern = new RegExp(`^${key}`, 'i');
+        const { patchList, patchData } = this.state;
+
+        const unSelectedData = patchData.filter((patch) => {
+            const tryToFind = patchList.find((obj) => obj.sku === patch.sku);
+            if (typeof tryToFind !== 'undefined') {
+                return false;
+            }
+
+            return true;
+        });
+
+        if (key === '-' || !key || key === '') {
+            this.setState({
+                patchCodes: unSelectedData.map((patch) => patch.sku)
+            });
+        } else {
+            const filteredData = unSelectedData.filter((patch) => pattern.test(patch.sku));
+            this.setState({
+                patchCodes: filteredData.map((patch) => patch.sku)
+            });
+        }
+    }
+
+    getPatchListFromSku(sku) {
+        const { patchData } = this.state;
+
+        const list = patchData.find((product) => product.sku === sku);
+        if (typeof list !== 'undefined' && list.length > 0) {
+            return list.patchList.map((patch) => {
+                const newObj = patch;
+                newObj.id = nanoid();
+                newObj.quantity = 1;
+                newObj.discount = 0;
+                newObj.code = newObj.sku;
+                newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
+                return newObj;
+            });
+        }
+
+        return [{
+            id: nanoid(),
+            sku: '-',
+            name: '-',
+            price: '-',
+            quantity: '0',
+            discount: '0',
+            code: '',
+            line: '-'
+        }];
+    }
+
+    async requestPatchProducts() {
+        const { showErrorNotification } = this.props;
+        const { keyword } = this.state;
+
+        this.debounce(
+            async () => {
+                try {
+                    const {
+                        patchProductCollection:
+                        { allPatchProducts }
+                    } = await fetchQuery(PatchProductQuery.getPatchProductQuery(keyword));
+
+                    this.setState({ patchData: allPatchProducts });
+                } catch (e) {
+                    showErrorNotification(getErrorMessage(e));
+                }
+            }
+        );
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    debounce(func, timeout = 500) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            func();
+        }, timeout);
     }
 
     addAnotherPatch() {
         const { patchList } = this.state;
+
+        this.requestPatchProducts();
+
         this.setState({
             patchList: [...patchList, {
                 id: nanoid(),
-                Sku: '-',
+                sku: '-',
                 name: '-',
                 price: '-',
                 quantity: '0',
@@ -88,15 +203,26 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         });
     }
 
-    findObjFromSku(Sku) {
-        const Obj = patchData.find((patch) => patch.Sku === Sku);
+    calculatePatchLine(price, quantity, discount) {
+        // eslint-disable-next-line no-magic-numbers
+        return (price * quantity) - (price * quantity * (discount / 100));
+    }
+
+    findObjFromSku(sku) {
+        const { patchData } = this.state;
+
+        const Obj = patchData.find((patch) => patch.sku === sku);
         if (typeof Obj !== 'undefined') {
+            Obj.id = nanoid();
+            Obj.quantity = 1;
+            Obj.discount = 0;
+            Obj.line = this.calculatePatchLine(Obj.price, Obj.quantity, Obj.discount).toFixed(2);
             return Obj;
         }
 
         return {
             id: nanoid(),
-            Sku: '-',
+            sku: '-',
             name: '-',
             price: '-',
             quantity: '0',
@@ -105,13 +231,33 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
         };
     }
 
-    patchSelectionChange(e, rowId) {
+    patchCodeInputChange(e, rowId) {
+        e.preventDefault();
         const { patchList } = this.state;
-        const patchObj = this.findObjFromSku(e.target.value);
+
+        this.setState({ keyword: e.target.value });
 
         this.setState({
             patchList: patchList.map((patch) => {
                 if (patch.id === rowId) {
+                    const patchObj = patch;
+                    patchObj.code = e.target.value;
+                    return patchObj;
+                }
+
+                return patch;
+            })
+        });
+        this.getFilteredPatchCodes(e.target.value);
+    }
+
+    patchSelectionChange(e, rowId) {
+        const { patchList } = this.state;
+        const patchObj = this.findObjFromSku(e.target.textContent);
+        this.setState({
+            patchList: patchList.map((patch) => {
+                if (patch.id === rowId) {
+                    patchObj.code = patchObj.sku;
                     return patchObj;
                 }
 
@@ -121,11 +267,12 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     }
 
     patchInputOnChange(e, rowId) {
+        e.preventDefault();
+
         const { patchList } = this.state;
         const { name } = e.target;
         // eslint-disable-next-line fp/no-let
         let { value } = e.target;
-
         this.setState({
             patchList: patchList.map((patch) => {
                 const newObj = patch;
@@ -145,6 +292,8 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
                         }
                     }
                     newObj[name] = value;
+                    newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
+                    return newObj;
                 }
 
                 return patch;
@@ -162,7 +311,6 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
 
     updatePatchQuantityButton(mode, rowId) {
         const { patchList } = this.state;
-
         this.setState({
             patchList: patchList.map((patch) => {
                 if (patch.id === rowId) {
@@ -172,7 +320,7 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
                     } else if (mode < 0 && (newObj.quantity - 1) > 0) {
                         newObj.quantity--;
                     }
-
+                    newObj.line = this.calculatePatchLine(newObj.price, newObj.quantity, newObj.discount).toFixed(2);
                     return newObj;
                 }
 
@@ -184,6 +332,48 @@ export class ProductActionsContainer extends SourceProductActionsContainer {
     toggleDropDown() {
         const { isAddPatchDropOpen } = this.state;
         this.setState({ isAddPatchDropOpen: !isAddPatchDropOpen });
+    }
+
+    openSelectPatch(e, rowId) {
+        const { patchList } = this.state;
+
+        this.setState({
+            patchList: patchList.map((patch) => {
+                if (patch.id === rowId) {
+                    const openRow = patchList.find((patch) => patch.id === rowId);
+                    openRow.isSelectOpen = true;
+                    return openRow;
+                }
+
+                return patch;
+            })
+        });
+        this.getFilteredPatchCodes(e.target.value);
+    }
+
+    closeSelectPatch(rowId, wasOpen) {
+        if (!wasOpen) {
+            return;
+        }
+        const { patchList } = this.state;
+        this.setState({
+            patchList: patchList.map((patch) => {
+                const openRow = patch;
+                if (patch.sku !== patch.code) {
+                    if (patch.sku !== '-') {
+                        openRow.code = patch.sku;
+                    } else {
+                        openRow.code = '';
+                    }
+                }
+                if (patch.id === rowId) {
+                    openRow.isSelectOpen = false;
+                    return openRow;
+                }
+
+                return openRow;
+            })
+        });
     }
 }
 

@@ -97,9 +97,13 @@ export class MyClientsPageContainer extends PureComponent {
         const { clientsPerPage: prevClientsPerPage } = prevState;
         const { clientsPerPageList } = this.props;
         const { location: prevLocation } = prevProps;
-
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
+            const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
+            history.replace(`${MY_CLIENTS_URL}${pageParam}`);
+        }
 
         if (clientsPerPageList.length > 0 && !clientsPerPageList.includes(clientsPerPage)) {
             this.onClientsPerPageChange(
@@ -109,11 +113,6 @@ export class MyClientsPageContainer extends PureComponent {
             );
 
             return;
-        }
-
-        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
-            const pageParam = total_pages > 1 ? `?page=${ total_pages }` : '';
-            history.replace(`${ MY_CLIENTS_URL }${ pageParam }`);
         }
 
         if (currentPage !== prevPage || clientsPerPage !== prevClientsPerPage) {

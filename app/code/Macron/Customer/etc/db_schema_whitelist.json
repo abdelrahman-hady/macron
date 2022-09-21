@@ -2,6 +2,7 @@
     "customer_entity": {
         "column": {
             "business_partner_id": true,
+            "parent_business_partner_id": true,
             "phone_number": true,
             "type": true,
             "status": true,
@@ -11,7 +12,13 @@
             "customer_discounts": true,
             "retail_price_list": true,
             "wholesale_price_list": true,
-            "company_name":true
+            "company_name": true
+        },
+        "index": {
+            "CUSTOMER_ENTITY_BUSINESS_PARTNER_ID": true
+        },
+        "constraint": {
+            "CUSTOMER_ENTITY_BUSINESS_PARTNER_ID": true
         }
     },
     "customer_entity_discounts": {

@@ -23,4 +23,52 @@ class Collection extends AbstractCollection
             ClientsCollection::class
         );
     }
+
+    /**
+     * Join all foreign tables
+     *
+     * @return $this
+     */
+    public function joinTables(): static
+    {
+        $this
+            ->getSelect()
+            ->joinLeft(
+                'erp_affiliation',
+                'erp_affiliation.id = main_table.affiliation_id',
+                ['affiliation' => 'label']
+            )
+            ->joinLeft(
+                'erp_contract_expiracy_date',
+                'erp_contract_expiracy_date.id = main_table.date_id',
+                ['date' => 'label']
+            )
+            ->joinLeft(
+                'erp_current_brand',
+                'erp_current_brand.id = main_table.current_brand_id',
+                ['current_brand' => 'label']
+            )
+            ->joinLeft(
+                'erp_sport',
+                'erp_sport.id = main_table.sport_id',
+                ['sport' => 'label']
+            )
+            ->joinLeft(
+                'erp_distance',
+                'erp_distance.id = main_table.distance_id',
+                ['distance' => 'label']
+            )
+            ->joinLeft(
+                'erp_color as primaryColor',
+                'primaryColor.id = main_table.primary_color_id',
+                ['primary_color' => 'label']
+            )
+            ->joinLeft(
+                'erp_color as secondaryColor',
+                'secondaryColor.id = main_table.secondary_color_id',
+                ['secondary_color' => 'label']
+            );
+
+        return $this;
+    }
 }

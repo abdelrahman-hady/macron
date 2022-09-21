@@ -34,8 +34,8 @@ export class OrderTypePopupComponent extends PureComponent {
         companies: PropTypes.objectOf.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         onConfirm: PropTypes.func.isRequired,
-        addProductToCart: PropTypes.func,
-        selectedCustomer: PropTypes.string.isRequired
+        selectedCustomer: PropTypes.string.isRequired,
+        addProductToCart: PropTypes.func
     };
 
     static defaultProps = {

@@ -30,6 +30,7 @@ export class OrderQuery extends SourceOrderQuery {
             ...super._getOrderItemsFields(isSingleOrder),
             'internal_note',
             'reference_note',
+            'sap_order_id',
             'user_customer_name'
         ];
 
@@ -55,17 +56,25 @@ export class OrderQuery extends SourceOrderQuery {
 
     _getOrdersField(options) {
         const {
-            orderId, page = 1, pageSize = ORDERS_PER_PAGE,
+            orderId, page = 1, pageSize = ORDERS_PER_PAGE, isSapOrderId,
             filterOptions: {
                 dateFrom, dateTo, status, user_customer_name
             } = {}
-        } = options || {};
-        const ordersField = new Field('orders');
+        } = options;
 
+        const ordersField = new Field('orders');
         const filter = {};
 
+        if (isSapOrderId) {
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { sap_order_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
+        }
+
         if (orderId) {
-            filter.entity_id = { eq: orderId };
+            return ordersField
+                .addArgument('filter', 'CustomerOrdersFilterInput', { entity_id: { eq: orderId } })
+                .addFieldList(this._getOrdersFields(true));
         }
 
         if (dateFrom) {

@@ -56,8 +56,9 @@ export class CreateClientPageContainer extends PureComponent {
     };
 
     state = {
-        selectItems: [],
+        clientOptions: {},
         isLoading: false,
+        isOptionsLoading: false,
         client: {}
     };
 
@@ -82,10 +83,12 @@ export class CreateClientPageContainer extends PureComponent {
 
     containerProps = () => {
         const { isEdit } = this.props;
-        const { selectItems, isLoading, client } = this.state;
+        const {
+            clientOptions, isLoading, client, isOptionsLoading
+        } = this.state;
 
         return {
-            selectItems, isLoading, isEdit, client
+            clientOptions, isLoading, isEdit, client, isOptionsLoading
         };
     };
 
@@ -128,7 +131,18 @@ export class CreateClientPageContainer extends PureComponent {
     }
 
     async requestSelectItems() {
-        this.setState({ selectItems: [{ name: 'item1', id: 1 }, { name: 'item2', id: 2 }] });
+        const { showErrorNotification } = this.props;
+
+        this.setState({ isOptionsLoading: true });
+
+        try {
+            const { clientOptions } = await fetchQuery(ClientQuery.getClientOptionsQuery());
+
+            this.setState({ clientOptions, isOptionsLoading: false });
+        } catch (e) {
+            showErrorNotification(getErrorMessage(e));
+            this.setState({ isOptionsLoading: false });
+        }
     }
 
     async requestClient() {

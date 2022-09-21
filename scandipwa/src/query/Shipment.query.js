@@ -12,17 +12,64 @@ import { SHIPMENTS_PER_PAGE } from '../route/Shipments/Shipments.config';
 /** @namespace Scandipwa/Query/Shipment/Query */
 export class ShipmentQuery {
     getShipmentsQuery(options) {
-        const { page = 1, pageSize = SHIPMENTS_PER_PAGE } = options ?? {};
+        const {
+            page = 1, pageSize = SHIPMENTS_PER_PAGE, filterOptions
+        } = options ?? {};
 
-        return new Field('shipments')
+        const shipmentsField = new Field('shipments');
+
+        // if (shipmentId) {
+        //     return shipmentsField
+        //         .addArgument('filter', 'ShipmentsFilterInput', { entity_id: { eq: shipmentId } })
+        //         .addFieldList(this._getShipmentFields());
+        // }
+
+        const {
+            status, customer_name, dateFrom, dateTo
+        } = filterOptions;
+
+        const filter = { };
+
+        if (status) {
+            filter.status = { eq: status };
+        }
+
+        if (customer_name) {
+            filter.customer_name = { eq: customer_name };
+        }
+
+        if (dateFrom) {
+            filter.date = { ...filter.date, from: dateFrom };
+        }
+
+        if (dateTo) {
+            filter.date = { ...filter.date, to: dateTo };
+        }
+
+        if (Object.keys(filter).length) {
+            shipmentsField.addArgument('filter', 'ShipmentsFilterInput', filter);
+        }
+
+        return shipmentsField
             .addArgument('currentPage', 'Int', page)
             .addArgument('pageSize', 'Int', pageSize)
-            .addFieldList(this._getShipmentFields());
+            .addField(this._getShipmentsField())
+            .addField(this._getPageInfoField());
     }
 
     getShipmentsByKeywordQuery(keyword) {
         return new Field('shipmentsByKeyword')
             .addArgument('keyword', 'String!', keyword)
+            .addFieldList(this._getShipmentFields());
+    }
+
+    _getPageInfoField() {
+        return new Field('page_info')
+            .addFieldList(this._getPageInfoFields());
+    }
+
+    _getShipmentsField() {
+        return new Field('items')
             .addFieldList(this._getShipmentFields());
     }
 
@@ -34,7 +81,16 @@ export class ShipmentQuery {
             'tracking_number',
             'date',
             'customer_name',
-            'address'
+            'address',
+            'packing_list_link'
+        ];
+    }
+
+    _getPageInfoFields() {
+        return [
+            'current_page',
+            'page_size',
+            'total_pages'
         ];
     }
 }

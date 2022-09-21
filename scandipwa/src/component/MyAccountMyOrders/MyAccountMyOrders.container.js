@@ -73,10 +73,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         searchInput: '',
         orderListSearchResult: [],
         filterOptions: {
-            status: null,
-            user_customer_name: null,
             dateFrom: '',
-            dateTo: ''
+            dateTo: '',
+            status: null,
+            user_customer_name: null
         },
         availableFilters: {
             status: [],
@@ -84,13 +84,11 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         }
     };
 
-    timer = null;
-
     containerFunctions = {
         updateOptions: this.updateOptions.bind(this),
         onOrderPerPageChange: this.onOrderPerPageChange.bind(this),
-        onInputChange: this.onInputChange.bind(this),
         onDateSelectorChange: this.onDateSelectorChange.bind(this),
+        onInputChange: this.onInputChange.bind(this),
         formatToFieldOptions: this.formatToFieldOptions.bind(this)
     };
 
@@ -98,14 +96,14 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         const { ordersPerPageList, device } = this.props;
         const {
             ordersPerPage,
-            sortOptions,
-            statusOptions,
             searchInput,
             orderListSearchResult,
             dateFrom,
             dateTo,
             filterOptions,
-            availableFilters
+            availableFilters,
+            sortOptions,
+            statusOptions
         } = this.state;
 
         return {
@@ -114,19 +112,19 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             orderListSearchResult,
             ordersPerPageList,
             ordersPerPage,
+            dateFrom,
+            dateTo,
             sortOptions,
             statusOptions,
             filterOptions,
             availableFilters,
-            dateFrom,
-            dateTo,
             ...super.containerProps()
         };
     }
 
     componentDidMount() {
         const { getOrderList } = this.props;
-        const { ordersPerPage, filterOptions } = this.state;
+        const { ordersPerPage = ORDERS_PER_PAGE, filterOptions } = this.state;
 
         if (!BrowserDatabase.getItem(ORDERS_PER_PAGE_ITEM)) {
             this.onOrderPerPageChange(ORDERS_PER_PAGE);
@@ -171,7 +169,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
     formatToFieldOptions(options) {
         return options.map((option, idx) => ({
             id: idx + 1,
-            label: __(option),
+            label: option,
             value: idx + 1
         }));
     }
@@ -184,19 +182,28 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
                 } = {}
             }
         } = this.props;
+
         const {
-            sortOptions: { orderStatus }, ordersPerPage, filterOptions, availableFilters
+            sortOptions: { orderStatus },
+            ordersPerPage,
+            filterOptions,
+            availableFilters
         } = this.state;
         const {
             sortOptions: { orderStatus: prevOrderStatus },
             ordersPerPage: prevOrdersPerPage,
-            filterOptions: prevfilterOptions,
+            filterOptions: prevFilterOptions,
             availableFilters: prevAvailableFilters
         } = prevState;
         const { location: prevLocation } = prevProps;
 
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
+
+        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
+            const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
+            history.replace(appendWithStoreCode(`/sales/order/history${pageParam}`));
+        }
 
         if (ordersPerPageList.length > 0 && !ordersPerPageList.includes(ordersPerPage)) {
             this.onOrderPerPageChange(
@@ -208,12 +215,7 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             return;
         }
 
-        if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
-            const pageParam = total_pages > 1 ? `?page=${total_pages}` : '';
-            history.replace(appendWithStoreCode(`/sales/order/history${pageParam}`));
-        }
-
-        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevfilterOptions));
+        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevFilterOptions));
         const availFiltersChanged = () => !(JSON.stringify(availableFilters) === JSON.stringify(prevAvailableFilters));
 
         if (orderStatus !== prevOrderStatus
@@ -242,8 +244,27 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
 
     onOrderPerPageChange(ordersPerPage) {
         BrowserDatabase.setItem(ordersPerPage, ORDERS_PER_PAGE_ITEM);
-
         this.setState({ ordersPerPage });
+    }
+
+    onDateSelectorChange(e) {
+        const { name, value } = e.target;
+        const { filterOptions } = this.state;
+        // eslint-disable-next-line fp/no-let
+        let date = value;
+        if (name === 'dateTo') {
+            const valueArr = value.split('-');
+            const day = parseFloat(valueArr[2]) + 1;
+            // eslint-disable-next-line no-magic-numbers
+            valueArr[2] = String(`0${ day}`).slice(-2);
+            date = valueArr.join('-');
+        }
+
+        if (date === '--aN') {
+            date = '';
+        }
+
+        this.setState({ filterOptions: { ...filterOptions, [name]: date } });
     }
 
     _getStatusOptions() {
@@ -271,25 +292,10 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
         return [];
     }
 
-    onDateSelectorChange(e) {
-        const { name, value } = e.target;
-        const { filterOptions } = this.state;
-        // eslint-disable-next-line fp/no-let
-        let date = value;
-        if (name === 'dateTo') {
-            const valueArr = value.split('-');
-            const day = parseFloat(valueArr[2]) + 1;
-            // eslint-disable-next-line no-magic-numbers
-            valueArr[2] = String(`0${ day}`).slice(-2);
-            date = valueArr.join('-');
-        }
-        this.setState({ filterOptions: { ...filterOptions, [name]: date } });
-    }
-
     onInputChange(e) {
         const { setLoadingStatus } = this.props;
         const { value } = e.target;
-        const { ordersPerPage } = this.state;
+        const { ordersPerPage = ORDERS_PER_PAGE } = this.state;
         this.setState({ searchInput: value });
         const query = OrderQuery.getOrdersByKeywordQuery(this._getPageFromUrl(), ordersPerPage, value);
         this.debounce(

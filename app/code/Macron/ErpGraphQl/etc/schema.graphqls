@@ -3,27 +3,32 @@ type Query {
         pageSize: Int = 10
         currentPage: Int = 1
     ): Clients
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
-    @doc(description: "Get list of clients")
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Clients")
+        @doc(description: "Get list of clients")
 
-    client(client_id: Int!): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
-    @doc(description: "Get client by id")
+    client(client_id: Int!): Client
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Client")
+        @doc(description: "Get client by id")
 
     clientsByKeyword(
         keyword: String!
-    ): [ClientType]
-    @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
-    @doc(description: "Get clients by keyword")
+    ): [Client]
+        @resolver(class: "Macron\\ErpGraphQl\\Model\\Resolver\\ClientsByKeyword")
+        @doc(description: "Get clients by keyword")
 
-    invoices: [InvoiceType]
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
-    @doc(description: "Get list of invoices for the current logged in customer")
+    invoices(
+        pageSize: Int = 10
+        currentPage: Int = 1
+    ): [InvoiceType]
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Invoices")
+        @doc(description: "Get list of invoices for the current logged in customer")
+
 
     shipments(
-        currentPage: Int = 1
         pageSize: Int = 10
-    ): [Shipment]
+        currentPage: Int = 1
+        filter: ShipmentsFilterInput
+    ): Shipments
     @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\Shipments")
     @doc(description: "Get shipments list")
 
@@ -37,75 +42,90 @@ type Query {
 type Mutation {
     deleteClient(
         client_id: Int!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
-    @doc(description: "Delete client by id")
+    ): Client
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\DeleteClient")
+        @doc(description: "Delete client by id")
 
     createClient(
         client: CreateClientInput!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
-    @doc(description: "Create a new client")
+    ): Client
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\CreateClient")
+        @doc(description: "Create a new client")
 
     updateClient(
         client: UpdateClientInput!
-    ): ClientType
-    @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
-    @doc(description: "Update client")
+    ): Client
+        @resolver(class: "\\Macron\\ErpGraphQl\\Model\\Resolver\\UpdateClient")
+        @doc(description: "Update client")
 }
 
 type Clients {
-    items: [ClientType]
+    items: [Client]
     page_info: SearchResultPageInfo
 }
 
-type ClientType {
+type Client {
     entity_id: Int
     company_name: String
     address: String
     vat_number: Int
-    contract_expiracy_date: String
+    date_id: Int
+    date: String
+    affiliation_id: Int
     affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
+    sport_id: Int
+    sport: String
+    category: String
+    primary_color_id: Int
+    primary_color: String
+    secondary_color_id: Int
+    secondary_color: String
+    current_brand_id: Int
     current_brand: String
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
+    distance: String
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
 }
 
 type Shipment {
     entity_id: Int
-    shipment_number: String,
-    status: String,
-    tracking_number: String,
-    date: String,
-    customer_name: String,
-    address: String
+    shipment_number: String
+    status: String
+    tracking_number: String
+    date: String
+    customer_name: String
+    address: String,
+    packing_list_link: String
+}
+
+type Shipments {
+    items: [Shipment]
+    page_info: SearchResultPageInfo
 }
 
 input CreateClientInput {
     company_name: String!
     address: String
     vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
+    date_id: Int
+    affiliation_id: Int
+    sport_id: Int
+    category: String
+    primary_color_id: Int
+    secondary_color_id: Int
+    current_brand_id: Int
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
 }
 
 input UpdateClientInput {
@@ -113,19 +133,43 @@ input UpdateClientInput {
     company_name: String!
     address: String
     vat_number: Int
-    contract_expiracy_date: String
-    affiliation: String
-    sport: Int
-    category: Int
-    primary_color: Int
-    secondary_color: Int
-    current_brand: String
+    date_id: Int
+    date: String
+    affiliation_id: Int
+    sport_id: Int
+    category: String
+    primary_color_id: Int
+    secondary_color_id: Int
+    current_brand_id: Int
     coni_id: Int
     membership_no: Int
-    distance: Int
+    distance_id: Int
     contact_person: String
     mobile: String
     email: String
+    is_contract_signed: Boolean
+}
+
+type ClientOptions {
+    affiliations: [Option]
+    current_brands: [Option]
+    dates: [Option]
+    sports: [Option]
+    colors: [Option]
+    distances: [Option]
+}
+
+type Option {
+    id: Int
+    label: String
+}
+
+input ShipmentsFilterInput
+    @doc(description: "Identifies the filter to use for filtering shipments.")
+{
+  customer_name: FilterStringTypeInput @doc(description: "Filters by customer name.")
+  status: FilterStringTypeInput @doc(description: "Filters by shipment status.")
+  date: FilterTypeInput @doc(description: "Filters by date.")
 }
 
 type InvoiceType {
@@ -133,6 +177,7 @@ type InvoiceType {
     invoice_number: String
     user_sap_id: String
     date: String
+    due_date: String
     currency: String
     grand_total: String
     status: String

@@ -62,7 +62,6 @@ export class HeaderContainer extends SourceHeaderContainer {
         };
     }
 
-    // overridden to change the Account Button Path to my profile page instead of  account
     onMyAccountButtonClick() {
         const {
             showOverlay,

@@ -32,6 +32,24 @@ export class OrderDispatcher extends SourceOrderDispatcher {
             }
         );
     }
+
+    async getOrderById(dispatch, orderId, isSapOrderId) {
+        try {
+            const {
+                customer: {
+                    orders: {
+                        items
+                    }
+                }
+            } = await fetchQuery(OrderQuery.getOrderListQuery({ orderId, isSapOrderId }));
+
+            return items[0];
+        } catch (error) {
+            dispatch(showNotification('error', getErrorMessage(error)));
+
+            return null;
+        }
+    }
 }
 
 export default new OrderDispatcher();

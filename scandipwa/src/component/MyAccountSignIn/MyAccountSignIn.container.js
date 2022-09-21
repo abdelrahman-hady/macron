@@ -1,7 +1,7 @@
 /*
  * @category Macron
- * @author    Lena Sinichenkova <lena.sinichenkova@scandiweb.com | info@scandiweb.com>
  * @author    Saad Amir <saad.amir@scandiweb.com | info@scandiweb.com>
+ * @author    Lena Sinichenkova <lena.sinichenkova@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -47,6 +47,20 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
         profileOverlay: false
     };
 
+    state = {
+        ...super.state,
+        isPasswordVisible: false
+    };
+
+    containerFunctions = {
+        ...this.containerFunctions,
+        onSignInSuccess: this.onSignInSuccess.bind(this),
+        onPasswordVisibilityClick: this.onPasswordVisibilityClick.bind(this),
+        myProfileAction: this.myProfileAction.bind(this),
+        getHelpAction: this.getHelpAction.bind(this),
+        logoutAction: this.logoutAction.bind(this)
+    };
+
     containerProps() {
         const { profileOverlay } = this.props;
         const { isPasswordVisible: visibilityState } = this.state;
@@ -81,11 +95,6 @@ export class MyAccountSignInContainer extends SourceMyAccountSignInContainer {
         history.push({ pathname: appendWithStoreCode('/') });
         logout();
     }
-
-    state = {
-        ...super.state,
-        isPasswordVisible: false
-    };
 
     onPasswordVisibilityClick(e) {
         e.preventDefault();

@@ -9,15 +9,20 @@ import { connect } from 'react-redux';
 
 import {
     mapDispatchToProps,
-    mapStateToProps,
+    mapStateToProps as sourceMapStateToProps,
     ProductContainer as SourceProductContainer
 } from 'SourceComponent/Product/Product.container';
 import { DEFAULT_MAX_PRODUCTS } from 'Util/Product/Extract';
 
 export {
-    mapDispatchToProps,
-    mapStateToProps
+    mapDispatchToProps
 };
+
+/** @namespace Scandipwa/Component/Product/Container/mapStateToProps */
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    stockCacheLifetime: state.ConfigReducer.stock_cache_lifetime
+});
 
 /** @namespace Scandipwa/Component/Product/Container */
 export class ProductContainer extends SourceProductContainer {
@@ -39,6 +44,11 @@ export class ProductContainer extends SourceProductContainer {
         // eslint-disable-next-line react/destructuring-assignment
         parameters: this.props.parameters
     };
+
+    componentDidMount() {
+        this.updateSelectedValues();
+        this.updateAdjustedPrice();
+    }
 
     async addToCart() {
         this.updateSelectedValues();

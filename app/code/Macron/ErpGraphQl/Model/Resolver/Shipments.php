@@ -58,10 +58,46 @@ class Shipments implements ResolverInterface
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
 
-        return $this->shipmentsCollection
-            ->create($customerId)
-            ->setPageSize($pageSize)
-            ->setCurPage($currentPage)
-            ->getData();
+        $date = $args['filter']['date'] ?? null;
+        $status = $args['filter']['status'] ?? null;
+        $customerName = $args['filter']['customer_name'] ?? null;
+
+        $collection = $this->shipmentsCollection
+            ->create($customerId);
+
+        if($date !== null) {
+          $currentDate = $this->timezoneInterface->date()->format('Y-m-d');
+          $fromDate = date('Y-m-d', strtotime($date['from']) ?? '-24 hour'); //Start Date
+          $toDate = date('Y-m-d', strtotime($date['to'] ?? $currentDate)); //End Date
+
+          $collection = $collection->addFieldToFilter('date', ['gteq' => $fromDate])
+               ->addFieldToFilter('date', ['lteq' => $toDate]);
+        }
+
+        if($status !== null) {
+         $collection = $collection->addFieldToFilter(
+            'status',
+            ['in' => $status]
+         );
+        }
+
+        if($customerName !== null) {
+          $collection = $collection->addFieldToFilter(
+              'customer_name',
+              ['in' => $customerName]
+          );
+        }
+
+        $collection = $collection->setPageSize($pageSize)
+            ->setCurPage($currentPage);
+
+        return [
+            'items' => $collection->getData(),
+            'page_info' => [
+                'page_size' => $collection->getPageSize(),
+                'current_page' => $collection->getCurPage(),
+                'total_pages' => $collection->getLastPageNumber()
+            ],
+        ];
     }
 }
