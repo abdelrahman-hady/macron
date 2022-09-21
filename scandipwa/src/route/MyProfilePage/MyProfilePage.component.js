@@ -104,7 +104,8 @@ export class MyProfilePageComponent extends PureComponent {
             <div>
                 <p>
                     { /* eslint-disable-next-line max-len */ }
-                    { __(`If any information is not correct please contact your account manager: ${accountmanageremail}`) }
+                    { __('If any information is not correct please contact your account manager: ') }
+                    { accountmanageremail }
                 </p>
             </div>
         );

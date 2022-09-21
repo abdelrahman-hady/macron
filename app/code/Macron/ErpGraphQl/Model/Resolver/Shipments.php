@@ -15,6 +15,7 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Macron\ErpGraphQl\Model\ResourceModel\Shipments\CollectionFactory;
 
 class Shipments implements ResolverInterface
@@ -24,12 +25,18 @@ class Shipments implements ResolverInterface
      */
     protected CollectionFactory $shipmentsCollection;
 
+     /**
+     * @var TimezoneInterface
+     */
+    protected TimezoneInterface $timezoneInterface;
+
     /**
      * @param CollectionFactory $shipmentsCollection
      */
-    public function __construct(CollectionFactory $shipmentsCollection)
+    public function __construct(CollectionFactory $shipmentsCollection, TimezoneInterface $timezoneInterface)
     {
         $this->shipmentsCollection = $shipmentsCollection;
+        $this->timezoneInterface = $timezoneInterface;
     }
 
      /**
@@ -57,11 +64,22 @@ class Shipments implements ResolverInterface
         $customerId = $context->getUserId();
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
-        $status = isset($args['filter']) && isset($args['filter']['status']) ?  $args['filter']['status'] : null;
-        $customerName = isset($args['filter']) && isset($args['filter']['customer_name']) ?  $args['filter']['customer_name'] : null;
+
+        $date = $args['filter']['date'] ?? null;
+        $status = $args['filter']['status'] ?? null;
+        $customerName = $args['filter']['customer_name'] ?? null;
 
         $collection = $this->shipmentsCollection
             ->create($customerId);
+
+        if($date !== null) {
+          $currentDate = $this->timezoneInterface->date()->format('Y-m-d');
+          $fromDate = date('Y-m-d', strtotime($date['from']) ?? '-24 hour'); //Start Date
+          $toDate = date('Y-m-d', strtotime($date['to'] ?? $currentDate)); //End Date
+
+          $collection = $collection->addFieldToFilter('date', ['gteq' => $fromDate])
+               ->addFieldToFilter('date', ['lteq' => $toDate]);
+        }
 
         if($status !== null) {
          $collection = $collection->addFieldToFilter(

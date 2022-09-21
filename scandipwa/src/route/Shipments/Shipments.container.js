@@ -53,7 +53,7 @@ export const mapDispatchToProps = (dispatch) => ({
 /** @namespace Scandipwa/Route/Shipments/Container */
 export class ShipmentsContainer extends PureComponent {
     static propTypes = {
-        shipmentsPerPageList: PropTypes.string.isRequired,
+        shipmentsPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         updateMeta: PropTypes.func.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         location: LocationType.isRequired,
@@ -62,13 +62,15 @@ export class ShipmentsContainer extends PureComponent {
 
     state = {
         shipmentsPerPage: +(BrowserDatabase.getItem(SHIPMENTS_PER_PAGE_ITEM) ?? SHIPMENTS_PER_PAGE),
-        shipments: [],
+        shipments: {},
         isLoading: false,
         searchInput: '',
         shipmentsSearchResult: [],
         filterOptions: {
             status: null,
-            customer_name: null
+            customer_name: null,
+            dateFrom: '',
+            dateTo: ''
         },
         availableFilters: {
             status: [],
@@ -80,7 +82,8 @@ export class ShipmentsContainer extends PureComponent {
         onInputChange: this.onInputChange.bind(this),
         updateOptions: this.updateOptions.bind(this),
         onShipmentsPerPageChange: this.onShipmentsPerPageChange.bind(this),
-        formatToFieldOptions: this.formatToFieldOptions.bind(this)
+        formatToFieldOptions: this.formatToFieldOptions.bind(this),
+        onDateSelectorChange: this.onDateSelectorChange.bind(this)
     };
 
     componentDidMount() {
@@ -90,9 +93,10 @@ export class ShipmentsContainer extends PureComponent {
         this.updateBreadcrumbs();
         this.requestShipments(this._getPageFromUrl(), shipmentsPerPage, filterOptions).then(
             /** @namespace Scandipwa/Route/Shipments/Container/ShipmentsContainer/componentDidMount/requestShipments/then */
+
             () => {
                 // Get Available Filter Options on First Shipments
-                this.setState({ availableFilters: this.getAvailablefilterOptions() });
+                this.setState({ availableFilters: this.getAvailableFilterOptions() });
             }
         );
     }
@@ -107,7 +111,7 @@ export class ShipmentsContainer extends PureComponent {
         } = this.state;
         const {
             shipmentsPerPage: prevShipmentsPerPage,
-            filterOptions: prevfilterOptions,
+            filterOptions: prevFilterOptions,
             availableFilters: prevAvailableFilters
         } = prevState;
         const { location: prevLocation } = prevProps;
@@ -115,7 +119,7 @@ export class ShipmentsContainer extends PureComponent {
         const prevPage = this._getPageFromUrl(prevLocation);
         const currentPage = this._getPageFromUrl();
 
-        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevfilterOptions));
+        const filterOptionsChanged = () => !(JSON.stringify(filterOptions) === JSON.stringify(prevFilterOptions));
         const availFiltersChanged = () => !(JSON.stringify(availableFilters) === JSON.stringify(prevAvailableFilters));
 
         if (currentPage !== 1 && total_pages > 0 && currentPage > total_pages) {
@@ -133,7 +137,7 @@ export class ShipmentsContainer extends PureComponent {
                 () => {
                     // Should update available filters when page number is changed
                     if (currentPage !== prevPage) {
-                        this.setState({ availableFilters: this.getAvailablefilterOptions() });
+                        this.setState({ availableFilters: this.getAvailableFilterOptions() });
                     }
                 }
             );
@@ -149,7 +153,7 @@ export class ShipmentsContainer extends PureComponent {
         }));
     }
 
-    getAvailablefilterOptions() {
+    getAvailableFilterOptions() {
         const { shipments: { items = [] } } = this.state;
 
         const uniqueLists = {
@@ -203,7 +207,13 @@ export class ShipmentsContainer extends PureComponent {
     containerProps = () => {
         const { shipmentsPerPageList } = this.props;
         const {
-            shipments, isLoading, searchInput, shipmentsPerPage, shipmentsSearchResult, filterOptions, availableFilters
+            shipments,
+            isLoading,
+            searchInput,
+            shipmentsPerPage,
+            shipmentsSearchResult,
+            filterOptions,
+            availableFilters
         } = this.state;
 
         return {
@@ -239,6 +249,19 @@ export class ShipmentsContainer extends PureComponent {
         ];
 
         updateBreadcrumbs(breadcrumbs);
+    }
+
+    onDateSelectorChange(e) {
+        const { name, value } = e.target;
+        const { filterOptions } = this.state;
+        // eslint-disable-next-line fp/no-let
+        let date = value;
+
+        if (date === '--aN') {
+            date = '';
+        }
+
+        this.setState({ filterOptions: { ...filterOptions, [name]: date } });
     }
 
     onInputChange(e) {
