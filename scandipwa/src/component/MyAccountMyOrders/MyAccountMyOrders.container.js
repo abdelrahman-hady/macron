@@ -283,6 +283,11 @@ export class MyAccountMyOrdersContainer extends SourceMyAccountMyOrdersContainer
             valueArr[2] = String(`0${ day}`).slice(-2);
             date = valueArr.join('-');
         }
+
+        if (date === '--aN') {
+            date = '';
+        }
+
         this.setState({ filterOptions: { ...filterOptions, [name]: date } });
     }
 
