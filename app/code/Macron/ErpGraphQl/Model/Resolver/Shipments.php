@@ -57,8 +57,9 @@ class Shipments implements ResolverInterface
         $customerId = $context->getUserId();
         $pageSize = $args['pageSize'];
         $currentPage = $args['currentPage'];
-        $status = isset($args['filter']) && isset($args['filter']['status']) ?  $args['filter']['status'] : null;
-        $customerName = isset($args['filter']) && isset($args['filter']['customer_name']) ?  $args['filter']['customer_name'] : null;
+
+        $status = $args['filter']['status'] ?? null;
+        $customerName = $args['filter']['customer_name'] ?? null;
 
         $collection = $this->shipmentsCollection
             ->create($customerId);

@@ -2,7 +2,7 @@
  * @category  Macron
  * @author    Opeyemi Ilesanmi <opeyemi.ilesanmi@scandiweb.com | info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
- * @copyright  Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
+ * @copyright Copyright (c) 2022 Scandiweb, Inc (http://scandiweb.com) (c) 2022 Scandiweb, Inc (https://scandiweb.com)
  */
 
 /* eslint-disable react/jsx-no-bind */
@@ -31,7 +31,7 @@ export class ShipmentsComponent extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool,
         shipments: PropTypes.arrayOf(ShipmentsType).isRequired,
-        shipmentsPerPageList: PropTypes.string.isRequired,
+        shipmentsPerPageList: PropTypes.arrayOf(PropTypes.number).isRequired,
         shipmentsPerPage: PropTypes.number.isRequired,
         onShipmentPerPageChange: PropTypes.func.isRequired,
         onInputChange: PropTypes.func.isRequired,
